@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新盘列表 - 新房AI作业平台V2</title>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #FA8C16;
+            --success: #00B42A;
+            --warning: #FF7D00;
+            --danger: #FA5151;
+            --bg: #F7F8FA;
+            --border: #E5E6EB;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: #1D2129; }
+        
+        /* 顶部导航 */
+        .header { background: #fff; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
+        .header h1 { font-size: 18px; font-weight: 600; }
+        .header-actions { display: flex; gap: 12px; }
+        
+        /* 按钮 */
+        .btn { padding: 8px 16px; border-radius: 8px; border: none; cursor: pointer; font-size: 14px; display: inline-flex; align-items: center; gap: 6px; }
+        .btn-primary { background: var(--primary); color: #fff; }
+        .btn-default { background: #fff; border: 1px solid var(--border); color: #4E5969; }
+        .btn-danger { background: var(--danger); color: #fff; }
+        
+        /* 标签页 */
+        .tabs { background: #fff; padding: 0 24px; border-bottom: 1px solid var(--border); display: flex; gap: 24px; }
+        .tab { padding: 12px 0; border-bottom: 2px solid transparent; color: #86909C; cursor: pointer; }
+        .tab.active { color: var(--primary); border-color: var(--primary); }
+        
+        /* 筛选区 */
+        .filter-bar { background: #fff; padding: 16px 24px; margin: 16px 0; border-radius: 8px; display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
+        .filter-item { display: flex; align-items: center; gap: 8px; }
+        .filter-item label { font-size: 13px; color: #86909C; white-space: nowrap; }
+        .filter-item input, .filter-item select { padding: 8px 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; min-width: 150px; }
+        
+        /* 表格 */
+        .table-container { background: #fff; border-radius: 8px; overflow: hidden; margin: 16px 0; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--border); }
+        th { background: #FAFAFA; font-weight: 500; font-size: 13px; color: #86909C; }
+        td { font-size: 14px; }
+        
+        /* 复选框 */
+        input[type="checkbox"] { width: 16px; height: 16px; cursor: pointer; }
+        
+        /* 状态标签 */
+        .status { padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: 500; }
+        .status-draft { background: #F2F3F5; color: #86909C; }
+        .status-review { background: #E6F7FF; color: #1890FF; }
+        .status-online { background: #E8FFEA; color: var(--success); }
+        .status-offline { background: #FFF7E6; color: var(--warning); }
+        
+        /* 操作链接 */
+        .action-link { color: var(--primary); cursor: pointer; margin-right: 12px; }
+        .action-link:hover { text-decoration: underline; }
+        
+        /* 分页 */
+        .pagination { display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; }
+        .pagination-info { font-size: 13px; color: #86909C; }
+        .pagination-controls { display: flex; gap: 8px; }
+        .pagination-controls button { padding: 6px 12px; border: 1px solid var(--border); background: #fff; border-radius: 6px; cursor: pointer; }
+        .pagination-controls button.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+        
+        /* 徽章 */
+        .badge { background: var(--danger); color: #fff; padding: 2px 6px; border-radius: 10px; font-size: 11px; margin-left: 8px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1><i class="fa fa-building-o"></i> 新房AI作业平台V2</h1>
+        <div class="header-actions">
+            <button class="btn btn-primary" onclick="addBuilding()">
+                <i class="fa fa-plus"></i> 新增楼盘
+            </button>
+        </div>
+    </div>
+    
+    <div class="tabs">
+        <div class="tab active">全部 <span class="badge">156</span></div>
+        <div class="tab">草稿 <span>12</span></div>
+        <div class="tab">待审核 <span class="badge">5</span></div>
+        <div class="tab">已上线 <span>89</span></div>
+        <div class="tab">已下线 <span>50</span></div>
+    </div>
+    
+    <div class="filter-bar">
+        <div class="filter-item">
+            <label>楼盘名称</label>
+            <input type="text" placeholder="搜索楼盘名称" id="searchInput">
+        </div>
+        <div class="filter-item">
+            <label>区域</label>
+            <select id="regionFilter">
+                <option value="">全部区域</option>
+                <option value="浦东">浦东新区</option>
+                <option value="浦西">浦西</option>
+            </select>
+        </div>
+        <div class="filter-item">
+            <label>均价</label>
+            <select id="priceFilter">
+                <option value="">全部均价</option>
+                <option value="3w">3万以下</option>
+                <option value="5w">3-5万</option>
+                <option value="8w">5-8万</option>
+                <option value="10w">8万以上</option>
+            </select>
+        </div>
+        <div class="filter-item">
+            <label>户型</label>
+            <select id="typeFilter">
+                <option value="">全部户型</option>
+                <option value="1">一室</option>
+                <option value="2">两室</option>
+                <option value="3">三室</option>
+            </select>
+        </div>
+        <button class="btn btn-primary"><i class="fa fa-search"></i> 筛选</button>
+        <button class="btn btn-default">重置</button>
+    </div>
+    
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th width="40"><input type="checkbox"></th>
+                    <th>楼盘名称</th>
+                    <th>区域</th>
+                    <th>均价(万/㎡)</th>
+                    <th>户型</th>
+                    <th>状态</th>
+                    <th>维护人</th>
+                    <th>更新时间</th>
+                    <th width="180">操作</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="pagination">
+        <div class="pagination-info">共 <span id="totalCount">0</span> 条记录</div>
+        <div class="pagination-controls">
+            <button>上一页</button>
+            <button class="active">1</button>
+            <button>2</button>
+            <button>3</button>
+            <button>4</button>
+            <button>5</button>
+            <button>下一页</button>
+        </div>
+    </div>
+
+    <script>
+        // Mock数据
+        const buildings = [
+            { id: '001', name: '万科翡翠公园', region: '浦东新区', price: '8.5', type: '三室', status: 'online', manager: '张三', updateTime: '2026-04-14' },
+            { id: '002', name: '仁恒滨江园', region: '浦东新区', price: '12.0', type: '四室', status: 'review', manager: '李四', updateTime: '2026-04-13' },
+            { id: '003', name: '绿城黄浦湾', region: '黄浦区', price: '15.0', type: '三室', status: 'draft', manager: '王五', updateTime: '2026-04-12' },
+            { id: '004', name: '龙湖天琅', region: '徐汇区', price: '9.2', type: '两室', status: 'offline', manager: '赵六', updateTime: '2026-04-11' },
+            { id: '005', name: '保利发展广场', region: '静安区', price: '10.5', type: '三室', status: 'online', manager: '钱七', updateTime: '2026-04-10' }
+        ];
+
+        const statusMap = {
+            draft: { text: '草稿', class: 'status-draft' },
+            review: { text: '待审核', class: 'status-review' },
+            online: { text: '已上线', class: 'status-online' },
+            offline: { text: '已下线', class: 'status-offline' }
+        };
+
+        function renderTable() {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = buildings.map(b => `
+                <tr>
+                    <td><input type="checkbox"></td>
+                    <td><strong>${b.name}</strong></td>
+                    <td>${b.region}</td>
+                    <td>${b.price}</td>
+                    <td>${b.type}</td>
+                    <td><span class="status ${statusMap[b.status].class}">${statusMap[b.status].text}</span></td>
+                    <td>${b.manager}</td>
+                    <td>${b.updateTime}</td>
+                    <td>
+                        <span class="action-link" onclick="viewDetail('${b.id}')">查看</span>
+                        <span class="action-link" onclick="editBuilding('${b.id}')">编辑</span>
+                        <span class="action-link" onclick="deleteBuilding('${b.id}')">删除</span>
+                    </td>
+                </tr>
+            `).join('');
+            document.getElementById('totalCount').textContent = buildings.length;
+        }
+
+        function addBuilding() { alert('跳转新增楼盘页面'); }
+        function viewDetail(id) { alert('查看楼盘详情: ' + id); }
+        function editBuilding(id) { alert('编辑楼盘: ' + id); }
+        function deleteBuilding(id) { if(confirm('确认删除？')) { alert('删除: ' + id); } }
+
+        // Tab切换
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.onclick = function() {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            };
+        });
+
+        renderTable();
+    </script>
+</body>
+</html>
