@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>任务列表 - 新房AI作业平台V2</title>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #FA8C16;
+            --success: #00B42A;
+            --warning: #FF7D00;
+            --danger: #FA5151;
+            --bg: #F7F8FA;
+            --border: #E5E6EB;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: #1D2129; }
+        
+        .header { background: #fff; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
+        .header h1 { font-size: 18px; font-weight: 600; }
+        
+        .btn { padding: 8px 16px; border-radius: 8px; border: none; cursor: pointer; font-size: 14px; display: inline-flex; align-items: center; gap: 6px; }
+        .btn-primary { background: var(--primary); color: #fff; }
+        .btn-default { background: #fff; border: 1px solid var(--border); color: #4E5969; }
+        
+        .tabs { background: #fff; padding: 0 24px; border-bottom: 1px solid var(--border); display: flex; gap: 24px; }
+        .tab { padding: 12px 0; border-bottom: 2px solid transparent; color: #86909C; cursor: pointer; font-size: 14px; }
+        .tab.active { color: var(--primary); border-color: var(--primary); }
+        .badge { background: var(--danger); color: #fff; padding: 2px 6px; border-radius: 10px; font-size: 11px; margin-left: 6px; }
+        
+        .filter-bar { background: #fff; padding: 16px 24px; margin: 16px 0; border-radius: 8px; display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
+        .filter-item { display: flex; align-items: center; gap: 8px; }
+        .filter-item label { font-size: 13px; color: #86909C; }
+        .filter-item input, .filter-item select { padding: 8px 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; min-width: 150px; }
+        
+        .table-container { background: #fff; border-radius: 8px; overflow: hidden; margin: 16px 0; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--border); }
+        th { background: #FAFAFA; font-weight: 500; font-size: 13px; color: #86909C; }
+        
+        .status { padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: 500; }
+        .status-pending { background: #F2F3F5; color: #86909C; }
+        .status-released { background: #E6F7FF; color: #1890FF; }
+        .status-doing { background: #FFF7E6; color: var(--warning); }
+        .status-done { background: #E8FFEA; color: var(--success); }
+        
+        .action-link { color: var(--primary); cursor: pointer; margin-right: 12px; }
+        .action-link:hover { text-decoration: underline; }
+        
+        .progress-bar { width: 100px; height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; display: inline-block; vertical-align: middle; margin-left: 8px; }
+        .progress-fill { height: 100%; background: var(--primary); border-radius: 3px; }
+        
+        .pagination { display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; }
+        .pagination-info { font-size: 13px; color: #86909C; }
+        .pagination-controls { display: flex; gap: 8px; }
+        .pagination-controls button { padding: 6px 12px; border: 1px solid var(--border); background: #fff; border-radius: 6px; cursor: pointer; }
+        .pagination-controls button.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1><i class="fa fa-tasks"></i> 探盘任务</h1>
+        <button class="btn btn-primary" onclick="createTask()">
+            <i class="fa fa-plus"></i> 创建任务
+        </button>
+    </div>
+    
+    <div class="tabs">
+        <div class="tab active">全部 <span class="badge">28</span></div>
+        <div class="tab">待下发 <span>5</span></div>
+        <div class="tab">执行中 <span>12</span></div>
+        <div class="tab">已完成 <span>11</span></div>
+    </div>
+    
+    <div class="filter-bar">
+        <div class="filter-item">
+            <label>任务名称</label>
+            <input type="text" placeholder="搜索任务名称">
+        </div>
+        <div class="filter-item">
+            <label>楼盘</label>
+            <select>
+                <option value="">全部楼盘</option>
+                <option value="1">万科翡翠公园</option>
+                <option value="2">仁恒滨江园</option>
+            </select>
+        </div>
+        <div class="filter-item">
+            <label>执行人</label>
+            <select>
+                <option value="">全部人员</option>
+                <option value="1">张经纪人</option>
+                <option value="2">李经纪人</option>
+            </select>
+        </div>
+        <div class="filter-item">
+            <label>截止日期</label>
+            <input type="date">
+        </div>
+        <button class="btn btn-primary"><i class="fa fa-search"></i> 筛选</button>
+        <button class="btn btn-default">重置</button>
+    </div>
+    
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th><input type="checkbox"></th>
+                    <th>任务名称</th>
+                    <th>楼盘</th>
+                    <th>执行人</th>
+                    <th>状态</th>
+                    <th>进度</th>
+                    <th>截止日期</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+        </table>
+    </div>
+    
+    <div class="pagination">
+        <div class="pagination-info">共 <span>28</span> 条</div>
+        <div class="pagination-controls">
+            <button>上一页</button>
+            <button class="active">1</button>
+            <button>2</button>
+            <button>3</button>
+            <button>下一页</button>
+        </div>
+    </div>
+
+    <script>
+        const tasks = [
+            { id: '001', name: '万科翡翠公园探盘', building: '万科翡翠公园', user: '张经纪人', status: 'doing', progress: 60, deadline: '2026-04-20' },
+            { id: '002', name: '仁恒滨江园探盘', building: '仁恒滨江园', user: '李经纪人', status: 'released', progress: 0, deadline: '2026-04-25' },
+            { id: '003', name: '绿城黄浦湾探盘', building: '绿城黄浦湾', user: '王经纪人', status: 'done', progress: 100, deadline: '2026-04-15' },
+            { id: '004', name: '龙湖天琅探盘', building: '龙湖天琅', user: '张经纪人', status: 'pending', progress: 0, deadline: '2026-04-30' },
+            { id: '005', name: '保利发展广场探盘', building: '保利发展广场', user: '赵经纪人', status: 'doing', progress: 40, deadline: '2026-04-22' }
+        ];
+
+        const statusMap = {
+            pending: { text: '待下发', class: 'status-pending' },
+            released: { text: '已下发', class: 'status-released' },
+            doing: { text: '执行中', class: 'status-doing' },
+            done: { text: '已完成', class: 'status-done' }
+        };
+
+        function renderTable() {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = tasks.map(t => `
+                <tr>
+                    <td><input type="checkbox"></td>
+                    <td><strong>${t.name}</strong></td>
+                    <td>${t.building}</td>
+                    <td>${t.user}</td>
+                    <td><span class="status ${statusMap[t.status].class}">${statusMap[t.status].text}</span></td>
+                    <td>
+                        ${t.progress}%
+                        <div class="progress-bar"><div class="progress-fill" style="width: ${t.progress}%"></div></div>
+                    </td>
+                    <td>${t.deadline}</td>
+                    <td>
+                        <span class="action-link" onclick="viewDetail('${t.id}')">详情</span>
+                        <span class="action-link" onclick="track('${t.id}')">追踪</span>
+                        ${t.status === 'pending' ? '<span class="action-link" onclick="release(\'' + t.id + '\')">下发</span>' : ''}
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function createTask() { alert('跳转创建任务页面'); }
+        function viewDetail(id) { alert('查看任务详情: ' + id); }
+        function track(id) { alert('查看任务追踪: ' + id); }
+        function release(id) { alert('下发任务: ' + id); }
+
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.onclick = function() {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            };
+        });
+
+        renderTable();
+    </script>
+</body>
+</html>

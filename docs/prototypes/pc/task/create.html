@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>创建任务 - 新房AI作业平台V2</title>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #FA8C16;
+            --success: #00B42A;
+            --warning: #FF7D00;
+            --danger: #FA5151;
+            --bg: #F7F8FA;
+            --border: #E5E6EB;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: #1D2129; }
+        
+        /* 顶部导航 */
+        .header { background: #fff; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
+        .header h1 { font-size: 18px; font-weight: 600; }
+        .header-actions { display: flex; gap: 12px; }
+        
+        /* 按钮 */
+        .btn { padding: 8px 16px; border-radius: 8px; border: none; cursor: pointer; font-size: 14px; display: inline-flex; align-items: center; gap: 6px; }
+        .btn-primary { background: var(--primary); color: #fff; }
+        .btn-default { background: #fff; border: 1px solid var(--border); color: #4E5969; }
+        .btn-sm { padding: 6px 12px; font-size: 13px; }
+        
+        /* 表单容器 */
+        .form-container { max-width: 900px; margin: 24px auto; background: #fff; border-radius: 12px; padding: 24px; }
+        
+        /* 步骤条 */
+        .steps { display: flex; justify-content: center; margin-bottom: 32px; }
+        .step { display: flex; align-items: center; }
+        .step-circle { width: 32px; height: 32px; border-radius: 50%; background: var(--border); color: #86909C; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; }
+        .step.active .step-circle { background: var(--primary); color: #fff; }
+        .step.completed .step-circle { background: var(--success); color: #fff; }
+        .step-label { margin-left: 8px; color: #86909C; font-size: 14px; }
+        .step.active .step-label { color: var(--primary); font-weight: 500; }
+        .step-line { width: 80px; height: 2px; background: var(--border); margin: 0 16px; }
+        
+        /* 表单区块 */
+        .form-section { margin-bottom: 24px; }
+        .form-section-title { font-size: 16px; font-weight: 600; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+        
+        /* 表单项 */
+        .form-row { display: flex; margin-bottom: 16px; }
+        .form-row:last-child { margin-bottom: 0; }
+        .form-label { width: 140px; text-align: right; padding-right: 16px; font-size: 14px; color: #4E5969; line-height: 36px; }
+        .form-content { flex: 1; }
+        .form-content input, .form-content select, .form-content textarea { width: 100%; padding: 8px 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 14px; }
+        .form-content textarea { min-height: 80px; resize: vertical; }
+        .form-hint { font-size: 12px; color: #86909C; margin-top: 4px; }
+        
+        /* 复选框组 */
+        .checkbox-group { display: flex; flex-wrap: wrap; gap: 16px; }
+        .checkbox-item { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+        .checkbox-item input { width: 16px; height: 16px; }
+        
+        /* 人员选择 */
+        .user-select { border: 1px solid var(--border); border-radius: 8px; padding: 12px; }
+        .user-item { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: var(--bg); border-radius: 6px; margin-bottom: 8px; }
+        .user-item:last-child { margin-bottom: 0; }
+        .user-info { display: flex; align-items: center; gap: 12px; }
+        .user-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--primary); color: #fff; display: flex; align-items: center; justify-content: center; }
+        .user-name { font-size: 14px; }
+        .user-dept { font-size: 12px; color: #86909C; }
+        
+        /* 楼盘选择卡片 */
+        .building-card { border: 1px solid var(--border); border-radius: 8px; padding: 16px; cursor: pointer; transition: all 0.2s; }
+        .building-card:hover { border-color: var(--primary); }
+        .building-card.selected { border-color: var(--primary); background: #FFF7E6; }
+        .building-name { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+        .building-info { font-size: 13px; color: #86909C; }
+        
+        /* 开关 */
+        .switch { position: relative; width: 44px; height: 24px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: #E5E6EB; transition: 0.3s; border-radius: 24px; }
+        .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 2px; bottom: 2px; background: #fff; transition: 0.3s; border-radius: 50%; }
+        input:checked + .slider { background: var(--primary); }
+        input:checked + .slider:before { transform: translateX(20px); }
+        
+        /* 按钮组 */
+        .form-actions { display: flex; justify-content: center; gap: 16px; margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border); }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1><i class="fa fa-tasks"></i> 创建探盘任务</h1>
+        <div class="header-actions">
+            <button class="btn btn-default" onclick="saveDraft()"><i class="fa fa-save"></i> 保存草稿</button>
+        </div>
+    </div>
+    
+    <div class="form-container">
+        <!-- 步骤条 -->
+        <div class="steps">
+            <div class="step active">
+                <div class="step-circle">1</div>
+                <span class="step-label">选择楼盘</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="step">
+                <div class="step-circle">2</div>
+                <span class="step-label">配置规则</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="step">
+                <div class="step-circle">3</div>
+                <span class="step-label">选定人员</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="step">
+                <div class="step-circle">4</div>
+                <span class="step-label">确认下发</span>
+            </div>
+        </div>
+        
+        <!-- 步骤1：选择楼盘 -->
+        <div class="form-section">
+            <div class="form-section-title"><i class="fa fa-building-o"></i> 步骤1：选择楼盘</div>
+            <div class="form-row">
+                <div class="form-label">选择楼盘</div>
+                <div class="form-content">
+                    <select id="buildingSelect" onchange="selectBuilding()">
+                        <option value="">请选择楼盘</option>
+                        <option value="1">万科翡翠公园 - 浦东新区 - 8.5万/㎡</option>
+                        <option value="2">仁恒滨江园 - 浦东新区 - 12万/㎡</option>
+                        <option value="3">绿城黄浦湾 - 黄浦区 - 15万/㎡</option>
+                    </select>
+                </div>
+            </div>
+            <div id="selectedBuilding" style="display:none; margin-top: 16px;">
+                <div class="building-card selected">
+                    <div class="building-name" id="selectedBuildingName"></div>
+                    <div class="building-info" id="selectedBuildingInfo"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 步骤2：配置规则 -->
+        <div class="form-section">
+            <div class="form-section-title"><i class="fa fa-cog"></i> 步骤2：配置规则</div>
+            
+            <div class="form-row">
+                <div class="form-label">打卡配置</div>
+                <div class="form-content">
+                    <div class="checkbox-group">
+                        <label class="checkbox-item">
+                            <input type="checkbox" checked> 定位打卡
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" checked> AI自动审核
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-label">打卡范围</div>
+                <div class="form-content">
+                    <input type="number" placeholder="请输入范围" value="100">
+                    <div class="form-hint">单位：米，建议范围50-200米</div>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-label">位置偏移阈值</div>
+                <div class="form-content">
+                    <input type="number" placeholder="请输入偏移值" value="50">
+                    <div class="form-hint">超出此范围将提示偏移</div>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-label">点位采集</div>
+                <div class="form-content">
+                    <div class="checkbox-group">
+                        <label class="checkbox-item">
+                            <input type="checkbox" checked> 售楼处入口
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" checked> 样板间
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" checked> 户型图
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" checked> 沙盘
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox"> 小区环境
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-label">内容生成</div>
+                <div class="form-content">
+                    <div class="checkbox-group">
+                        <label class="checkbox-item">
+                            <input type="checkbox" checked> AI文案生成
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" checked> AI配图生成
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox"> 视频生成
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 步骤3：选定人员 -->
+        <div class="form-section">
+            <div class="form-section-title"><i class="fa fa-users"></i> 步骤3：选定执行人员</div>
+            <div class="form-row">
+                <div class="form-label">选择经纪人</div>
+                <div class="form-content">
+                    <div class="user-select">
+                        <div class="user-item">
+                            <div class="user-info">
+                                <div class="user-avatar"><i class="fa fa-user"></i></div>
+                                <div>
+                                    <div class="user-name">张经纪人</div>
+                                    <div class="user-dept">浦东区-A组</div>
+                                </div>
+                            </div>
+                            <input type="checkbox" checked>
+                        </div>
+                        <div class="user-item">
+                            <div class="user-info">
+                                <div class="user-avatar"><i class="fa fa-user"></i></div>
+                                <div>
+                                    <div class="user-name">李经纪人</div>
+                                    <div class="user-dept">浦东区-A组</div>
+                                </div>
+                            </div>
+                            <input type="checkbox">
+                        </div>
+                        <div class="user-item">
+                            <div class="user-info">
+                                <div class="user-avatar"><i class="fa fa-user"></i></div>
+                                <div>
+                                    <div class="user-name">王经纪人</div>
+                                    <div class="user-dept">浦东区-B组</div>
+                                </div>
+                            </div>
+                            <input type="checkbox">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-label">截止时间</div>
+                <div class="form-content">
+                    <input type="date" value="2026-04-25">
+                </div>
+            </div>
+        </div>
+        
+        <!-- 步骤4：确认下发 -->
+        <div class="form-section">
+            <div class="form-section-title"><i class="fa fa-paper-plane"></i> 步骤4：确认下发</div>
+            <div style="background: var(--bg); border-radius: 8px; padding: 16px;">
+                <table style="width: 100%; font-size: 14px;">
+                    <tr>
+                        <td style="color: #86909C; width: 100px;">楼盘名称</td>
+                        <td id="confirmBuilding">请选择楼盘</td>
+                    </tr>
+                    <tr style="height: 12px;"></tr>
+                    <tr>
+                        <td style="color: #86909C;">执行人员</td>
+                        <td>张经纪人 等1人</td>
+                    </tr>
+                    <tr style="height: 12px;"></tr>
+                    <tr>
+                        <td style="color: #86909C;">截止时间</td>
+                        <td>2026-04-25</td>
+                    </tr>
+                    <tr style="height: 12px;"></tr>
+                    <tr>
+                        <td style="color: #86909C;">任务规则</td>
+                        <td>定位打卡 + 点位采集 + AI内容生成</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        
+        <!-- 操作按钮 -->
+        <div class="form-actions">
+            <button class="btn btn-default" onclick="history.back()">取消</button>
+            <button class="btn btn-primary" onclick="submitTask()"><i class="fa fa-paper-plane"></i> 确认下发</button>
+        </div>
+    </div>
+
+    <script>
+        function selectBuilding() {
+            const select = document.getElementById('buildingSelect');
+            const selectedDiv = document.getElementById('selectedBuilding');
+            if (select.value) {
+                selectedDiv.style.display = 'block';
+                const option = select.options[select.selectedIndex];
+                document.getElementById('selectedBuildingName').textContent = option.text.split(' - ')[0];
+                document.getElementById('selectedBuildingInfo').textContent = option.text.split(' - ').slice(1).join(' - ');
+                document.getElementById('confirmBuilding').textContent = option.text.split(' - ')[0];
+            } else {
+                selectedDiv.style.display = 'none';
+            }
+        }
+        
+        function saveDraft() { alert('保存草稿'); }
+        function submitTask() { alert('任务下发成功！'); }
+    </script>
+</body>
+</html>

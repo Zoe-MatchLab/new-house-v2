@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>配置任务 - 新房AI作业平台V2</title>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #FA8C16;
+            --success: #00B42A;
+            --warning: #FF7D00;
+            --danger: #FA5151;
+            --bg: #F7F8FA;
+            --border: #E5E6EB;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { height: 100%; }
+        body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg); color: #1D2129; }
+        
+        /* 顶部导航 */
+        .header { position: fixed; top: 0; left: 0; right: 0; height: 56px; background: var(--primary); color: #fff; display: flex; align-items: center; padding: 0 16px; z-index: 100; }
+        .header-back { font-size: 20px; margin-right: 16px; }
+        .header h1 { font-size: 17px; font-weight: 600; flex: 1; }
+        
+        /* 内容区 */
+        .content { padding: 72px 16px 100px; }
+        
+        /* 任务卡片 */
+        .task-card { background: #fff; border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+        .task-title { font-size: 17px; font-weight: 600; margin-bottom: 8px; }
+        .task-meta { font-size: 13px; color: #86909C; display: flex; gap: 16px; }
+        
+        /* 配置区块 */
+        .config-section { background: #fff; border-radius: 12px; margin-bottom: 12px; }
+        .config-header { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; border-bottom: 1px solid var(--border); }
+        .config-title { font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+        .config-title i { color: var(--primary); }
+        .config-badge { font-size: 12px; padding: 2px 8px; border-radius: 4px; }
+        .badge-on { background: #E8FFEA; color: var(--success); }
+        .badge-off { background: #F2F3F5; color: #86909C; }
+        
+        .config-body { padding: 12px 16px; }
+        
+        /* 配置项 */
+        .config-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--bg); }
+        .config-item:last-child { border-bottom: none; }
+        .config-label { font-size: 14px; color: #4E5969; display: flex; align-items: center; gap: 8px; }
+        .config-value { font-size: 14px; color: #86909C; }
+        
+        /* 开关 */
+        .switch { position: relative; width: 44px; height: 24px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: #E5E6EB; transition: 0.3s; border-radius: 24px; }
+        .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 2px; bottom: 2px; background: #fff; transition: 0.3s; border-radius: 50%; }
+        input:checked + .slider { background: var(--primary); }
+        input:checked + .slider:before { transform: translateX(20px); }
+        
+        /* 点位列表 */
+        .point-item { display: flex; align-items: center; gap: 12px; padding: 10px 0; }
+        .point-icon { width: 36px; height: 36px; border-radius: 8px; background: var(--bg); display: flex; align-items: center; justify-content: center; color: var(--primary); }
+        .point-name { font-size: 14px; flex: 1; }
+        .point-status { font-size: 12px; color: var(--success); }
+        
+        /* 人员 */
+        .user-item { display: flex; align-items: center; gap: 12px; padding: 10px 0; }
+        .user-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--primary); color: #fff; display: flex; align-items: center; justify-content: center; }
+        .user-info { flex: 1; }
+        .user-name { font-size: 14px; font-weight: 500; }
+        .user-dept { font-size: 12px; color: #86909C; }
+        
+        /* 底部操作 */
+        .bottom-bar { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; padding: 12px 16px; padding-bottom: calc(12px + env(safe-area-inset-bottom)); border-top: 1px solid var(--border); z-index: 100; }
+        .btn { width: 100%; padding: 14px; border-radius: 10px; border: none; font-size: 16px; font-weight: 600; cursor: pointer; }
+        .btn-primary { background: var(--primary); color: #fff; }
+        .btn-disabled { background: #E5E6EB; color: #86909C; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <span class="header-back"><i class="fa fa-angle-left"></i></span>
+        <h1>任务配置</h1>
+    </div>
+    
+    <div class="content">
+        <!-- 任务信息 -->
+        <div class="task-card">
+            <div class="task-title">万科翡翠公园探盘任务</div>
+            <div class="task-meta">
+                <span><i class="fa fa-clock-o"></i> 截止 4月20日</span>
+                <span><i class="fa fa-user"></i> 张经纪人</span>
+            </div>
+        </div>
+        
+        <!-- 打卡配置 -->
+        <div class="config-section">
+            <div class="config-header">
+                <div class="config-title"><i class="fa fa-map-marker"></i> 打卡配置</div>
+                <span class="config-badge badge-on">已开启</span>
+            </div>
+            <div class="config-body">
+                <div class="config-item">
+                    <span class="config-label"><i class="fa fa-crosshairs"></i> 定位打卡</span>
+                    <span class="config-value">已开启</span>
+                </div>
+                <div class="config-item">
+                    <span class="config-label"><i class="fa fa-arrows-h"></i> 打卡范围</span>
+                    <span class="config-value">100米</span>
+                </div>
+                <div class="config-item">
+                    <span class="config-label"><i class="fa fa-threshold"></i> 位置偏移阈值</span>
+                    <span class="config-value">50米</span>
+                </div>
+                <div class="config-item">
+                    <span class="config-label"><i class="fa fa-check-circle"></i> AI自动审核</span>
+                    <span class="config-value">已开启</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 点位配置 -->
+        <div class="config-section">
+            <div class="config-header">
+                <div class="config-title"><i class="fa fa-map-pin"></i> 点位采集</div>
+                <span class="config-badge badge-on">已开启</span>
+            </div>
+            <div class="config-body">
+                <div class="point-item">
+                    <div class="point-icon"><i class="fa fa-home"></i></div>
+                    <span class="point-name">售楼处入口</span>
+                    <span class="point-status">必填</span>
+                </div>
+                <div class="point-item">
+                    <div class="point-icon"><i class="fa fa-image"></i></div>
+                    <span class="point-name">样板间</span>
+                    <span class="point-status">3张</span>
+                </div>
+                <div class="point-item">
+                    <div class="point-icon"><i class="fa fa-file-image-o"></i></div>
+                    <span class="point-name">户型图</span>
+                    <span class="point-status">1张</span>
+                </div>
+                <div class="point-item">
+                    <div class="point-icon"><i class="fa fa-th-large"></i></div>
+                    <span class="point-name">沙盘</span>
+                    <span class="point-status">2张</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 内容生成 -->
+        <div class="config-section">
+            <div class="config-header">
+                <div class="config-title"><i class="fa fa-magic"></i> 内容生成</div>
+                <span class="config-badge badge-on">已开启</span>
+            </div>
+            <div class="config-body">
+                <div class="config-item">
+                    <span class="config-label"><i class="fa fa-file-text"></i> AI文案生成</span>
+                    <span class="config-value">已开启</span>
+                </div>
+                <div class="config-item">
+                    <span class="config-label"><i class="fa fa-image"></i> AI配图生成</span>
+                    <span class="config-value">已开启</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 执行人员 -->
+        <div class="config-section">
+            <div class="config-header">
+                <div class="config-title"><i class="fa fa-users"></i> 执行人员</div>
+            </div>
+            <div class="config-body">
+                <div class="user-item">
+                    <div class="user-avatar"><i class="fa fa-user"></i></div>
+                    <div class="user-info">
+                        <div class="user-name">张经纪人</div>
+                        <div class="user-dept">浦东区-A组</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 底部操作 -->
+    <div class="bottom-bar">
+        <button class="btn btn-primary" onclick="executeConfig()">
+            <i class="fa fa-check"></i> 确认执行配置
+        </button>
+    </div>
+
+    <script>
+        function executeConfig() {
+            alert('配置已确认，即将开始执行任务！');
+        }
+    </script>
+</body>
+</html>
