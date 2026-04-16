@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>录音分析 - PC端 - 房产AI作业平台</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#165DFF',
+                        success: '#00B42A',
+                        warning: '#FF7D00',
+                        danger: '#F53F3F',
+                        dark: '#1D2129',
+                        'gray-light': '#F2F3F5',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 500; }
+        .tag-completed { background: #E8FFEA; color: #00B42A; }
+        .tag-progress { background: #FFF7E8; color: #FF7D00; }
+        .tag-pending { background: #F2F3F5; color: #4E5969; }
+        .tag-failed { background: #FFECE8; color: #F53F3F; }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- 顶部导航 -->
+    <nav class="bg-white shadow-sm fixed top-0 left-0 right-0 z-50">
+        <div class="flex justify-between items-center px-6 py-3">
+            <div class="flex items-center space-x-2">
+                <i class="fa fa-home text-primary text-2xl"></i>
+                <span class="text-xl font-bold text-dark">房产AI作业平台</span>
+                <span class="text-sm text-gray-500 ml-2">管理后台</span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button class="text-gray-600 hover:text-primary relative">
+                    <i class="fa fa-bell-o text-lg"></i>
+                    <span class="absolute top-0 right-0 bg-danger text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">5</span>
+                </button>
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center">管</div>
+                    <span class="text-sm font-medium">区域经理A</span>
+                    <i class="fa fa-angle-down text-gray-400"></i>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 侧边栏 -->
+    <div class="flex pt-14">
+        <aside class="w-64 bg-white h-[calc(100vh-56px)] fixed left-0 shadow-sm">
+            <nav class="py-4">
+                <div class="px-4 py-2 text-xs text-gray-400 uppercase font-medium">功能菜单</div>
+                <a href="../task/list.html" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50">
+                    <i class="fa fa-tasks w-5 text-center"></i>
+                    <span class="ml-3">任务管理</span>
+                </a>
+                <a href="list.html" class="flex items-center px-4 py-3 text-primary bg-blue-50 border-r-4 border-primary">
+                    <i class="fa fa-microphone w-5 text-center"></i>
+                    <span class="ml-3">录音分析</span>
+                </a>
+                <a href="../material/list.html" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50">
+                    <i class="fa fa-cubes w-5 text-center"></i>
+                    <span class="ml-3">物料管理</span>
+                </a>
+                <a href="../customer/list.html" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50">
+                    <i class="fa fa-users w-5 text-center"></i>
+                    <span class="ml-3">客户管理</span>
+                </a>
+                <a href="../new-building/list.html" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50">
+                    <i class="fa fa-building-o w-5 text-center"></i>
+                    <span class="ml-3">新盘管理</span>
+                </a>
+                <a href="../dashboard/overview.html" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50">
+                    <i class="fa fa-line-chart w-5 text-center"></i>
+                    <span class="ml-3">数据看板</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- 主内容区 -->
+        <main class="ml-64 flex-1 p-6">
+            <!-- 页面标题 -->
+            <div class="mb-6 flex items-center justify-between">
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-800">录音分析</h1>
+                    <p class="text-gray-500 text-sm mt-1">管理所有录音分析数据，支持筛选、导出</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button onclick="batchExport()" class="px-4 py-2 border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50 flex items-center">
+                        <i class="fa fa-download mr-2"></i>批量导出
+                    </button>
+                </div>
+            </div>
+
+            <!-- 筛选栏 -->
+            <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
+                <div class="grid grid-cols-5 gap-4">
+                    <div>
+                        <label class="block text-xs text-gray-500 mb-1">用户名称</label>
+                        <input type="text" id="filterUser" placeholder="搜索用户名称" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-500 mb-1">关联楼盘</label>
+                        <input type="text" id="filterBuilding" placeholder="搜索楼盘名称" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-500 mb-1">分析状态</label>
+                        <select id="filterStatus" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
+                            <option value="">全部</option>
+                            <option value="completed">分析完成</option>
+                            <option value="progress">分析中</option>
+                            <option value="pending">待分析</option>
+                            <option value="failed">分析失败</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-500 mb-1">录音来源</label>
+                        <select id="filterSource" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
+                            <option value="">全部</option>
+                            <option value="task">任务内录音</option>
+                            <option value="self">自主录音</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-500 mb-1">时间范围</label>
+                        <select class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
+                            <option value="today">今天</option>
+                            <option value="week">本周</option>
+                            <option value="month">本月</option>
+                            <option value="quarter">本季度</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flex justify-end mt-3 space-x-3">
+                    <button onclick="resetFilters()" class="px-3 py-1.5 border border-gray-200 rounded-lg text-gray-600 text-sm hover:bg-gray-50">
+                        重置
+                    </button>
+                    <button onclick="applyFilters()" class="px-3 py-1.5 bg-primary text-white rounded-lg text-sm hover:bg-primary/90">
+                        搜索
+                    </button>
+                </div>
+            </div>
+
+            <!-- 数据列表 -->
+            <div class="bg-white rounded-lg shadow-sm">
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="text-left text-gray-500 text-sm bg-gray-50">
+                                <th class="px-4 py-3 w-12">
+                                    <input type="checkbox" class="rounded border-gray-300">
+                                </th>
+                                <th class="px-4 py-3 text-xs font-medium">录音名称</th>
+                                <th class="px-4 py-3 text-xs font-medium">用户</th>
+                                <th class="px-4 py-3 text-xs font-medium">关联楼盘</th>
+                                <th class="px-4 py-3 text-xs font-medium">录音时长</th>
+                                <th class="px-4 py-3 text-xs font-medium">来源</th>
+                                <th class="px-4 py-3 text-xs font-medium">分析状态</th>
+                                <th class="px-4 py-3 text-xs font-medium">综合评分</th>
+                                <th class="px-4 py-3 text-xs font-medium">上传时间</th>
+                                <th class="px-4 py-3 text-xs font-medium text-right">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recordingTableBody">
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- 分页 -->
+                <div class="flex items-center justify-between px-4 py-3 border-t border-gray-100">
+                    <div class="text-sm text-gray-500">
+                        共 <span class="font-medium" id="totalCount">6</span> 条，每页显示 
+                        <select class="px-2 py-1 border border-gray-200 rounded text-sm">
+                            <option>10</option>
+                            <option>20</option>
+                            <option>50</option>
+                        </select> 条
+                    </div>
+                    <div class="flex items-center gap-1">
+                        <button class="px-3 py-1.5 border border-gray-200 rounded text-sm text-gray-400 cursor-not-allowed" disabled>上一页</button>
+                        <button class="px-3 py-1.5 bg-primary text-white rounded text-sm">1</button>
+                        <button class="px-3 py-1.5 border border-gray-200 rounded text-sm text-gray-600 hover:bg-gray-50">2</button>
+                        <button class="px-3 py-1.5 border border-gray-200 rounded text-sm text-gray-600 hover:bg-gray-50">3</button>
+                        <button class="px-3 py-1.5 border border-gray-200 rounded text-sm text-gray-600 hover:bg-gray-50">下一页</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // 录音数据
+        const recordingsData = [
+            {
+                id: 1,
+                name: '张三-万科城市花园-20260416',
+                userName: '张三',
+                buildingName: '万科城市花园',
+                duration: '05:32',
+                source: 'task',
+                sourceText: '任务内录音',
+                status: 'completed',
+                statusText: '分析完成',
+                score: 85,
+                uploadTime: '2026-04-16 14:30'
+            },
+            {
+                id: 2,
+                name: '李四-中海汇德里-20260416',
+                userName: '李四',
+                buildingName: '中海汇德里',
+                duration: '08:15',
+                source: 'task',
+                sourceText: '任务内录音',
+                status: 'completed',
+                statusText: '分析完成',
+                score: 92,
+                uploadTime: '2026-04-16 11:20'
+            },
+            {
+                id: 3,
+                name: '王五-金隅学府-20260415',
+                userName: '王五',
+                buildingName: '金隅学府',
+                duration: '03:45',
+                source: 'self',
+                sourceText: '自主录音',
+                status: 'progress',
+                statusText: '分析中',
+                score: null,
+                uploadTime: '2026-04-15 16:45'
+            },
+            {
+                id: 4,
+                name: '赵六-远洋LAVIE-20260415',
+                userName: '赵六',
+                buildingName: '远洋LAVIE',
+                duration: '06:20',
+                source: 'task',
+                sourceText: '任务内录音',
+                status: 'completed',
+                statusText: '分析完成',
+                score: 78,
+                uploadTime: '2026-04-15 10:15'
+            },
+            {
+                id: 5,
+                name: '孙七-招商公园1872-20260414',
+                userName: '孙七',
+                buildingName: '招商公园1872',
+                duration: '04:10',
+                source: 'self',
+                sourceText: '自主录音',
+                status: 'pending',
+                statusText: '待分析',
+                score: null,
+                uploadTime: '2026-04-14 15:30'
+            },
+            {
+                id: 6,
+                name: '周八-华润橡树湾-20260414',
+                userName: '周八',
+                buildingName: '华润橡树湾',
+                duration: '07:05',
+                source: 'task',
+                sourceText: '任务内录音',
+                status: 'failed',
+                statusText: '分析失败',
+                score: null,
+                uploadTime: '2026-04-14 09:45'
+            }
+        ];
+
+        // 渲染表格
+        function renderTable(data) {
+            const tbody = document.getElementById('recordingTableBody');
+            document.getElementById('totalCount').textContent = data.length;
+            
+            tbody.innerHTML = data.map(item => `
+                <tr class="border-b border-gray-100 hover:bg-gray-50">
+                    <td class="px-4 py-4">
+                        <input type="checkbox" class="rounded border-gray-300" data-id="${item.id}">
+                    </td>
+                    <td class="px-4 py-4 text-sm">
+                        <div class="flex items-center gap-2">
+                            <i class="fa fa-microphone text-gray-400"></i>
+                            <span class="text-primary cursor-pointer hover:underline" onclick="viewDetail(${item.id})">${item.name}</span>
+                        </div>
+                    </td>
+                    <td class="px-4 py-4 text-sm text-gray-600">${item.userName}</td>
+                    <td class="px-4 py-4 text-sm text-gray-600">${item.buildingName || '-'}</td>
+                    <td class="px-4 py-4 text-sm text-gray-600">${item.duration}</td>
+                    <td class="px-4 py-4 text-sm">
+                        <span class="px-2 py-0.5 rounded text-xs ${item.source === 'task' ? 'bg-blue-50 text-blue-600' : 'bg-gray-100 text-gray-600'}">
+                            ${item.sourceText}
+                        </span>
+                    </td>
+                    <td class="px-4 py-4 text-sm">
+                        <span class="tag tag-${item.status === 'completed' ? 'completed' : item.status === 'progress' ? 'progress' : item.status === 'failed' ? 'failed' : 'pending'}">
+                            ${item.statusText}
+                        </span>
+                    </td>
+                    <td class="px-4 py-4 text-sm">
+                        ${item.score ? `<span class="font-medium ${item.score >= 90 ? 'text-success' : item.score >= 80 ? 'text-primary' : item.score >= 70 ? 'text-warning' : 'text-danger'}">${item.score}分</span>` : '-'}
+                    </td>
+                    <td class="px-4 py-4 text-sm text-gray-500">${item.uploadTime}</td>
+                    <td class="px-4 py-4 text-sm text-right whitespace-nowrap">
+                        <button onclick="viewDetail(${item.id})" class="text-primary hover:underline">详情</button>
+                        ${item.status === 'completed' ? `
+                            <button onclick="reAnalyze(${item.id})" class="text-gray-500 hover:underline ml-3">重新分析</button>
+                        ` : ''}
+                        ${item.status === 'failed' ? `
+                            <button onclick="retryAnalyze(${item.id})" class="text-warning hover:underline ml-3">重试</button>
+                        ` : ''}
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // 查看详情
+        function viewDetail(id) {
+            window.location.href = `detail.html?id=${id}`;
+        }
+
+        // 批量导出
+        function batchExport() {
+            const checked = document.querySelectorAll('tbody input[type="checkbox"]:checked');
+            if (checked.length === 0) {
+                alert('请先选择要导出的录音');
+                return;
+            }
+            alert(`已选择 ${checked.length} 条录音，开始导出...`);
+        }
+
+        // 重置筛选
+        function resetFilters() {
+            document.getElementById('filterUser').value = '';
+            document.getElementById('filterBuilding').value = '';
+            document.getElementById('filterStatus').value = '';
+            document.getElementById('filterSource').value = '';
+            renderTable(recordingsData);
+        }
+
+        // 应用筛选
+        function applyFilters() {
+            const userName = document.getElementById('filterUser').value.toLowerCase();
+            const buildingName = document.getElementById('filterBuilding').value.toLowerCase();
+            const status = document.getElementById('filterStatus').value;
+            const source = document.getElementById('filterSource').value;
+
+            let filtered = recordingsData;
+
+            if (userName) {
+                filtered = filtered.filter(item => item.userName.toLowerCase().includes(userName));
+            }
+            if (buildingName) {
+                filtered = filtered.filter(item => (item.buildingName || '').toLowerCase().includes(buildingName));
+            }
+            if (status) {
+                filtered = filtered.filter(item => item.status === status);
+            }
+            if (source) {
+                filtered = filtered.filter(item => item.source === source);
+            }
+
+            renderTable(filtered);
+        }
+
+        // 重新分析
+        function reAnalyze(id) {
+            if (confirm('确认重新分析该录音？')) {
+                alert('已提交重新分析任务');
+            }
+        }
+
+        // 重试
+        function retryAnalyze(id) {
+            if (confirm('确认重试分析该录音？')) {
+                alert('已提交重试任务');
+            }
+        }
+
+        // 初始化
+        renderTable(recordingsData);
+    </script>
+</body>
+</html>

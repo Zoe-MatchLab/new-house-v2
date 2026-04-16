@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>录音分析详情 - 房产AI作业平台</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#165DFF',
+                        success: '#00B42A',
+                        warning: '#FF7D00',
+                        danger: '#F53F3F',
+                        dark: '#1D2129',
+                        'gray-light': '#F2F3F5',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 500; }
+        .tag-completed { background: #E8FFEA; color: #00B42A; }
+        .tag-progress { background: #FFF7E8; color: #FF7D00; }
+        .section-card { background: #fff; border-radius: 12px; border: 1px solid #E8E9EB; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+        .md-content { font-size: 14px; line-height: 1.8; }
+        .md-content h1 { font-size: 20px; font-weight: bold; margin: 16px 0 8px; }
+        .md-content h2 { font-size: 16px; font-weight: bold; margin: 12px 0 6px; color: #1D2129; }
+        .md-content h3 { font-size: 14px; font-weight: 600; margin: 10px 0 4px; color: #4E5969; }
+        .md-content table { width: 100%; border-collapse: collapse; margin: 8px 0; }
+        .md-content th, .md-content td { border: 1px solid #E8E9EB; padding: 8px 12px; text-align: left; }
+        .md-content th { background: #F7F8FA; font-weight: 500; }
+        .md-content ul, .md-content ol { padding-left: 20px; margin: 8px 0; }
+        .md-content li { margin: 4px 0; }
+        .md-content strong { font-weight: 600; color: #1D2129; }
+        .audio-player { width: 100%; height: 48px; background: #F7F8FA; border-radius: 8px; }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- 顶部导航 -->
+    <nav class="bg-white shadow-sm fixed top-0 left-0 right-0 z-50">
+        <div class="flex justify-between items-center px-6 py-3">
+            <div class="flex items-center space-x-2">
+                <i class="fa fa-home text-primary text-2xl"></i>
+                <span class="text-xl font-bold text-dark">房产AI作业平台</span>
+                <span class="text-sm text-gray-500 ml-2">管理后台</span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button class="text-gray-600 hover:text-primary relative">
+                    <i class="fa fa-bell-o text-lg"></i>
+                    <span class="absolute top-0 right-0 bg-danger text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">5</span>
+                </button>
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center">管</div>
+                    <span class="text-sm font-medium">区域经理A</span>
+                    <i class="fa fa-angle-down text-gray-400"></i>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 侧边栏 -->
+    <div class="flex pt-14">
+        <aside class="w-64 bg-white h-[calc(100vh-56px)] fixed left-0 shadow-sm">
+            <nav class="py-4">
+                <div class="px-4 py-2 text-xs text-gray-400 uppercase font-medium">功能菜单</div>
+                <a href="../task/list.html" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50">
+                    <i class="fa fa-tasks w-5 text-center"></i>
+                    <span class="ml-3">任务管理</span>
+                </a>
+                <a href="list.html" class="flex items-center px-4 py-3 text-primary bg-blue-50 border-r-4 border-primary">
+                    <i class="fa fa-microphone w-5 text-center"></i>
+                    <span class="ml-3">录音分析</span>
+                </a>
+                <a href="../material/list.html" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50">
+                    <i class="fa fa-cubes w-5 text-center"></i>
+                    <span class="ml-3">物料管理</span>
+                </a>
+                <a href="../customer/list.html" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50">
+                    <i class="fa fa-users w-5 text-center"></i>
+                    <span class="ml-3">客户管理</span>
+                </a>
+                <a href="../new-building/list.html" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50">
+                    <i class="fa fa-building-o w-5 text-center"></i>
+                    <span class="ml-3">新盘管理</span>
+                </a>
+                <a href="../dashboard/overview.html" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50">
+                    <i class="fa fa-line-chart w-5 text-center"></i>
+                    <span class="ml-3">数据看板</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- 主内容区 -->
+        <main class="ml-64 flex-1 p-6">
+            <!-- 面包屑 -->
+            <div class="mb-4 text-sm">
+                <a href="list.html" class="text-primary hover:underline">录音分析</a>
+                <span class="mx-2 text-gray-400">/</span>
+                <span class="text-gray-500">录音详情</span>
+            </div>
+
+            <!-- 页面标题 -->
+            <div class="mb-6 flex items-center justify-between">
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-800">张三-万科城市花园-20260416</h1>
+                    <p class="text-gray-500 text-sm mt-1">上传时间：2026-04-16 14:30 | 来源：任务内录音</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button onclick="downloadReport()" class="px-4 py-2 border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50 flex items-center">
+                        <i class="fa fa-download mr-2"></i>导出报告
+                    </button>
+                    <button onclick="reAnalyze()" class="px-4 py-2 border border-primary text-primary rounded-lg hover:bg-primary/10 flex items-center">
+                        <i class="fa fa-refresh mr-2"></i>重新分析
+                    </button>
+                </div>
+            </div>
+
+            <!-- 录音播放 -->
+            <div class="section-card mb-6">
+                <div class="px-6 py-4 border-b border-gray-100">
+                    <h3 class="font-semibold text-gray-800">录音播放</h3>
+                </div>
+                <div class="p-6">
+                    <div class="flex items-center gap-6">
+                        <button onclick="playAudio()" id="playBtn" class="w-14 h-14 bg-primary text-white rounded-full flex items-center justify-center hover:bg-primary/90">
+                            <i class="fa fa-play text-xl"></i>
+                        </button>
+                        <div class="flex-1">
+                            <div class="flex items-center gap-3 mb-2">
+                                <span class="text-sm text-gray-600">00:00</span>
+                                <div class="flex-1 h-2 bg-gray-200 rounded-full">
+                                    <div id="audioProgress" class="h-full bg-primary rounded-full" style="width: 35%"></div>
+                                </div>
+                                <span class="text-sm text-gray-600">05:32</span>
+                            </div>
+                            <div class="text-sm text-gray-500">录音时长：5分32秒</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 基本信息 -->
+            <div class="section-card mb-6">
+                <div class="px-6 py-4 border-b border-gray-100">
+                    <h3 class="font-semibold text-gray-800">基本信息</h3>
+                </div>
+                <div class="p-6">
+                    <div class="grid grid-cols-4 gap-6">
+                        <div>
+                            <div class="text-sm text-gray-500 mb-1">用户姓名</div>
+                            <div class="font-medium">张三</div>
+                        </div>
+                        <div>
+                            <div class="text-sm text-gray-500 mb-1">关联楼盘</div>
+                            <div class="font-medium text-primary cursor-pointer hover:underline">万科城市花园</div>
+                        </div>
+                        <div>
+                            <div class="text-sm text-gray-500 mb-1">关联任务</div>
+                            <div class="font-medium text-primary cursor-pointer hover:underline">万科城市花园探盘任务</div>
+                        </div>
+                        <div>
+                            <div class="text-sm text-gray-500 mb-1">上传时间</div>
+                            <div class="font-medium">2026-04-16 14:30</div>
+                        </div>
+                        <div>
+                            <div class="text-sm text-gray-500 mb-1">录音时长</div>
+                            <div class="font-medium">05:32</div>
+                        </div>
+                        <div>
+                            <div class="text-sm text-gray-500 mb-1">分析状态</div>
+                            <div class="font-medium"><span class="tag tag-completed">分析完成</span></div>
+                        </div>
+                        <div>
+                            <div class="text-sm text-gray-500 mb-1">分析时间</div>
+                            <div class="font-medium">2026-04-16 14:32</div>
+                        </div>
+                        <div>
+                            <div class="text-sm text-gray-500 mb-1">综合评分</div>
+                            <div class="font-medium text-success text-xl">85分</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 分析结果 -->
+            <div class="section-card mb-6">
+                <div class="px-6 py-4 border-b border-gray-100">
+                    <h3 class="font-semibold text-gray-800">分析结果</h3>
+                </div>
+                <div class="p-6">
+                    <div class="md-content">
+                        <h1>录音分析报告</h1>
+
+                        <h2>## 基本信息</h2>
+                        <ul>
+                        <li>录音时长：05:32</li>
+                        <li>分析时间：2026-04-16</li>
+                        <li>用户：张三</li>
+                        </ul>
+
+                        <h2>## 综合评分</h2>
+                        <p><strong>总分：85分</strong></p>
+
+                        <h2>## 各维度得分</h2>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>维度</th>
+                                    <th>得分</th>
+                                    <th>说明</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>产品熟悉度</td>
+                                    <td>28/30</td>
+                                    <td>楼盘信息准确率达93%，卖点覆盖较全面</td>
+                                </tr>
+                                <tr>
+                                    <td>需求挖掘</td>
+                                    <td>22/25</td>
+                                    <td>追问3轮，需求确认话术覆盖率85%</td>
+                                </tr>
+                                <tr>
+                                    <td>应变能力</td>
+                                    <td>20/25</td>
+                                    <td>异议处理覆盖率达80%，平均响应延迟2秒</td>
+                                </tr>
+                                <tr>
+                                    <td>成交意识</td>
+                                    <td>15/20</td>
+                                    <td>逼定时机把握较好，邀约技巧有待提升</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h2>## 关键话术点评</h2>
+                        <h3>### 好的话术</h3>
+                        <ul>
+                        <li>"针对客户关心的学区问题，我们项目配套的学区是XX学校..."（第3分钟）</li>
+                        <li>"关于物业费，我们提供的是五星级服务..."（第5分钟）</li>
+                        </ul>
+
+                        <h3>### 需改进的话术</h3>
+                        <ul>
+                        <li>"关于样板间的装修标准..."（第4分钟）建议：增加具体数据的引用</li>
+                        <li>"关于周边配套..."（第6分钟）建议：增加步行时间的具体描述</li>
+                        </ul>
+
+                        <h2>## 改进建议</h2>
+                        <ol>
+                        <li>增加需求挖掘轮次，建议至少追问5轮以上</li>
+                        <li>异议处理时增加具体数据支撑，提高说服力</li>
+                        <li>逼定时机可以更早，在客户兴趣最高时主动邀约</li>
+                        <li>建议增加竞品对比环节，展示项目优势</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 维度评分雷达图 -->
+            <div class="section-card">
+                <div class="px-6 py-4 border-b border-gray-100">
+                    <h3 class="font-semibold text-gray-800">评分维度</h3>
+                </div>
+                <div class="p-6">
+                    <div class="grid grid-cols-4 gap-4">
+                        <div class="text-center p-4 bg-gray-50 rounded-lg">
+                            <div class="text-3xl font-bold text-primary mb-2">28/30</div>
+                            <div class="text-sm text-gray-600">产品熟悉度</div>
+                            <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
+                                <div class="bg-primary h-2 rounded-full" style="width: 93%"></div>
+                            </div>
+                        </div>
+                        <div class="text-center p-4 bg-gray-50 rounded-lg">
+                            <div class="text-3xl font-bold text-success mb-2">22/25</div>
+                            <div class="text-sm text-gray-600">需求挖掘</div>
+                            <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
+                                <div class="bg-success h-2 rounded-full" style="width: 88%"></div>
+                            </div>
+                        </div>
+                        <div class="text-center p-4 bg-gray-50 rounded-lg">
+                            <div class="text-3xl font-bold text-warning mb-2">20/25</div>
+                            <div class="text-sm text-gray-600">应变能力</div>
+                            <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
+                                <div class="bg-warning h-2 rounded-full" style="width: 80%"></div>
+                            </div>
+                        </div>
+                        <div class="text-center p-4 bg-gray-50 rounded-lg">
+                            <div class="text-3xl font-bold text-danger mb-2">15/20</div>
+                            <div class="text-sm text-gray-600">成交意识</div>
+                            <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
+                                <div class="bg-danger h-2 rounded-full" style="width: 75%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // 播放/暂停
+        let isPlaying = false;
+        function playAudio() {
+            const btn = document.getElementById('playBtn');
+            isPlaying = !isPlaying;
+            if (isPlaying) {
+                btn.innerHTML = '<i class="fa fa-pause text-xl"></i>';
+                // 模拟播放进度
+                simulateProgress();
+            } else {
+                btn.innerHTML = '<i class="fa fa-play text-xl"></i>';
+            }
+        }
+
+        // 模拟进度
+        function simulateProgress() {
+            if (!isPlaying) return;
+            const progress = document.getElementById('audioProgress');
+            let width = parseInt(progress.style.width);
+            if (width < 100) {
+                width += 1;
+                progress.style.width = width + '%';
+                setTimeout(simulateProgress, 1000);
+            }
+        }
+
+        // 导出报告
+        function downloadReport() {
+            alert('正在导出分析报告...');
+        }
+
+        // 重新分析
+        function reAnalyze() {
+            if (confirm('确认重新分析该录音？')) {
+                alert('已提交重新分析任务');
+            }
+        }
+    </script>
+</body>
+</html>
