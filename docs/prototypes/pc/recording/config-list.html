@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>分析配置 - 房产AI作业平台</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#165DFF',
+                        success: '#00B42A',
+                        warning: '#FF7D00',
+                        danger: '#F53F3F',
+                        dark: '#1D2129',
+                        'gray-light': '#F2F3F5',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 500; }
+        .tag-enabled { background: #E8FFEA; color: #00B42A; }
+        .tag-disabled { background: #F2F3F5; color: #4E5969; }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- 顶部导航 -->
+    <nav class="bg-white shadow-sm fixed top-0 left-0 right-0 z-50">
+        <div class="flex justify-between items-center px-6 py-3">
+            <div class="flex items-center space-x-2">
+                <i class="fa fa-home text-primary text-2xl"></i>
+                <span class="text-xl font-bold text-dark">房产AI作业平台</span>
+                <span class="text-sm text-gray-500 ml-2">管理后台</span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button class="text-gray-600 hover:text-primary relative">
+                    <i class="fa fa-bell-o text-lg"></i>
+                    <span class="absolute top-0 right-0 bg-danger text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">5</span>
+                </button>
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center">管</div>
+                    <span class="text-sm font-medium">区域经理A</span>
+                    <i class="fa fa-angle-down text-gray-400"></i>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 侧边栏 -->
+    <div class="flex pt-14">
+        <aside class="w-64 bg-white h-[calc(100vh-56px)] fixed left-0 shadow-sm">
+            <nav class="py-4">
+                <div class="px-4 py-2 text-xs text-gray-400 uppercase font-medium">功能菜单</div>
+                <a href="../new-building/list.html" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50">
+                    <i class="fa fa-building-o w-5 text-center"></i>
+                    <span class="ml-3">新盘管理</span>
+                </a>
+                <a href="../task/list.html" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50">
+                    <i class="fa fa-tasks w-5 text-center"></i>
+                    <span class="ml-3">任务管理</span>
+                </a>
+                <a href="list.html" class="flex items-center px-4 py-3 text-primary bg-blue-50 border-r-4 border-primary">
+                    <i class="fa fa-microphone w-5 text-center"></i>
+                    <span class="ml-3">录音分析</span>
+                </a>
+                <div class="pl-8">
+                    <a href="list.html" class="flex items-center px-4 py-2 text-sm text-gray-500 hover:text-primary">
+                        <span>录音列表</span>
+                    </a>
+                    <a href="config-list.html" class="flex items-center px-4 py-2 text-sm text-primary font-medium">
+                        <span>分析配置</span>
+                    </a>
+                    <a href="statistics.html" class="flex items-center px-4 py-2 text-sm text-gray-500 hover:text-primary">
+                        <span>统计分析</span>
+                    </a>
+                </div>
+                <a href="../material/list.html" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50">
+                    <i class="fa fa-cubes w-5 text-center"></i>
+                    <span class="ml-3">物料管理</span>
+                </a>
+                <a href="../customer/list.html" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50">
+                    <i class="fa fa-users w-5 text-center"></i>
+                    <span class="ml-3">客户管理</span>
+                </a>
+                <a href="../dashboard/overview.html" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50">
+                    <i class="fa fa-line-chart w-5 text-center"></i>
+                    <span class="ml-3">数据看板</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- 主内容区 -->
+        <main class="ml-64 flex-1 p-6">
+            <!-- 页面标题 -->
+            <div class="mb-6 flex items-center justify-between">
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-800">分析配置</h1>
+                    <p class="text-gray-500 text-sm mt-1">管理录音分析场景配置</p>
+                </div>
+                <a href="config.html" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 flex items-center">
+                    <i class="fa fa-plus mr-2"></i>新增配置
+                </a>
+            </div>
+
+            <!-- 配置列表 -->
+            <div class="bg-white rounded-lg shadow-sm">
+                <table class="w-full">
+                    <thead>
+                        <tr class="text-left text-gray-500 text-sm bg-gray-50">
+                            <th class="px-6 py-4 text-xs font-medium">配置名称</th>
+                            <th class="px-6 py-4 text-xs font-medium">分析场景</th>
+                            <th class="px-6 py-4 text-xs font-medium">启用状态</th>
+                            <th class="px-6 py-4 text-xs font-medium">创建时间</th>
+                            <th class="px-6 py-4 text-xs font-medium text-right">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="configTableBody" class="divide-y divide-gray-100">
+                    </tbody>
+                </table>
+
+                <!-- 空状态提示 -->
+                <div id="emptyState" class="hidden py-16 text-center">
+                    <div class="text-gray-300 text-5xl mb-4"><i class="fa fa-microphone-slash"></i></div>
+                    <div class="text-gray-500 mb-2">暂无配置</div>
+                    <div class="text-gray-400 text-sm mb-4">点击"新增配置"创建第一个录音分析场景</div>
+                    <a href="config.html" class="px-4 py-2 bg-primary text-white rounded-lg text-sm hover:bg-primary/90">
+                        新增配置
+                    </a>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // 配置数据
+        const configsData = [
+            {
+                id: 1,
+                name: '邀约录音分析',
+                scene: 'invitation',
+                sceneText: '邀约录音分析',
+                desc: '用于分析经纪人邀约客户的录音，提升邀约能力',
+                promptTemplate: '你是一位专业的房产销售培训师...',
+                enabled: true,
+                createTime: '2026-04-10 10:00'
+            }
+        ];
+
+        // 渲染表格
+        function renderTable() {
+            const tbody = document.getElementById('configTableBody');
+            const emptyState = document.getElementById('emptyState');
+
+            if (configsData.length === 0) {
+                tbody.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            tbody.innerHTML = configsData.map(item => `
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4">
+                        <div class="font-medium text-gray-800">${item.name}</div>
+                        ${item.desc ? `<div class="text-sm text-gray-400 mt-1">${item.desc}</div>` : ''}
+                    </td>
+                    <td class="px-6 py-4 text-sm text-gray-600">${item.sceneText}</td>
+                    <td class="px-6 py-4">
+                        <span class="tag ${item.enabled ? 'tag-enabled' : 'tag-disabled'}">
+                            ${item.enabled ? '已启用' : '已禁用'}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 text-sm text-gray-500">${item.createTime}</td>
+                    <td class="px-6 py-4 text-sm text-right whitespace-nowrap">
+                        <a href="config.html?id=${item.id}" class="text-primary hover:underline">编辑</a>
+                        <button onclick="toggleStatus(${item.id})" class="text-gray-500 hover:underline ml-3">
+                            ${item.enabled ? '禁用' : '启用'}
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // 切换状态
+        function toggleStatus(id) {
+            const config = configsData.find(item => item.id === id);
+            if (!config) return;
+
+            const action = config.enabled ? '禁用' : '启用';
+            if (confirm(`确认${action}"${config.name}"吗？`)) {
+                config.enabled = !config.enabled;
+                renderTable();
+            }
+        }
+
+        // 初始化
+        renderTable();
+    </script>
+</body>
+</html>
