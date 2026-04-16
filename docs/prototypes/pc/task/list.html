@@ -3,186 +3,447 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>任务列表 - 新房AI作业平台V2</title>
+    <title>任务管理 - PC端 - 房产AI作业平台</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #FA8C16;
-            --success: #00B42A;
-            --warning: #FF7D00;
-            --danger: #FA5151;
-            --bg: #F7F8FA;
-            --border: #E5E6EB;
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#165DFF',
+                        success: '#00B42A',
+                        warning: '#FF7D00',
+                        danger: '#F53F3F',
+                        dark: '#1D2129',
+                        'gray-light': '#F2F3F5',
+                    }
+                }
+            }
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: #1D2129; }
+    </script>
+    <style>
+        /* 状态标签样式 */
+        .tag {
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+            display: inline-block;
+        }
+        .tag-draft { background: #F2F3F5; color: #4E5969; }
+        .tag-progress { background: #FFF7E8; color: #FF7D00; }
+        .tag-completed { background: #E8FFEA; color: #00B42A; }
+        .tag-timeout { background: #FFECE8; color: #F53F3F; }
+        .tag-stopped { background: #F2F3F5; color: #4E5969; }
         
-        .header { background: #fff; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
-        .header h1 { font-size: 18px; font-weight: 600; }
+        /* 表格样式 */
+        .hover-row:hover { background: #f8f9fa; }
+        .sub-task-row:hover { background: #fafafa; }
         
-        .btn { padding: 8px 16px; border-radius: 8px; border: none; cursor: pointer; font-size: 14px; display: inline-flex; align-items: center; gap: 6px; }
-        .btn-primary { background: var(--primary); color: #fff; }
-        .btn-default { background: #fff; border: 1px solid var(--border); color: #4E5969; }
+        /* 子表格折叠/展开 */
+        .sub-table { display: none; }
+        .sub-table.expanded { display: table-row-group; }
+        .expand-btn { cursor: pointer; transition: transform 0.2s; }
+        .expand-btn.expanded { transform: rotate(90deg); }
         
-        .tabs { background: #fff; padding: 0 24px; border-bottom: 1px solid var(--border); display: flex; gap: 24px; }
-        .tab { padding: 12px 0; border-bottom: 2px solid transparent; color: #86909C; cursor: pointer; font-size: 14px; }
-        .tab.active { color: var(--primary); border-color: var(--primary); }
-        .badge { background: var(--danger); color: #fff; padding: 2px 6px; border-radius: 10px; font-size: 11px; margin-left: 6px; }
-        
-        .filter-bar { background: #fff; padding: 16px 24px; margin: 16px 0; border-radius: 8px; display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
-        .filter-item { display: flex; align-items: center; gap: 8px; }
-        .filter-item label { font-size: 13px; color: #86909C; }
-        .filter-item input, .filter-item select { padding: 8px 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; min-width: 150px; }
-        
-        .table-container { background: #fff; border-radius: 8px; overflow: hidden; margin: 16px 0; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--border); }
-        th { background: #FAFAFA; font-weight: 500; font-size: 13px; color: #86909C; }
-        
-        .status { padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: 500; }
-        .status-pending { background: #F2F3F5; color: #86909C; }
-        .status-released { background: #E6F7FF; color: #1890FF; }
-        .status-doing { background: #FFF7E6; color: var(--warning); }
-        .status-done { background: #E8FFEA; color: var(--success); }
-        
-        .action-link { color: var(--primary); cursor: pointer; margin-right: 12px; }
-        .action-link:hover { text-decoration: underline; }
-        
-        .progress-bar { width: 100px; height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; display: inline-block; vertical-align: middle; margin-left: 8px; }
-        .progress-fill { height: 100%; background: var(--primary); border-radius: 3px; }
-        
-        .pagination { display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; }
-        .pagination-info { font-size: 13px; color: #86909C; }
-        .pagination-controls { display: flex; gap: 8px; }
-        .pagination-controls button { padding: 6px 12px; border: 1px solid var(--border); background: #fff; border-radius: 6px; cursor: pointer; }
-        .pagination-controls button.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+        /* 气泡窗 */
+        .executor-popover {
+            position: absolute;
+            background: white;
+            border: 1px solid #e5e6eb;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            padding: 8px 12px;
+            z-index: 100;
+            min-width: 120px;
+            display: none;
+        }
+        .executor-popover.show { display: block; }
+        .executor-item {
+            padding: 4px 0;
+            font-size: 13px;
+            color: #1D2129;
+        }
+        .executor-item:not(:last-child) { border-bottom: 1px solid #f2f3f5; }
     </style>
 </head>
-<body>
-    <div class="header">
-        <h1><i class="fa fa-tasks"></i> 探盘任务</h1>
-        <button class="btn btn-primary" onclick="createTask()">
-            <i class="fa fa-plus"></i> 创建任务
-        </button>
-    </div>
-    
-    <div class="tabs">
-        <div class="tab active">全部 <span class="badge">28</span></div>
-        <div class="tab">待下发 <span>5</span></div>
-        <div class="tab">执行中 <span>12</span></div>
-        <div class="tab">已完成 <span>11</span></div>
-    </div>
-    
-    <div class="filter-bar">
-        <div class="filter-item">
-            <label>任务名称</label>
-            <input type="text" placeholder="搜索任务名称">
+<body class="bg-gray-50">
+    <!-- 顶部导航 -->
+    <nav class="bg-white shadow-sm fixed top-0 left-0 right-0 z-50">
+        <div class="flex justify-between items-center px-6 py-3">
+            <div class="flex items-center space-x-2">
+                <i class="fa fa-home text-primary text-2xl"></i>
+                <span class="text-xl font-bold text-dark">房产AI作业平台</span>
+                <span class="text-sm text-gray-500 ml-2">管理后台</span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button class="text-gray-600 hover:text-primary relative">
+                    <i class="fa fa-bell-o text-lg"></i>
+                    <span class="absolute top-0 right-0 bg-danger text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">5</span>
+                </button>
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center">管</div>
+                    <span class="text-sm font-medium">区域经理A</span>
+                    <i class="fa fa-angle-down text-gray-400"></i>
+                </div>
+            </div>
         </div>
-        <div class="filter-item">
-            <label>楼盘</label>
-            <select>
-                <option value="">全部楼盘</option>
-                <option value="1">万科翡翠公园</option>
-                <option value="2">仁恒滨江园</option>
-            </select>
-        </div>
-        <div class="filter-item">
-            <label>执行人</label>
-            <select>
-                <option value="">全部人员</option>
-                <option value="1">张经纪人</option>
-                <option value="2">李经纪人</option>
-            </select>
-        </div>
-        <div class="filter-item">
-            <label>截止日期</label>
-            <input type="date">
-        </div>
-        <button class="btn btn-primary"><i class="fa fa-search"></i> 筛选</button>
-        <button class="btn btn-default">重置</button>
-    </div>
-    
-    <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th><input type="checkbox"></th>
-                    <th>任务名称</th>
-                    <th>楼盘</th>
-                    <th>执行人</th>
-                    <th>状态</th>
-                    <th>进度</th>
-                    <th>截止日期</th>
-                    <th>操作</th>
-                </tr>
-            </thead>
-            <tbody id="tableBody"></tbody>
-        </table>
-    </div>
-    
-    <div class="pagination">
-        <div class="pagination-info">共 <span>28</span> 条</div>
-        <div class="pagination-controls">
-            <button>上一页</button>
-            <button class="active">1</button>
-            <button>2</button>
-            <button>3</button>
-            <button>下一页</button>
-        </div>
+    </nav>
+
+    <div class="flex pt-14">
+        <!-- 侧边栏 -->
+        <aside class="w-64 bg-white h-[calc(100vh-56px)] fixed left-0 shadow-sm">
+            <nav class="py-4">
+                <div class="px-4 py-2 text-xs text-gray-400 uppercase font-medium">功能菜单</div>
+                <a href="../new-building/list.html" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50">
+                    <i class="fa fa-building-o w-5 text-center"></i>
+                    <span class="ml-3">新盘管理</span>
+                </a>
+                <a href="list.html" class="flex items-center px-4 py-3 text-primary bg-blue-50 border-r-4 border-primary">
+                    <i class="fa fa-tasks w-5 text-center"></i>
+                    <span class="ml-3">任务管理</span>
+                </a>
+                <a href="../recording/list.html" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50">
+                    <i class="fa fa-microphone w-5 text-center"></i>
+                    <span class="ml-3">录音分析</span>
+                </a>
+                <a href="../material/list.html" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50">
+                    <i class="fa fa-cubes w-5 text-center"></i>
+                    <span class="ml-3">物料管理</span>
+                </a>
+                <a href="../customer/list.html" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50">
+                    <i class="fa fa-users w-5 text-center"></i>
+                    <span class="ml-3">客户管理</span>
+                </a>
+                <a href="../dashboard/overview.html" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50">
+                    <i class="fa fa-line-chart w-5 text-center"></i>
+                    <span class="ml-3">数据看板</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- 主内容 -->
+        <main class="ml-64 flex-1 p-6">
+            <!-- 头部 -->
+            <div class="flex justify-between items-center mb-6">
+                <div>
+                    <h1 class="text-2xl font-bold mb-1">任务管理</h1>
+                    <p class="text-gray-500">管理所有任务，支持查看、筛选操作</p>
+                </div>
+            </div>
+            
+            <!-- 筛选区域 -->
+            <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100 mb-6">
+                <div class="grid grid-cols-4 gap-4">
+                    <!-- 关键词搜索 -->
+                    <div>
+                        <label class="text-xs text-gray-500 mb-1 block">关键词搜索</label>
+                        <div class="relative">
+                            <input type="text" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm pl-8" placeholder="任务名称/楼盘名称">
+                            <i class="fa fa-search absolute left-2.5 top-2.5 text-gray-400 text-xs"></i>
+                        </div>
+                    </div>
+                    <!-- 任务类型 -->
+                    <div>
+                        <label class="text-xs text-gray-500 mb-1 block">任务类型</label>
+                        <select class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm">
+                            <option value="">全部</option>
+                            <option value="patrol">探盘任务</option>
+                            <option value="training">话术训练任务</option>
+                            <option value="recording">录音分析任务</option>
+                            <option value="copywriting">文案生成任务</option>
+                            <option value="custom">自定义任务</option>
+                        </select>
+                    </div>
+                    <!-- 任务状态 -->
+                    <div>
+                        <label class="text-xs text-gray-500 mb-1 block">任务状态</label>
+                        <select class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm">
+                            <option value="">全部</option>
+                            <option value="draft">草稿</option>
+                            <option value="progress">进行中</option>
+                            <option value="completed">已完成</option>
+                            <option value="timeout">已超时</option>
+                            <option value="stopped">已停止</option>
+                        </select>
+                    </div>
+                    <!-- 创建人 -->
+                    <div>
+                        <label class="text-xs text-gray-500 mb-1 block">创建人</label>
+                        <select class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm">
+                            <option value="">全部</option>
+                            <option value="mine">我的</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid grid-cols-4 gap-4 mt-4">
+                    <!-- 执行人 -->
+                    <div>
+                        <label class="text-xs text-gray-500 mb-1 block">执行人</label>
+                        <input type="text" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" placeholder="输入人员姓名搜索">
+                    </div>
+                    <!-- 创建时间 -->
+                    <div>
+                        <label class="text-xs text-gray-500 mb-1 block">创建时间</label>
+                        <input type="date" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm">
+                    </div>
+                    <!-- 结束时间 -->
+                    <div>
+                        <label class="text-xs text-gray-500 mb-1 block">结束时间</label>
+                        <input type="date" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm">
+                    </div>
+                    <!-- 操作按钮 -->
+                    <div class="flex items-end gap-2">
+                        <button class="px-4 py-2 border border-gray-300 rounded-lg text-gray-600 text-sm hover:bg-gray-50">
+                            <i class="fa fa-refresh mr-1"></i> 重置
+                        </button>
+                        <button class="px-4 py-2 bg-primary text-white rounded-lg text-sm hover:bg-primary/90">
+                            <i class="fa fa-search mr-1"></i> 搜索
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 任务列表 -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-20">
+                <table class="w-full">
+                    <thead>
+                        <tr class="bg-gray-50">
+                            <th class="w-10 text-center px-4 py-3 text-xs text-gray-500 font-medium">勾选</th>
+                            <th class="text-left px-4 py-3 text-xs text-gray-500 font-medium">任务名称</th>
+                            <th class="text-left px-4 py-3 text-xs text-gray-500 font-medium">任务类型</th>
+                            <th class="text-left px-4 py-3 text-xs text-gray-500 font-medium">子任务</th>
+                            <th class="text-left px-4 py-3 text-xs text-gray-500 font-medium">任务状态</th>
+                            <th class="text-left px-4 py-3 text-xs text-gray-500 font-medium">完成进度</th>
+                            <th class="text-left px-4 py-3 text-xs text-gray-500 font-medium">创建人</th>
+                            <th class="text-left px-4 py-3 text-xs text-gray-500 font-medium">执行人</th>
+                            <th class="text-left px-4 py-3 text-xs text-gray-500 font-medium">创建时间</th>
+                            <th class="text-left px-4 py-3 text-xs text-gray-500 font-medium">结束时间</th>
+                            <th class="text-left px-4 py-3 text-xs text-gray-500 font-medium">提醒时间</th>
+                            <th class="text-left px-4 py-3 text-xs text-gray-500 font-medium">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="taskTableBody">
+                        <!-- 任务行1：进行中 -->
+                        <tr class="border-b border-gray-100 hover-row">
+                            <td class="px-4 py-3 text-center">
+                                <input type="checkbox" class="rounded">
+                            </td>
+                            <td class="px-4 py-3 text-sm font-medium">万科城市花园探盘任务</td>
+                            <td class="px-4 py-3 text-sm">探盘任务</td>
+                            <td class="px-4 py-3">
+                                <button class="expand-btn text-primary text-sm" onclick="toggleSubTable(this)">
+                                    <i class="fa fa-chevron-right mr-1"></i>
+                                    <span>共3个子任务</span>
+                                </button>
+                            </td>
+                            <td class="px-4 py-3"><span class="tag tag-progress">进行中</span></td>
+                            <td class="px-4 py-3 text-sm font-medium">2/3</td>
+                            <td class="px-4 py-3 text-sm">区域经理A</td>
+                            <td class="px-4 py-3 text-sm relative">
+                                <span class="executor-trigger cursor-pointer text-primary hover:underline" onmouseenter="showExecutorPopover(this)" onmouseleave="hideExecutorPopover(this)">
+                                    张三、李四、王五
+                                </span>
+                                <div class="executor-popover">
+                                    <div class="executor-item">张三</div>
+                                    <div class="executor-item">李四</div>
+                                    <div class="executor-item">王五</div>
+                                </div>
+                            </td>
+                            <td class="px-4 py-3 text-sm text-gray-500">2026-04-16 10:00</td>
+                            <td class="px-4 py-3 text-sm text-gray-500">2026-04-18 18:00</td>
+                            <td class="px-4 py-3 text-sm text-gray-500">2026-04-17 18:00</td>
+                            <td class="px-4 py-3">
+                                <button class="text-sm text-primary hover:underline" onclick="viewTask()">查看</button>
+                            </td>
+                        </tr>
+                        <!-- 子任务表格（折叠） -->
+                        <tr class="sub-table">
+                            <td colspan="12" class="p-0">
+                                <table class="w-full bg-gray-50">
+                                    <tr class="sub-task-row border-b border-gray-200">
+                                        <td class="w-10 px-4 py-2"></td>
+                                        <td class="px-4 py-2 text-sm">路书执行</td>
+                                        <td class="px-4 py-2 text-sm">路书执行</td>
+                                        <td class="px-4 py-2"><span class="tag tag-completed">已完成</span></td>
+                                        <td class="px-4 py-2" colspan="8">
+                                            <button class="text-sm text-primary hover:underline" onclick="viewTask()">查看</button>
+                                        </td>
+                                    </tr>
+                                    <tr class="sub-task-row border-b border-gray-200">
+                                        <td class="w-10 px-4 py-2"></td>
+                                        <td class="px-4 py-2 text-sm">话术训练</td>
+                                        <td class="px-4 py-2 text-sm">话术训练</td>
+                                        <td class="px-4 py-2"><span class="tag tag-progress">进行中</span></td>
+                                        <td class="px-4 py-2" colspan="8">
+                                            <button class="text-sm text-primary hover:underline" onclick="viewTask()">查看</button>
+                                        </td>
+                                    </tr>
+                                    <tr class="sub-task-row">
+                                        <td class="w-10 px-4 py-2"></td>
+                                        <td class="px-4 py-2 text-sm">录音分析</td>
+                                        <td class="px-4 py-2 text-sm">录音分析</td>
+                                        <td class="px-4 py-2"><span class="tag tag-draft">待执行</span></td>
+                                        <td class="px-4 py-2" colspan="8">
+                                            <button class="text-sm text-primary hover:underline" onclick="viewTask()">查看</button>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+
+                        <!-- 任务行2：已完成 -->
+                        <tr class="border-b border-gray-100 hover-row">
+                            <td class="px-4 py-3 text-center">
+                                <input type="checkbox" class="rounded">
+                            </td>
+                            <td class="px-4 py-3 text-sm font-medium">话术训练任务-新手培训</td>
+                            <td class="px-4 py-3 text-sm">话术训练任务</td>
+                            <td class="px-4 py-3">
+                                <button class="expand-btn text-primary text-sm" onclick="toggleSubTable(this)">
+                                    <i class="fa fa-chevron-right mr-1"></i>
+                                    <span>共1个子任务</span>
+                                </button>
+                            </td>
+                            <td class="px-4 py-3"><span class="tag tag-completed">已完成</span></td>
+                            <td class="px-4 py-3 text-sm font-medium">1/1</td>
+                            <td class="px-4 py-3 text-sm">区域经理B</td>
+                            <td class="px-4 py-3 text-sm text-primary hover:underline cursor-pointer">赵六</td>
+                            <td class="px-4 py-3 text-sm text-gray-500">2026-04-15 09:00</td>
+                            <td class="px-4 py-3 text-sm text-gray-500">2026-04-16 18:00</td>
+                            <td class="px-4 py-3 text-sm text-gray-500">2026-04-16 10:00</td>
+                            <td class="px-4 py-3">
+                                <button class="text-sm text-primary hover:underline" onclick="viewTask()">查看</button>
+                            </td>
+                        </tr>
+                        <!-- 子任务表格（折叠） -->
+                        <tr class="sub-table">
+                            <td colspan="12" class="p-0">
+                                <table class="w-full bg-gray-50">
+                                    <tr class="sub-task-row">
+                                        <td class="w-10 px-4 py-2"></td>
+                                        <td class="px-4 py-2 text-sm">话术训练</td>
+                                        <td class="px-4 py-2 text-sm">话术训练</td>
+                                        <td class="px-4 py-2"><span class="tag tag-completed">已完成</span></td>
+                                        <td class="px-4 py-2" colspan="8">
+                                            <button class="text-sm text-primary hover:underline" onclick="viewTask()">查看</button>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+
+                        <!-- 任务行3：已超时 -->
+                        <tr class="border-b border-gray-100 hover-row">
+                            <td class="px-4 py-3 text-center">
+                                <input type="checkbox" class="rounded">
+                            </td>
+                            <td class="px-4 py-3 text-sm font-medium">录音分析任务-客户跟进</td>
+                            <td class="px-4 py-3 text-sm">录音分析任务</td>
+                            <td class="px-4 py-3">
+                                <button class="expand-btn text-primary text-sm" onclick="toggleSubTable(this)">
+                                    <i class="fa fa-chevron-right mr-1"></i>
+                                    <span>共2个子任务</span>
+                                </button>
+                            </td>
+                            <td class="px-4 py-3"><span class="tag tag-timeout">已超时</span></td>
+                            <td class="px-4 py-3 text-sm font-medium">1/2</td>
+                            <td class="px-4 py-3 text-sm">区域经理A</td>
+                            <td class="px-4 py-3 text-sm text-primary hover:underline cursor-pointer">钱七、孙八</td>
+                            <td class="px-4 py-3 text-sm text-gray-500">2026-04-14 10:00</td>
+                            <td class="px-4 py-3 text-sm text-danger">2026-04-15 18:00</td>
+                            <td class="px-4 py-3 text-sm text-gray-500">2026-04-15 10:00</td>
+                            <td class="px-4 py-3">
+                                <button class="text-sm text-primary hover:underline" onclick="viewTask()">查看</button>
+                            </td>
+                        </tr>
+                        <!-- 子任务表格（折叠） -->
+                        <tr class="sub-table">
+                            <td colspan="12" class="p-0">
+                                <table class="w-full bg-gray-50">
+                                    <tr class="sub-task-row border-b border-gray-200">
+                                        <td class="w-10 px-4 py-2"></td>
+                                        <td class="px-4 py-2 text-sm">录音上传</td>
+                                        <td class="px-4 py-2 text-sm">录音分析</td>
+                                        <td class="px-4 py-2"><span class="tag tag-completed">已完成</span></td>
+                                        <td class="px-4 py-2" colspan="8">
+                                            <button class="text-sm text-primary hover:underline" onclick="viewTask()">查看</button>
+                                        </td>
+                                    </tr>
+                                    <tr class="sub-task-row">
+                                        <td class="w-10 px-4 py-2"></td>
+                                        <td class="px-4 py-2 text-sm">AI分析</td>
+                                        <td class="px-4 py-2 text-sm">录音分析</td>
+                                        <td class="px-4 py-2"><span class="tag tag-timeout">已超时</span></td>
+                                        <td class="px-4 py-2" colspan="8">
+                                            <button class="text-sm text-primary hover:underline" onclick="viewTask()">查看</button>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+
+                        <!-- 任务行4：草稿 -->
+                        <tr class="border-b border-gray-100 hover-row">
+                            <td class="px-4 py-3 text-center">
+                                <input type="checkbox" class="rounded">
+                            </td>
+                            <td class="px-4 py-3 text-sm font-medium">自定义任务-周报收集</td>
+                            <td class="px-4 py-3 text-sm">自定义任务</td>
+                            <td class="px-4 py-3 text-gray-400 text-sm">-</td>
+                            <td class="px-4 py-3"><span class="tag tag-draft">草稿</span></td>
+                            <td class="px-4 py-3 text-sm font-medium">0/0</td>
+                            <td class="px-4 py-3 text-sm">区域经理A</td>
+                            <td class="px-4 py-3 text-sm text-gray-400">未分配</td>
+                            <td class="px-4 py-3 text-sm text-gray-500">2026-04-16 14:00</td>
+                            <td class="px-4 py-3 text-sm text-gray-500">2026-04-20 18:00</td>
+                            <td class="px-4 py-3 text-sm text-gray-500">-</td>
+                            <td class="px-4 py-3">
+                                <button class="text-sm text-primary hover:underline" onclick="viewTask()">查看</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- 分页 -->
+                <div class="flex justify-between items-center px-4 py-3 border-t border-gray-100">
+                    <div class="text-sm text-gray-500">共 4 条</div>
+                    <div class="flex items-center gap-2">
+                        <button class="px-3 py-1 border border-gray-300 rounded text-sm text-gray-400" disabled>上一页</button>
+                        <button class="px-3 py-1 border border-primary bg-primary text-white rounded text-sm">1</button>
+                        <button class="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 hover:bg-gray-50">2</button>
+                        <button class="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 hover:bg-gray-50">3</button>
+                        <button class="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 hover:bg-gray-50">下一页</button>
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
 
     <script>
-        const tasks = [
-            { id: '001', name: '万科翡翠公园探盘', building: '万科翡翠公园', user: '张经纪人', status: 'doing', progress: 60, deadline: '2026-04-20' },
-            { id: '002', name: '仁恒滨江园探盘', building: '仁恒滨江园', user: '李经纪人', status: 'released', progress: 0, deadline: '2026-04-25' },
-            { id: '003', name: '绿城黄浦湾探盘', building: '绿城黄浦湾', user: '王经纪人', status: 'done', progress: 100, deadline: '2026-04-15' },
-            { id: '004', name: '龙湖天琅探盘', building: '龙湖天琅', user: '张经纪人', status: 'pending', progress: 0, deadline: '2026-04-30' },
-            { id: '005', name: '保利发展广场探盘', building: '保利发展广场', user: '赵经纪人', status: 'doing', progress: 40, deadline: '2026-04-22' }
-        ];
-
-        const statusMap = {
-            pending: { text: '待下发', class: 'status-pending' },
-            released: { text: '已下发', class: 'status-released' },
-            doing: { text: '执行中', class: 'status-doing' },
-            done: { text: '已完成', class: 'status-done' }
-        };
-
-        function renderTable() {
-            const tbody = document.getElementById('tableBody');
-            tbody.innerHTML = tasks.map(t => `
-                <tr>
-                    <td><input type="checkbox"></td>
-                    <td><strong>${t.name}</strong></td>
-                    <td>${t.building}</td>
-                    <td>${t.user}</td>
-                    <td><span class="status ${statusMap[t.status].class}">${statusMap[t.status].text}</span></td>
-                    <td>
-                        ${t.progress}%
-                        <div class="progress-bar"><div class="progress-fill" style="width: ${t.progress}%"></div></div>
-                    </td>
-                    <td>${t.deadline}</td>
-                    <td>
-                        <span class="action-link" onclick="viewDetail('${t.id}')">详情</span>
-                        <span class="action-link" onclick="track('${t.id}')">追踪</span>
-                        ${t.status === 'pending' ? '<span class="action-link" onclick="release(\'' + t.id + '\')">下发</span>' : ''}
-                    </td>
-                </tr>
-            `).join('');
+        // 子表格折叠/展开
+        function toggleSubTable(btn) {
+            const subTable = btn.closest('tr').nextElementSibling;
+            btn.classList.toggle('expanded');
+            subTable.classList.toggle('expanded');
         }
 
-        function createTask() { alert('跳转创建任务页面'); }
-        function viewDetail(id) { alert('查看任务详情: ' + id); }
-        function track(id) { alert('查看任务追踪: ' + id); }
-        function release(id) { alert('下发任务: ' + id); }
+        // 执行人气泡窗
+        function showExecutorPopover(el) {
+            const popover = el.nextElementSibling;
+            popover.classList.add('show');
+        }
 
-        document.querySelectorAll('.tab').forEach(tab => {
-            tab.onclick = function() {
-                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-                this.classList.add('active');
-            };
-        });
+        function hideExecutorPopover(el) {
+            const popover = el.nextElementSibling;
+            popover.classList.remove('show');
+        }
 
-        renderTable();
+        // 查看任务
+        function viewTask() {
+            alert('打开任务详情页');
+        }
     </script>
 </body>
 </html>
