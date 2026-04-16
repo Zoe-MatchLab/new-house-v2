@@ -505,7 +505,7 @@
                         ${item.status === 'approved' ? `
                             <button onclick="viewDetail(${item.id})" class="text-primary text-sm hover:underline">详情</button>
                             <button onclick="openLaunch(${item.id})" class="text-primary text-sm ml-3 hover:underline">配置</button>
-                            <button disabled class="text-gray-300 text-sm ml-3 cursor-not-allowed" title="审核通过后不允许删除">删除</button>
+                            <button onclick="onlineMaterial(${item.id})" class="text-success text-sm ml-3 hover:underline">上线</button>
                         ` : ''}
                         
                         ${item.status === 'rejected' ? `
