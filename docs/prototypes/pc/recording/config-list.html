@@ -113,7 +113,6 @@
                     <thead>
                         <tr class="text-left text-gray-500 text-sm bg-gray-50">
                             <th class="px-6 py-4 text-xs font-medium">配置名称</th>
-                            <th class="px-6 py-4 text-xs font-medium">分析场景</th>
                             <th class="px-6 py-4 text-xs font-medium">启用状态</th>
                             <th class="px-6 py-4 text-xs font-medium">创建时间</th>
                             <th class="px-6 py-4 text-xs font-medium text-right">操作</th>
@@ -142,8 +141,6 @@
             {
                 id: 1,
                 name: '邀约录音分析',
-                scene: 'invitation',
-                sceneText: '邀约录音分析',
                 desc: '用于分析经纪人邀约客户的录音，提升邀约能力',
                 promptTemplate: '你是一位专业的房产销售培训师...',
                 enabled: true,
@@ -169,7 +166,7 @@
                         <div class="font-medium text-gray-800">${item.name}</div>
                         ${item.desc ? `<div class="text-sm text-gray-400 mt-1">${item.desc}</div>` : ''}
                     </td>
-                    <td class="px-6 py-4 text-sm text-gray-600">${item.sceneText}</td>
+                    <td class="px-6 py-4 text-sm text-gray-600"></td>
                     <td class="px-6 py-4">
                         <span class="tag ${item.enabled ? 'tag-enabled' : 'tag-disabled'}">
                             ${item.enabled ? '已启用' : '已禁用'}
