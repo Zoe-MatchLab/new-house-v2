@@ -489,45 +489,39 @@
                     <td class="px-4 py-4 text-sm text-gray-600">${item.propertyRights || '70年'}</td>
                     <td class="px-4 py-4 text-sm text-gray-600">${item.plotRatio || '2.5'}</td>
                     <td class="px-4 py-4 text-sm text-right whitespace-nowrap">
-                        <button onclick="viewDetail(${item.id})" class="text-primary text-sm hover:underline">详情</button>
-                        
                         ${item.status === 'draft' ? `
+                            <button onclick="viewDetail(${item.id})" class="text-primary text-sm hover:underline">详情</button>
                             <button onclick="editMaterial(${item.id})" class="text-gray-500 text-sm ml-3 hover:underline">编辑</button>
                             <button onclick="submitForReview(${item.id})" class="text-primary text-sm ml-3 hover:underline">提交审核</button>
                             <button onclick="openDeleteModal(${item.id})" class="text-danger text-sm ml-3 hover:underline">删除</button>
                         ` : ''}
                         
                         ${item.status === 'pending' ? `
-                            <button onclick="openAudit(${item.id})" class="text-primary text-sm ml-3 hover:underline">审核</button>
+                            <button onclick="openAudit(${item.id})" class="text-primary text-sm hover:underline">审核</button>
                             <button onclick="withdrawReview(${item.id})" class="text-warning text-sm ml-3 hover:underline">撤回</button>
-                            <button onclick="viewDetail(${item.id})" class="text-gray-500 text-sm ml-3 hover:underline">详情</button>
                         ` : ''}
                         
                         ${item.status === 'approved' ? `
+                            <button onclick="viewDetail(${item.id})" class="text-primary text-sm hover:underline">详情</button>
                             <button onclick="openLaunch(${item.id})" class="text-primary text-sm ml-3 hover:underline">配置</button>
-                            <button onclick="viewDetail(${item.id})" class="text-gray-500 text-sm ml-3 hover:underline">详情</button>
                             <button disabled class="text-gray-300 text-sm ml-3 cursor-not-allowed" title="审核通过后不允许删除">删除</button>
                         ` : ''}
                         
-                        ${item.status === 'config_pending' ? `
-                            <button onclick="openLaunch(${item.id})" class="text-success text-sm ml-3 hover:underline">上线</button>
-                        ` : ''}
-                        
                         ${item.status === 'rejected' ? `
+                            <button onclick="viewDetail(${item.id})" class="text-primary text-sm hover:underline">详情</button>
                             <button onclick="editMaterial(${item.id})" class="text-gray-500 text-sm ml-3 hover:underline">编辑</button>
-                            <button onclick="resubmitAudit(${item.id})" class="text-primary text-sm ml-3 hover:underline">重新提交</button>
-                            <button onclick="viewDetail(${item.id})" class="text-gray-500 text-sm ml-3 hover:underline">详情</button>
-                            <button onclick="openDeleteModal(${item.id})" class="text-danger text-sm ml-3 hover:underline">删除</button>
+                            <button onclick="resubmitAudit(${item.id})" class="text-primary text-sm ml-3 hover:underline">提交审核</button>
                         ` : ''}
                         
                         ${item.status === 'online' ? `
-                            <button onclick="offlineMaterial(${item.id})" class="text-gray-500 text-sm ml-3 hover:underline">下线</button>
+                            <button onclick="offlineMaterial(${item.id})" class="text-gray-500 text-sm hover:underline">下线</button>
                         ` : ''}
                         
                         ${item.status === 'offline' ? `
+                            <button onclick="viewDetail(${item.id})" class="text-primary text-sm hover:underline">详情</button>
                             <button onclick="editMaterial(${item.id})" class="text-gray-500 text-sm ml-3 hover:underline">编辑</button>
+                            <button onclick="openLaunch(${item.id})" class="text-primary text-sm ml-3 hover:underline">配置</button>
                             <button onclick="onlineMaterial(${item.id})" class="text-success text-sm ml-3 hover:underline">上线</button>
-                            <button disabled class="text-gray-300 text-sm ml-3 cursor-not-allowed" title="已下线不允许删除">删除</button>
                         ` : ''}
                     </td>
                 </tr>
