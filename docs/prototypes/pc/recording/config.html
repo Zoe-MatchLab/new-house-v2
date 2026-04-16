@@ -231,7 +231,6 @@
                         <button onclick="toggleStatus(${item.id})" class="text-gray-500 hover:underline ml-3">
                             ${item.enabled ? '禁用' : '启用'}
                         </button>
-                        <button onclick="deleteConfig(${item.id})" class="text-danger hover:underline ml-3">删除</button>
                     </td>
                 </tr>
             `).join('');
@@ -270,17 +269,6 @@
             const action = config.enabled ? '禁用' : '启用';
             if (confirm(`确认${action}"${config.name}"吗？`)) {
                 config.enabled = !config.enabled;
-                renderTable();
-            }
-        }
-
-        // 删除配置
-        function deleteConfig(id) {
-            const config = configsData.find(item => item.id === id);
-            if (!config) return;
-
-            if (confirm(`确认删除配置"${config.name}"吗？`)) {
-                configsData = configsData.filter(item => item.id !== id);
                 renderTable();
             }
         }
