@@ -137,6 +137,18 @@
             border-color: var(--brand-primary);
         }
 
+        .filter-tab-more {
+            flex-shrink: 0;
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 13px;
+            background: var(--color-bg);
+            color: var(--color-sub);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
         /* 客户列表 */
         .customer-list {
             padding: var(--spacing-md);
@@ -170,25 +182,13 @@
             margin-top: 2px;
         }
 
-        .customer-tag {
-            padding: 2px 8px;
-            border-radius: 4px;
+        /* 空列表提示 */
+        .list-hint {
+            text-align: center;
+            padding: 8px 16px;
             font-size: 12px;
-        }
-
-        .tag-danger {
-            background: #FFF1F0;
-            color: var(--color-danger);
-        }
-
-        .tag-warning {
-            background: #FFF7E6;
-            color: var(--color-warning);
-        }
-
-        .tag-success {
-            background: #E6FFF1;
-            color: var(--color-success);
+            color: var(--color-sub);
+            background: var(--color-bg);
         }
 
         .customer-info {
@@ -304,11 +304,16 @@
 
         <!-- 筛选标签 -->
         <div class="filter-tabs" style="padding-top: 100px;">
-            <div class="filter-tab active" onclick="filterByLevel('')">全部</div>
-            <div class="filter-tab" onclick="filterByLevel('high')">高意向</div>
-            <div class="filter-tab" onclick="filterByLevel('medium')">中意向</div>
-            <div class="filter-tab" onclick="filterByLevel('low')">低意向</div>
+            <div class="filter-tab active" onclick="filterByTag('', this)">全部</div>
+            <div class="filter-tab" onclick="filterByTag('today', this)">今日新增</div>
+            <div class="filter-tab" onclick="filterByTag('week', this)">本周新增</div>
+            <div class="filter-tab-more" onclick="showFilterMenu()">
+                <i class="fa fa-sliders"></i>筛选
+            </div>
         </div>
+        
+        <!-- 列表提示 -->
+        <div class="list-hint">共 <span id="customerCount">5</span> 位客户</div>
 
         <!-- 客户列表 -->
         <div class="customer-list" id="customerList">
@@ -319,20 +324,10 @@
                         <div class="customer-name">张先生</div>
                         <div class="customer-phone">138****8888</div>
                     </div>
-                    <span class="customer-tag tag-danger">高意向</span>
+                    <span class="customer-tag" style="background: var(--color-bg); color: var(--color-sub);">5条录音</span>
                 </div>
-                <div class="customer-info">
-                    <div class="customer-info-item">
-                        <i class="fa fa-home"></i>
-                        <span class="customer-building">中海汇德里</span>
-                    </div>
-                    <div class="customer-info-item">
-                        <i class="fa fa-user"></i>
-                        <span>线上获客</span>
-                    </div>
-                </div>
-                <div class="customer-footer">
-                    <span>最新跟进：2小时前</span>
+                <div class="customer-footer" style="border-top: none; padding-top: 0;">
+                    <span>创建于 2026-04-10</span>
                     <span class="text-primary">查看详情 ></span>
                 </div>
             </div>
@@ -344,20 +339,10 @@
                         <div class="customer-name">李女士</div>
                         <div class="customer-phone">139****6666</div>
                     </div>
-                    <span class="customer-tag tag-warning">中意向</span>
+                    <span class="customer-tag" style="background: var(--color-bg); color: var(--color-sub);">3条录音</span>
                 </div>
-                <div class="customer-info">
-                    <div class="customer-info-item">
-                        <i class="fa fa-home"></i>
-                        <span class="customer-building">保利中央公园</span>
-                    </div>
-                    <div class="customer-info-item">
-                        <i class="fa fa-user"></i>
-                        <span>转介绍</span>
-                    </div>
-                </div>
-                <div class="customer-footer">
-                    <span>最新跟进：1天前</span>
+                <div class="customer-footer" style="border-top: none; padding-top: 0;">
+                    <span>创建于 2026-04-12</span>
                     <span class="text-primary">查看详情 ></span>
                 </div>
             </div>
@@ -369,20 +354,10 @@
                         <div class="customer-name">王先生</div>
                         <div class="customer-phone">137****5555</div>
                     </div>
-                    <span class="customer-tag tag-success">低意向</span>
+                    <span class="customer-tag" style="background: var(--color-bg); color: var(--color-sub);">1条录音</span>
                 </div>
-                <div class="customer-info">
-                    <div class="customer-info-item">
-                        <i class="fa fa-home"></i>
-                        <span class="customer-building">万科城市之光</span>
-                    </div>
-                    <div class="customer-info-item">
-                        <i class="fa fa-user"></i>
-                        <span>自然到访</span>
-                    </div>
-                </div>
-                <div class="customer-footer">
-                    <span>最新跟进：3天前</span>
+                <div class="customer-footer" style="border-top: none; padding-top: 0;">
+                    <span>创建于 2026-04-14</span>
                     <span class="text-primary">查看详情 ></span>
                 </div>
             </div>
@@ -394,20 +369,10 @@
                         <div class="customer-name">赵女士</div>
                         <div class="customer-phone">136****4444</div>
                     </div>
-                    <span class="customer-tag tag-danger">高意向</span>
+                    <span class="customer-tag" style="background: var(--color-bg); color: var(--color-sub);">8条录音</span>
                 </div>
-                <div class="customer-info">
-                    <div class="customer-info-item">
-                        <i class="fa fa-home"></i>
-                        <span class="customer-building">中海汇德里、保利中央公园</span>
-                    </div>
-                    <div class="customer-info-item">
-                        <i class="fa fa-user"></i>
-                        <span>线上获客</span>
-                    </div>
-                </div>
-                <div class="customer-footer">
-                    <span>最新跟进：今天</span>
+                <div class="customer-footer" style="border-top: none; padding-top: 0;">
+                    <span>创建于 2026-04-08</span>
                     <span class="text-primary">查看详情 ></span>
                 </div>
             </div>
@@ -419,20 +384,10 @@
                         <div class="customer-name">刘先生</div>
                         <div class="customer-phone">135****3333</div>
                     </div>
-                    <span class="customer-tag tag-warning">中意向</span>
+                    <span class="customer-tag" style="background: var(--color-bg); color: var(--color-sub);">2条录音</span>
                 </div>
-                <div class="customer-info">
-                    <div class="customer-info-item">
-                        <i class="fa fa-home"></i>
-                        <span class="customer-building">万科城市之光</span>
-                    </div>
-                    <div class="customer-info-item">
-                        <i class="fa fa-user"></i>
-                        <span>转介绍</span>
-                    </div>
-                </div>
-                <div class="customer-footer">
-                    <span>最新跟进：2天前</span>
+                <div class="customer-footer" style="border-top: none; padding-top: 0;">
+                    <span>创建于 2026-04-15</span>
                     <span class="text-primary">查看详情 ></span>
                 </div>
             </div>
@@ -477,16 +432,22 @@
             window.location.href = 'add.html';
         }
 
-        // 按意向等级筛选
-        function filterByLevel(level) {
+        // 按时间筛选
+        function filterByTag(tag, el) {
             // 更新标签样式
             document.querySelectorAll('.filter-tab').forEach(tab => {
                 tab.classList.remove('active');
             });
-            event.target.classList.add('active');
+            el.classList.add('active');
 
             // 实际项目中这里应该调用API筛选
-            showToast('筛选：' + (level || '全部'));
+            const tagNames = { '': '全部', today: '今日新增', week: '本周新增' };
+            showToast('筛选：' + (tagNames[tag] || '全部'));
+        }
+
+        // 显示筛选菜单
+        function showFilterMenu() {
+            showToast('筛选功能开发中');
         }
 
         // 搜索
