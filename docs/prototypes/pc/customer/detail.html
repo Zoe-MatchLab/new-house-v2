@@ -107,7 +107,7 @@
                         客户信息
                     </button>
                     <button onclick="switchTab('records')" id="tabRecords" class="px-6 py-3 text-sm font-medium text-gray-500 hover:text-primary">
-                        跟进记录
+                        关联录音
                     </button>
                 </div>
             </div>
@@ -142,78 +142,53 @@
                 </div>
             </div>
 
-            <!-- 跟进记录Tab -->
+            <!-- 关联录音Tab -->
             <div id="panelRecords" class="bg-white rounded-lg shadow-sm hidden">
-                <div class="p-6">
-                    <div class="text-sm text-gray-500 mb-4">共 <span class="text-primary font-medium">8</span> 条跟进记录</div>
-                    
-                    <!-- 跟进时间线 -->
-                    <div class="relative">
-                        <!-- 时间线竖线 -->
-                        <div class="absolute left-4 top-0 bottom-0 w-0.5 bg-gray-200"></div>
-                        
-                        <!-- 记录项 -->
-                        <div class="space-y-6">
-                            <!-- 记录1 -->
-                            <div class="relative flex gap-4">
-                                <div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-xs font-medium z-10">8</div>
-                                <div class="flex-1 bg-gray-50 rounded-lg p-4">
-                                    <div class="flex items-center justify-between mb-2">
-                                        <div class="text-sm font-medium text-gray-800">录音分析</div>
-                                        <div class="text-xs text-gray-400">2026-04-16 14:30</div>
-                                    </div>
-                                    <div class="text-sm text-gray-600 mb-2">录音：张三-万科城市花园-20260416</div>
-                                    <div class="text-sm text-gray-500 mb-2">评分：<span class="text-success font-medium">85分</span></div>
-                                    <div class="flex gap-2">
-                                        <a href="../recording/detail.html?id=1" class="text-sm text-primary hover:underline">查看分析</a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- 记录2 -->
-                            <div class="relative flex gap-4">
-                                <div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-xs font-medium z-10">7</div>
-                                <div class="flex-1 bg-gray-50 rounded-lg p-4">
-                                    <div class="flex items-center justify-between mb-2">
-                                        <div class="text-sm font-medium text-gray-800">录音分析</div>
-                                        <div class="text-xs text-gray-400">2026-04-15 10:20</div>
-                                    </div>
-                                    <div class="text-sm text-gray-600 mb-2">录音：李四-万科城市花园-20260415</div>
-                                    <div class="text-sm text-gray-500 mb-2">评分：<span class="text-success font-medium">92分</span></div>
-                                    <div class="flex gap-2">
-                                        <a href="../recording/detail.html?id=2" class="text-sm text-primary hover:underline">查看分析</a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- 记录3 -->
-                            <div class="relative flex gap-4">
-                                <div class="w-8 h-8 rounded-full bg-gray-300 text-white flex items-center justify-center text-xs font-medium z-10">6</div>
-                                <div class="flex-1 bg-gray-50 rounded-lg p-4">
-                                    <div class="flex items-center justify-between mb-2">
-                                        <div class="text-sm font-medium text-gray-800">状态变更</div>
-                                        <div class="text-xs text-gray-400">2026-04-10 09:00</div>
-                                    </div>
-                                    <div class="text-sm text-gray-600">潜在 → <span class="tag tag-following text-xs">跟进中</span></div>
-                                </div>
-                            </div>
-
-                            <!-- 记录4 -->
-                            <div class="relative flex gap-4">
-                                <div class="w-8 h-8 rounded-full bg-gray-300 text-white flex items-center justify-center text-xs font-medium z-10">5</div>
-                                <div class="flex-1 bg-gray-50 rounded-lg p-4">
-                                    <div class="flex items-center justify-between mb-2">
-                                        <div class="text-sm font-medium text-gray-800">录音分析</div>
-                                        <div class="text-xs text-gray-400">2026-04-08 16:30</div>
-                                    </div>
-                                    <div class="text-sm text-gray-600 mb-2">录音：张三-万科城市花园-20260408</div>
-                                    <div class="text-sm text-gray-500 mb-2">评分：<span class="text-warning font-medium">78分</span></div>
-                                    <div class="flex gap-2">
-                                        <a href="../recording/detail.html?id=3" class="text-sm text-primary hover:underline">查看分析</a>
-                                    </div>
-                                </div>
-                            </div>
+                <!-- 筛选栏 -->
+                <div class="p-4 border-b border-gray-100">
+                    <div class="flex items-center gap-4">
+                        <div class="flex items-center gap-2">
+                            <input type="text" id="filterRecordingName" placeholder="搜索录音名称" class="border border-gray-200 rounded-lg px-3 py-2 text-sm w-48">
                         </div>
+                        <select id="filterRecordingStatus" class="border border-gray-200 rounded-lg px-3 py-2 text-sm">
+                            <option value="">全部状态</option>
+                            <option value="completed">分析完成</option>
+                            <option value="progress">分析中</option>
+                            <option value="pending">待分析</option>
+                            <option value="failed">分析失败</option>
+                        </select>
+                        <button onclick="applyRecordingFilters()" class="px-3 py-2 bg-primary text-white rounded-lg text-sm hover:bg-primary/90">搜索</button>
+                        <button onclick="resetRecordingFilters()" class="px-3 py-2 border border-gray-200 text-gray-600 rounded-lg text-sm hover:bg-gray-50">重置</button>
+                    </div>
+                </div>
+                
+                <!-- 录音列表 -->
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="text-left text-gray-500 text-xs bg-gray-50">
+                                <th class="px-4 py-3 font-medium">录音名称</th>
+                                <th class="px-4 py-3 font-medium">关联楼盘</th>
+                                <th class="px-4 py-3 font-medium">录音时长</th>
+                                <th class="px-4 py-3 font-medium">分析状态</th>
+                                <th class="px-4 py-3 font-medium">综合评分</th>
+                                <th class="px-4 py-3 font-medium">上传时间</th>
+                                <th class="px-4 py-3 font-medium text-right">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recordingTableBody"></tbody>
+                    </table>
+                </div>
+                
+                <!-- 分页 -->
+                <div class="flex items-center justify-between px-4 py-3 border-t border-gray-100">
+                    <div class="text-sm text-gray-500">
+                        共 <span class="font-medium" id="recordingTotalCount">3</span> 条
+                    </div>
+                    <div class="flex items-center gap-1">
+                        <button class="px-3 py-1 border border-gray-200 rounded text-sm text-gray-400 cursor-not-allowed" disabled>上一页</button>
+                        <button class="px-3 py-1 bg-primary text-white rounded text-sm">1</button>
+                        <button class="px-3 py-1 border border-gray-200 rounded text-sm text-gray-600 hover:bg-gray-50">下一页</button>
                     </div>
                 </div>
             </div>
@@ -221,6 +196,105 @@
     </div>
 
     <script>
+        // 录音数据（该客户的关联录音）
+        const customerRecordings = [
+            {
+                id: 1,
+                name: '王女士-万科城市花园-20260416',
+                buildingName: '万科城市花园',
+                duration: '05:32',
+                status: 'completed',
+                statusText: '分析完成',
+                score: 85,
+                uploadTime: '2026-04-16 14:30'
+            },
+            {
+                id: 2,
+                name: '王女士-万科城市花园-20260415',
+                buildingName: '万科城市花园',
+                duration: '08:15',
+                status: 'completed',
+                statusText: '分析完成',
+                score: 92,
+                uploadTime: '2026-04-15 10:20'
+            },
+            {
+                id: 3,
+                name: '王女士-中海汇德里-20260408',
+                buildingName: '中海汇德里',
+                duration: '03:45',
+                status: 'progress',
+                statusText: '分析中',
+                score: null,
+                uploadTime: '2026-04-08 16:45'
+            }
+        ];
+
+        // 渲染录音列表
+        function renderRecordingTable(data) {
+            const tbody = document.getElementById('recordingTableBody');
+            document.getElementById('recordingTotalCount').textContent = data.length;
+            
+            if (data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="px-4 py-8 text-center text-gray-500">暂无关联录音</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = data.map(item => `
+                <tr class="border-b border-gray-100 hover:bg-gray-50">
+                    <td class="px-4 py-3 text-sm">
+                        <div class="flex items-center gap-2">
+                            <i class="fa fa-microphone text-gray-400"></i>
+                            <span class="text-primary cursor-pointer hover:underline" onclick="viewRecording(${item.id})">${item.name}</span>
+                        </div>
+                    </td>
+                    <td class="px-4 py-3 text-sm text-gray-600">${item.buildingName || '-'}</td>
+                    <td class="px-4 py-3 text-sm text-gray-600">${item.duration}</td>
+                    <td class="px-4 py-3 text-sm">
+                        <span class="tag tag-${item.status === 'completed' ? 'completed' : item.status === 'progress' ? 'progress' : item.status === 'failed' ? 'failed' : 'pending'}">
+                            ${item.statusText}
+                        </span>
+                    </td>
+                    <td class="px-4 py-3 text-sm">
+                        ${item.score ? `<span class="font-medium ${item.score >= 90 ? 'text-success' : item.score >= 80 ? 'text-primary' : item.score >= 70 ? 'text-warning' : 'text-danger'}">${item.score}分</span>` : '-'}
+                    </td>
+                    <td class="px-4 py-3 text-sm text-gray-500">${item.uploadTime}</td>
+                    <td class="px-4 py-3 text-sm text-right">
+                        <button onclick="viewRecording(${item.id})" class="text-primary hover:underline">查看详情</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // 查看录音详情
+        function viewRecording(id) {
+            window.location.href = `../recording/detail.html?id=${id}`;
+        }
+
+        // 筛选录音
+        function applyRecordingFilters() {
+            const name = document.getElementById('filterRecordingName').value.toLowerCase();
+            const status = document.getElementById('filterRecordingStatus').value;
+            
+            let filtered = customerRecordings;
+            
+            if (name) {
+                filtered = filtered.filter(item => item.name.toLowerCase().includes(name));
+            }
+            if (status) {
+                filtered = filtered.filter(item => item.status === status);
+            }
+            
+            renderRecordingTable(filtered);
+        }
+
+        // 重置筛选
+        function resetRecordingFilters() {
+            document.getElementById('filterRecordingName').value = '';
+            document.getElementById('filterRecordingStatus').value = '';
+            renderRecordingTable(customerRecordings);
+        }
+
         // Tab切换
         function switchTab(tab) {
             const tabInfo = document.getElementById('tabInfo');
@@ -244,6 +318,9 @@
                 panelInfo.classList.add('hidden');
             }
         }
+
+        // 初始化录音列表
+        renderRecordingTable(customerRecordings);
     </script>
 </body>
 </html>
