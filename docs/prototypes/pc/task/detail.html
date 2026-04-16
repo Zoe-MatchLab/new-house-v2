@@ -83,6 +83,60 @@
         .view-link:hover {
             text-decoration: underline;
         }
+        
+        /* 子任务展开区域 - 整行横向展开 */
+        .sub-task-container {
+            display: none;
+        }
+        .sub-task-container.expanded {
+            display: table-row;
+        }
+        .sub-task-container td {
+            padding: 0;
+        }
+        .sub-task-inner {
+            background: #fafafa;
+            border-bottom: 1px solid #e5e6eb;
+            padding: 12px 16px;
+            margin: 0 16px 0 56px;
+            border-radius: 0 0 8px 8px;
+        }
+        
+        /* 子任务表格 */
+        .sub-task-table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+        .sub-task-table th {
+            text-align: left;
+            padding: 8px 12px;
+            font-size: 12px;
+            color: #86909C;
+            font-weight: 500;
+            background: #fff;
+            border-bottom: 1px solid #E5E6EB;
+        }
+        .sub-task-level {
+            padding-left: 12px;
+            border-left: 2px solid #165DFF;
+            margin-left: -12px;
+        }
+        
+        /* 展开按钮 */
+        .expand-btn {
+            cursor: pointer;
+            color: #165DFF;
+            display: inline-flex;
+            align-items: center;
+        }
+        .expand-btn .arrow {
+            transition: transform 0.2s;
+            display: inline-block;
+        }
+        .expand-btn.expanded .arrow {
+            transform: rotate(90deg);
+        }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -337,147 +391,240 @@
                     
                     <!-- 执行页 -->
                     <div id="executeTab" class="tab-content hidden">
-                        <div class="mb-4 flex items-center justify-between">
+                        <!-- 表头 -->
+                        <div class="mb-3 flex items-center justify-between">
                             <h4 class="font-semibold">执行情况</h4>
                             <div class="text-sm text-gray-500">共 <span class="font-medium">3</span> 名执行人，整体进度 <span class="font-medium text-primary">67%</span></div>
                         </div>
                         
-                        <!-- 执行人卡片列表 -->
-                        <div class="grid grid-cols-3 gap-4">
-                            <!-- 执行人1 - 进行中 -->
-                            <div class="border border-gray-200 rounded-xl overflow-hidden bg-white">
-                                <!-- 头部 -->
-                                <div class="p-4 bg-gradient-to-r from-primary/10 to-transparent border-b border-gray-100">
-                                    <div class="flex items-center gap-3 mb-3">
-                                        <div class="w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center font-medium">张</div>
-                                        <div>
-                                            <div class="font-medium">张三</div>
-                                            <div class="text-xs text-gray-500">进行中</div>
-                                        </div>
-                                        <div class="ml-auto text-right">
-                                            <div class="text-2xl font-bold text-primary">67%</div>
-                                            <div class="text-xs text-gray-500">2/3 完成</div>
-                                        </div>
-                                    </div>
-                                    <!-- 进度条 -->
-                                    <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
-                                        <div class="h-full bg-primary rounded-full" style="width: 67%"></div>
-                                    </div>
-                                </div>
-                                
-                                <!-- 子任务列表 -->
-                                <div class="p-3 space-y-2">
-                                    <!-- Step 1: 路书执行 -->
-                                    <div class="flex items-center gap-3 p-2 rounded-lg bg-gray-50">
-                                        <div class="w-5 h-5 rounded-full bg-success text-white flex items-center justify-center text-xs">
-                                            <i class="fa fa-check"></i>
-                                        </div>
-                                        <div class="flex-1">
-                                            <div class="text-sm font-medium">路书执行</div>
-                                            <div class="text-xs text-gray-500">已完成</div>
-                                        </div>
-                                        <button class="px-3 py-1 text-xs bg-white border border-primary text-primary rounded hover:bg-primary/5">查看</button>
-                                    </div>
-                                    
-                                    <!-- Step 2: 话术训练 -->
-                                    <div class="flex items-center gap-3 p-2 rounded-lg bg-gray-50">
-                                        <div class="w-5 h-5 rounded-full bg-success text-white flex items-center justify-center text-xs">
-                                            <i class="fa fa-check"></i>
-                                        </div>
-                                        <div class="flex-1">
-                                            <div class="text-sm font-medium">话术训练</div>
-                                            <div class="text-xs text-gray-500">已完成</div>
-                                        </div>
-                                        <button class="px-3 py-1 text-xs bg-white border border-primary text-primary rounded hover:bg-primary/5">查看</button>
-                                    </div>
-                                    
-                                    <!-- Step 3: 录音分析 -->
-                                    <div class="flex items-center gap-3 p-2 rounded-lg bg-warning/10 border border-warning/30">
-                                        <div class="w-5 h-5 rounded-full bg-warning text-white flex items-center justify-center text-xs">
-                                            <i class="fa fa-spinner fa-spin"></i>
-                                        </div>
-                                        <div class="flex-1">
-                                            <div class="text-sm font-medium">录音分析</div>
-                                            <div class="text-xs text-warning">进行中 30%</div>
-                                        </div>
-                                        <button class="px-3 py-1 text-xs bg-warning text-white rounded hover:bg-warning/80">查看</button>
-                                    </div>
-                                </div>
-                            </div>
+                        <!-- 表格 -->
+                        <div class="border border-gray-200 rounded-lg overflow-hidden">
+                            <table class="w-full">
+                                <thead class="bg-gray-50 border-b border-gray-200">
+                                    <tr>
+                                        <th class="w-10 px-4 py-3 text-left text-xs font-medium text-gray-500"></th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500">执行人</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500">状态</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500">进度</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500">完成情况</th>
+                                        <th class="px-4 py-3 text-right text-xs font-medium text-gray-500">操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-100">
+                                    <!-- 执行人1 - 进行中（默认展开） -->
+                                    <tr class="hover:bg-gray-50 cursor-pointer" onclick="toggleSubTask('executor-1', this)">
+                                        <td class="px-4 py-3 text-center">
+                                            <button class="expand-btn expanded">
+                                                <span class="arrow"><i class="fa fa-chevron-right"></i></span>
+                                            </button>
+                                        </td>
+                                        <td class="px-4 py-3">
+                                            <div class="flex items-center gap-2">
+                                                <div class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center text-sm font-medium">张</div>
+                                                <span class="font-medium text-sm">张三</span>
+                                            </div>
+                                        </td>
+                                        <td class="px-4 py-3"><span class="tag tag-progress text-xs">进行中</span></td>
+                                        <td class="px-4 py-3">
+                                            <div class="flex items-center gap-2">
+                                                <div class="w-24 h-2 bg-gray-200 rounded-full overflow-hidden">
+                                                    <div class="h-full bg-primary rounded-full" style="width: 67%"></div>
+                                                </div>
+                                                <span class="text-sm text-primary font-medium">67%</span>
+                                            </div>
+                                        </td>
+                                        <td class="px-4 py-3 text-sm text-gray-500">2/3 完成</td>
+                                        <td class="px-4 py-3 text-right">
+                                            <button class="text-sm text-primary hover:underline" onclick="event.stopPropagation();">查看详情</button>
+                                        </td>
+                                    </tr>
+                                    <!-- 子任务展开区域 -->
+                                    <tr id="executor-1" class="sub-task-container expanded">
+                                        <td colspan="6" class="p-0">
+                                            <div class="sub-task-inner">
+                                                <table class="sub-task-table">
+                                                    <colgroup>
+                                                        <col style="width: 30%;">
+                                                        <col style="width: 25%;">
+                                                        <col style="width: 20%;">
+                                                        <col style="width: 25%;">
+                                                    </colgroup>
+                                                    <thead>
+                                                        <tr>
+                                                            <th class="text-left text-xs font-medium text-gray-500 py-2">子任务</th>
+                                                            <th class="text-left text-xs font-medium text-gray-500 py-2">任务类型</th>
+                                                            <th class="text-left text-xs font-medium text-gray-500 py-2">状态</th>
+                                                            <th class="text-right text-xs font-medium text-gray-500 py-2">操作</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="divide-y divide-gray-100">
+                                                        <tr class="hover:bg-gray-50">
+                                                            <td class="py-2"><span class="sub-task-level">路书执行</span></td>
+                                                            <td class="py-2 text-sm text-gray-600">内容生成</td>
+                                                            <td class="py-2"><span class="tag tag-completed text-xs">已完成</span></td>
+                                                            <td class="py-2 text-right"><button class="text-sm text-primary hover:underline">查看内容</button></td>
+                                                        </tr>
+                                                        <tr class="hover:bg-gray-50">
+                                                            <td class="py-2"><span class="sub-task-level">话术训练</span></td>
+                                                            <td class="py-2 text-sm text-gray-600">AI训练</td>
+                                                            <td class="py-2"><span class="tag tag-completed text-xs">已完成</span></td>
+                                                            <td class="py-2 text-right"><button class="text-sm text-primary hover:underline">查看结果</button></td>
+                                                        </tr>
+                                                        <tr class="hover:bg-warning/5">
+                                                            <td class="py-2"><span class="sub-task-level">录音分析</span></td>
+                                                            <td class="py-2 text-sm text-gray-600">AI分析</td>
+                                                            <td class="py-2"><span class="tag tag-progress text-xs">进行中 30%</span></td>
+                                                            <td class="py-2 text-right"><button class="text-sm text-warning hover:underline">查看分析</button></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </td>
+                                    </tr>
 
-                            <!-- 执行人2 - 已完成 -->
-                            <div class="border border-gray-200 rounded-xl overflow-hidden bg-white">
-                                <div class="p-4 bg-gradient-to-r from-success/10 to-transparent border-b border-gray-100">
-                                    <div class="flex items-center gap-3 mb-3">
-                                        <div class="w-10 h-10 bg-success text-white rounded-full flex items-center justify-center font-medium">李</div>
-                                        <div>
-                                            <div class="font-medium">李四</div>
-                                            <div class="text-xs text-success">已完成</div>
-                                        </div>
-                                        <div class="ml-auto text-right">
-                                            <div class="text-2xl font-bold text-success">100%</div>
-                                            <div class="text-xs text-gray-500">3/3 完成</div>
-                                        </div>
-                                    </div>
-                                    <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
-                                        <div class="h-full bg-success rounded-full" style="width: 100%"></div>
-                                    </div>
-                                </div>
-                                <div class="p-3 space-y-2">
-                                    <div class="flex items-center gap-3 p-2 rounded-lg bg-gray-50">
-                                        <div class="w-5 h-5 rounded-full bg-success text-white flex items-center justify-center text-xs"><i class="fa fa-check"></i></div>
-                                        <div class="flex-1 text-sm">路书执行</div>
-                                        <button class="px-3 py-1 text-xs bg-white border border-success text-success rounded hover:bg-success/5">查看</button>
-                                    </div>
-                                    <div class="flex items-center gap-3 p-2 rounded-lg bg-gray-50">
-                                        <div class="w-5 h-5 rounded-full bg-success text-white flex items-center justify-center text-xs"><i class="fa fa-check"></i></div>
-                                        <div class="flex-1 text-sm">话术训练</div>
-                                        <button class="px-3 py-1 text-xs bg-white border border-success text-success rounded hover:bg-success/5">查看</button>
-                                    </div>
-                                    <div class="flex items-center gap-3 p-2 rounded-lg bg-gray-50">
-                                        <div class="w-5 h-5 rounded-full bg-success text-white flex items-center justify-center text-xs"><i class="fa fa-check"></i></div>
-                                        <div class="flex-1 text-sm">录音分析</div>
-                                        <button class="px-3 py-1 text-xs bg-white border border-success text-success rounded hover:bg-success/5">查看</button>
-                                    </div>
-                                </div>
-                            </div>
+                                    <!-- 执行人2 - 已完成（收起） -->
+                                    <tr class="hover:bg-gray-50 cursor-pointer" onclick="toggleSubTask('executor-2', this)">
+                                        <td class="px-4 py-3 text-center">
+                                            <button class="expand-btn">
+                                                <span class="arrow"><i class="fa fa-chevron-right"></i></span>
+                                            </button>
+                                        </td>
+                                        <td class="px-4 py-3">
+                                            <div class="flex items-center gap-2">
+                                                <div class="w-8 h-8 bg-success text-white rounded-full flex items-center justify-center text-sm font-medium">李</div>
+                                                <span class="font-medium text-sm">李四</span>
+                                            </div>
+                                        </td>
+                                        <td class="px-4 py-3"><span class="tag tag-completed text-xs">已完成</span></td>
+                                        <td class="px-4 py-3">
+                                            <div class="flex items-center gap-2">
+                                                <div class="w-24 h-2 bg-gray-200 rounded-full overflow-hidden">
+                                                    <div class="h-full bg-success rounded-full" style="width: 100%"></div>
+                                                </div>
+                                                <span class="text-sm text-success font-medium">100%</span>
+                                            </div>
+                                        </td>
+                                        <td class="px-4 py-3 text-sm text-gray-500">3/3 完成</td>
+                                        <td class="px-4 py-3 text-right">
+                                            <button class="text-sm text-primary hover:underline" onclick="event.stopPropagation();">查看详情</button>
+                                        </td>
+                                    </tr>
+                                    <!-- 子任务展开区域 -->
+                                    <tr id="executor-2" class="sub-task-container">
+                                        <td colspan="6" class="p-0">
+                                            <div class="sub-task-inner">
+                                                <table class="sub-task-table">
+                                                    <colgroup>
+                                                        <col style="width: 30%;">
+                                                        <col style="width: 25%;">
+                                                        <col style="width: 20%;">
+                                                        <col style="width: 25%;">
+                                                    </colgroup>
+                                                    <thead>
+                                                        <tr>
+                                                            <th class="text-left text-xs font-medium text-gray-500 py-2">子任务</th>
+                                                            <th class="text-left text-xs font-medium text-gray-500 py-2">任务类型</th>
+                                                            <th class="text-left text-xs font-medium text-gray-500 py-2">状态</th>
+                                                            <th class="text-right text-xs font-medium text-gray-500 py-2">操作</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="divide-y divide-gray-100">
+                                                        <tr class="hover:bg-gray-50">
+                                                            <td class="py-2"><span class="sub-task-level">路书执行</span></td>
+                                                            <td class="py-2 text-sm text-gray-600">内容生成</td>
+                                                            <td class="py-2"><span class="tag tag-completed text-xs">已完成</span></td>
+                                                            <td class="py-2 text-right"><button class="text-sm text-primary hover:underline">查看内容</button></td>
+                                                        </tr>
+                                                        <tr class="hover:bg-gray-50">
+                                                            <td class="py-2"><span class="sub-task-level">话术训练</span></td>
+                                                            <td class="py-2 text-sm text-gray-600">AI训练</td>
+                                                            <td class="py-2"><span class="tag tag-completed text-xs">已完成</span></td>
+                                                            <td class="py-2 text-right"><button class="text-sm text-primary hover:underline">查看结果</button></td>
+                                                        </tr>
+                                                        <tr class="hover:bg-gray-50">
+                                                            <td class="py-2"><span class="sub-task-level">录音分析</span></td>
+                                                            <td class="py-2 text-sm text-gray-600">AI分析</td>
+                                                            <td class="py-2"><span class="tag tag-completed text-xs">已完成</span></td>
+                                                            <td class="py-2 text-right"><button class="text-sm text-primary hover:underline">查看分析</button></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </td>
+                                    </tr>
 
-                            <!-- 执行人3 - 未开始 -->
-                            <div class="border border-gray-200 rounded-xl overflow-hidden bg-white">
-                                <div class="p-4 bg-gradient-to-r from-gray-100 to-transparent border-b border-gray-100">
-                                    <div class="flex items-center gap-3 mb-3">
-                                        <div class="w-10 h-10 bg-gray-300 text-white rounded-full flex items-center justify-center font-medium">王</div>
-                                        <div>
-                                            <div class="font-medium">王五</div>
-                                            <div class="text-xs text-gray-400">未开始</div>
-                                        </div>
-                                        <div class="ml-auto text-right">
-                                            <div class="text-2xl font-bold text-gray-400">0%</div>
-                                            <div class="text-xs text-gray-400">0/3 完成</div>
-                                        </div>
-                                    </div>
-                                    <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
-                                        <div class="h-full bg-gray-300 rounded-full" style="width: 0%"></div>
-                                    </div>
-                                </div>
-                                <div class="p-3 space-y-2">
-                                    <div class="flex items-center gap-3 p-2 rounded-lg bg-gray-50 opacity-60">
-                                        <div class="w-5 h-5 rounded-full border-2 border-gray-300"></div>
-                                        <div class="flex-1 text-sm text-gray-400">路书执行</div>
-                                        <button class="px-3 py-1 text-xs bg-gray-100 text-gray-400 rounded cursor-not-allowed" disabled>查看</button>
-                                    </div>
-                                    <div class="flex items-center gap-3 p-2 rounded-lg bg-gray-50 opacity-60">
-                                        <div class="w-5 h-5 rounded-full border-2 border-gray-300"></div>
-                                        <div class="flex-1 text-sm text-gray-400">话术训练</div>
-                                        <button class="px-3 py-1 text-xs bg-gray-100 text-gray-400 rounded cursor-not-allowed" disabled>查看</button>
-                                    </div>
-                                    <div class="flex items-center gap-3 p-2 rounded-lg bg-gray-50 opacity-60">
-                                        <div class="w-5 h-5 rounded-full border-2 border-gray-300"></div>
-                                        <div class="flex-1 text-sm text-gray-400">录音分析</div>
-                                        <button class="px-3 py-1 text-xs bg-gray-100 text-gray-400 rounded cursor-not-allowed" disabled>查看</button>
-                                    </div>
-                                </div>
-                            </div>
+                                    <!-- 执行人3 - 未开始（收起） -->
+                                    <tr class="hover:bg-gray-50 cursor-pointer" onclick="toggleSubTask('executor-3', this)">
+                                        <td class="px-4 py-3 text-center">
+                                            <button class="expand-btn">
+                                                <span class="arrow"><i class="fa fa-chevron-right"></i></span>
+                                            </button>
+                                        </td>
+                                        <td class="px-4 py-3">
+                                            <div class="flex items-center gap-2">
+                                                <div class="w-8 h-8 bg-gray-300 text-white rounded-full flex items-center justify-center text-sm font-medium">王</div>
+                                                <span class="font-medium text-sm">王五</span>
+                                            </div>
+                                        </td>
+                                        <td class="px-4 py-3"><span class="tag tag-pending text-xs">未开始</span></td>
+                                        <td class="px-4 py-3">
+                                            <div class="flex items-center gap-2">
+                                                <div class="w-24 h-2 bg-gray-200 rounded-full overflow-hidden">
+                                                    <div class="h-full bg-gray-300 rounded-full" style="width: 0%"></div>
+                                                </div>
+                                                <span class="text-sm text-gray-400 font-medium">0%</span>
+                                            </div>
+                                        </td>
+                                        <td class="px-4 py-3 text-sm text-gray-400">0/3 完成</td>
+                                        <td class="px-4 py-3 text-right">
+                                            <button class="text-sm text-gray-400 cursor-not-allowed" onclick="event.stopPropagation();" disabled>查看详情</button>
+                                        </td>
+                                    </tr>
+                                    <!-- 子任务展开区域 -->
+                                    <tr id="executor-3" class="sub-task-container">
+                                        <td colspan="6" class="p-0">
+                                            <div class="sub-task-inner">
+                                                <table class="sub-task-table">
+                                                    <colgroup>
+                                                        <col style="width: 30%;">
+                                                        <col style="width: 25%;">
+                                                        <col style="width: 20%;">
+                                                        <col style="width: 25%;">
+                                                    </colgroup>
+                                                    <thead>
+                                                        <tr>
+                                                            <th class="text-left text-xs font-medium text-gray-500 py-2">子任务</th>
+                                                            <th class="text-left text-xs font-medium text-gray-500 py-2">任务类型</th>
+                                                            <th class="text-left text-xs font-medium text-gray-500 py-2">状态</th>
+                                                            <th class="text-right text-xs font-medium text-gray-500 py-2">操作</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="divide-y divide-gray-100">
+                                                        <tr class="opacity-50">
+                                                            <td class="py-2"><span class="sub-task-level">路书执行</span></td>
+                                                            <td class="py-2 text-sm text-gray-400">内容生成</td>
+                                                            <td class="py-2"><span class="tag tag-pending text-xs">待开始</span></td>
+                                                            <td class="py-2 text-right"><button class="text-sm text-gray-400 cursor-not-allowed" disabled>查看</button></td>
+                                                        </tr>
+                                                        <tr class="opacity-50">
+                                                            <td class="py-2"><span class="sub-task-level">话术训练</span></td>
+                                                            <td class="py-2 text-sm text-gray-400">AI训练</td>
+                                                            <td class="py-2"><span class="tag tag-pending text-xs">待开始</span></td>
+                                                            <td class="py-2 text-right"><button class="text-sm text-gray-400 cursor-not-allowed" disabled>查看</button></td>
+                                                        </tr>
+                                                        <tr class="opacity-50">
+                                                            <td class="py-2"><span class="sub-task-level">录音分析</span></td>
+                                                            <td class="py-2 text-sm text-gray-400">AI分析</td>
+                                                            <td class="py-2"><span class="tag tag-pending text-xs">待开始</span></td>
+                                                            <td class="py-2 text-right"><button class="text-sm text-gray-400 cursor-not-allowed" disabled>查看</button></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -497,6 +644,20 @@
                 content.classList.add('hidden');
             });
             document.getElementById(tabName + 'Tab').classList.remove('hidden');
+        }
+        
+        // 子任务折叠/展开
+        function toggleSubTask(id, row) {
+            var container = document.getElementById(id);
+            var btn = row.querySelector('.expand-btn');
+            
+            if (container.classList.contains('expanded')) {
+                container.classList.remove('expanded');
+                btn.classList.remove('expanded');
+            } else {
+                container.classList.add('expanded');
+                btn.classList.add('expanded');
+            }
         }
     </script>
 </body>
