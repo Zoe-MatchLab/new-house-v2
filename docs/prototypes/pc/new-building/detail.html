@@ -31,7 +31,6 @@
         .tag-published { background: #E8F3FF; color: #165DFF; }
         .section-card { background: #fff; border-radius: 12px; border: 1px solid #E8E9EB; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
         .info-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
-        .info-item { }
         .info-item.col-span-2 { grid-column: span 2; }
         .info-item.col-span-3 { grid-column: span 3; }
         .info-item.col-span-4 { grid-column: span 4; }
@@ -41,7 +40,13 @@
         .info-section { padding: 20px; }
         .image-gallery { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
         .image-thumb { aspect-ratio: 4/3; border-radius: 8px; overflow: hidden; background: #f7f8fa; }
-        .image-thumb img { width: 100%; height: 100%; object-fit: cover; }
+        .image-thumb img { width: 100%; height: 100%; object-fit: cover; cursor: pointer; transition: transform 0.2s; }
+        .image-thumb img:hover { transform: scale(1.02); }
+        .tab-btn { padding: 8px 16px; border-radius: 6px; font-size: 14px; cursor: pointer; transition: all 0.2s; }
+        .tab-btn:hover { background: #F2F3F5; }
+        .tab-btn.active { background: #165DFF; color: #fff; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
     </style>
 </head>
 <body class="bg-gray-50 min-h-screen">
@@ -68,609 +73,710 @@
     </nav>
 
     <!-- 侧边栏 -->
-    <aside class="fixed left-0 top-[60px] bottom-0 w-56 bg-white shadow-sm z-40 overflow-y-auto">
-        <div class="p-4">
-            <div class="text-xs text-gray-500 uppercase tracking-wider mb-3">楼盘管理</div>
-            <nav class="space-y-1">
-                <a href="list.html" class="flex items-center px-3 py-2 text-gray-600 rounded-lg hover:bg-gray-50">
-                    <i class="fa fa-building-o mr-3 text-gray-400"></i>楼盘列表
-                </a>
-                <a href="edit.html" class="flex items-center px-3 py-2 text-gray-600 rounded-lg hover:bg-gray-50">
-                    <i class="fa fa-edit mr-3 text-gray-400"></i>编辑楼盘
+    <div class="flex pt-14">
+        <aside class="w-64 bg-white h-[calc(100vh-56px)] fixed left-0 shadow-sm">
+            <nav class="py-4">
+                <div class="px-4 py-2 text-xs text-gray-400 uppercase font-medium">功能菜单</div>
+                <a href="list.html" class="flex items-center px-4 py-3 text-primary bg-blue-50 border-r-4 border-primary">
+                    <i class="fa fa-building-o w-5 text-center"></i>
+                    <span class="ml-3">新盘管理</span>
+                </a><a href="../task/list.html" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50">
+                    <i class="fa fa-tasks w-5 text-center"></i>
+                    <span class="ml-3">任务管理</span>
+                </a><a href="../recording/list.html" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50">
+                    <i class="fa fa-microphone w-5 text-center"></i>
+                    <span class="ml-3">录音分析</span>
+                </a><a href="../material/list.html" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50">
+                    <i class="fa fa-cubes w-5 text-center"></i>
+                    <span class="ml-3">物料管理</span>
+                </a><a href="../customer/list.html" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50">
+                    <i class="fa fa-users w-5 text-center"></i>
+                    <span class="ml-3">客户管理</span>
+                </a><a href="../dashboard/overview.html" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50">
+                    <i class="fa fa-line-chart w-5 text-center"></i>
+                    <span class="ml-3">数据看板</span>
                 </a>
             </nav>
-        </div>
-    </aside>
+        </aside>
 
-    <!-- 主内容区 -->
-    <main class="ml-56 pt-[60px] p-6">
-        <!-- 面包屑 -->
-        <div class="mb-4 flex items-center justify-between">
-            <div class="text-sm">
+        <!-- 主内容区 -->
+        <main class="ml-64 flex-1 p-6">
+            <!-- 面包屑 -->
+            <div class="mb-4 text-sm">
                 <a href="list.html" class="text-primary hover:underline">新盘管理</a>
                 <span class="mx-2 text-gray-400">/</span>
                 <span class="text-gray-500">楼盘详情</span>
             </div>
-            <div class="flex items-center gap-2">
-                <a href="edit.html?mode=audit" class="px-4 py-2 border border-primary text-primary rounded-lg hover:bg-primary/10 text-sm">
-                    <i class="fa fa-check-circle mr-1"></i>审核
-                </a>
-                <a href="edit.html" class="px-4 py-2 border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50 text-sm">
-                    <i class="fa fa-edit mr-1"></i>编辑
-                </a>
-            </div>
-        </div>
 
-        <!-- 页面标题 -->
-        <div class="mb-6 flex items-center justify-between">
-            <div class="flex items-center gap-4">
-                <img src="https://picsum.photos/seed/house1/80/80" alt="楼盘封面" class="w-16 h-16 rounded-lg object-cover">
-                <div>
-                    <h1 class="text-2xl font-bold text-gray-800">中海汇德里</h1>
-                    <p class="text-gray-500 text-sm mt-1">开发商：中海地产 | 朝阳区·望京</p>
-                </div>
-            </div>
-            <div class="flex items-center gap-3">
-                <span class="tag tag-published"><i class="fa fa-check mr-1"></i>已上线</span>
-                <span class="text-sm text-gray-500">更新时间：2026-04-16 10:30</span>
-            </div>
-        </div>
-
-        <!-- ========== 7.1 文本字段展示 ========== -->
-
-        <!-- 1. 基本信息（12个）-->
-        <div class="section-card mb-6">
-            <div class="section-title">
-                <i class="fa fa-info-circle text-primary"></i>
-                基本信息
-            </div>
-            <div class="info-section">
-                <div class="info-grid">
-                    <div class="info-item">
-                        <div class="info-label">楼盘名称</div>
-                        <div class="info-value">中海汇德里</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">物业总称</div>
-                        <div class="info-value">中海高端系</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">行政区</div>
-                        <div class="info-value">朝阳区</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">商圈/板块名称</div>
-                        <div class="info-value">望京</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">物业类别</div>
-                        <div class="info-value">平层</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">占地面积</div>
-                        <div class="info-value">50,000 ㎡</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">建筑面积</div>
-                        <div class="info-value">120,000 ㎡</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">得房率</div>
-                        <div class="info-value">85%</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">室内层高</div>
-                        <div class="info-value">3.0 米</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">梯户比</div>
-                        <div class="info-value">2梯4户</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">装修情况</div>
-                        <div class="info-value">精装</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">装修标准</div>
-                        <div class="info-value">3,000 元/㎡</div>
+            <!-- 页面标题 -->
+            <div class="mb-6 flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <img src="https://picsum.photos/seed/house1/80/80" alt="楼盘封面" class="w-16 h-16 rounded-lg object-cover">
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-800">中海汇德里</h1>
+                        <p class="text-gray-500 text-sm mt-1">开发商：中海地产 | 朝阳区·望京</p>
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <!-- 2. 项目规格（15个）-->
-        <div class="section-card mb-6">
-            <div class="section-title">
-                <i class="fa fa-th text-primary"></i>
-                项目规格
-            </div>
-            <div class="info-section">
-                <div class="info-grid">
-                    <div class="info-item">
-                        <div class="info-label">容积率</div>
-                        <div class="info-value">2.5</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">绿化率</div>
-                        <div class="info-value">35%</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">楼栋总数</div>
-                        <div class="info-value">15 栋</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">总户数</div>
-                        <div class="info-value">1,200 户</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">最大楼间距</div>
-                        <div class="info-value">80 米</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">均价</div>
-                        <div class="info-value text-primary font-bold">83,000 元/㎡</div>
-                    </div>
-                    <div class="info-item col-span-2">
-                        <div class="info-label">总价区间</div>
-                        <div class="info-value">680 - 1,200 万</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">首次开盘时间</div>
-                        <div class="info-value">2025-12-15</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">交房时间</div>
-                        <div class="info-value">2027-06-30</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">房屋状态</div>
-                        <div class="info-value">期房</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">预售证号</div>
-                        <div class="info-value">京房售字2025-088号</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">产权年限</div>
-                        <div class="info-value">70年</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">参考总价</div>
-                        <div class="info-value">680万起</div>
-                    </div>
+                <div class="flex items-center gap-3">
+                    <span class="tag tag-published"><i class="fa fa-check mr-1"></i>已上线</span>
+                    <span class="text-sm text-gray-500">更新时间：2026-04-16 10:30</span>
                 </div>
             </div>
-        </div>
 
-        <!-- 3. 开发商/物业（11个）-->
-        <div class="section-card mb-6">
-            <div class="section-title">
-                <i class="fa fa-building text-primary"></i>
-                开发商/物业
+            <!-- Tab切换 -->
+            <div class="mb-6 flex items-center gap-2">
+                <button class="tab-btn active" onclick="switchTab('info')">
+                    <i class="fa fa-file-text-o mr-1"></i>文本信息
+                </button>
+                <button class="tab-btn" onclick="switchTab('images')">
+                    <i class="fa fa-photo mr-1"></i>图片
+                </button>
+                <button class="tab-btn" onclick="switchTab('audit')">
+                    <i class="fa fa-history mr-1"></i>审核记录
+                </button>
             </div>
-            <div class="info-section">
-                <div class="info-grid">
-                    <div class="info-item col-span-2">
-                        <div class="info-label">物业公司</div>
-                        <div class="info-value">中海物业</div>
-                    </div>
-                    <div class="info-item col-span-2">
-                        <div class="info-label">物业公司介绍</div>
-                        <div class="info-value">国家一级资质物业管理企业，专注高端住宅服务20年</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">物业费</div>
-                        <div class="info-value">5.8 元/㎡/月</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">停车位数量</div>
-                        <div class="info-value">1,500 个</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">停车位配比</div>
-                        <div class="info-value">1:1.2</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">是否人车分流</div>
-                        <div class="info-value"><i class="fa fa-check text-success mr-1"></i>是</div>
-                    </div>
-                    <div class="info-item col-span-2">
-                        <div class="info-label">开发商名称</div>
-                        <div class="info-value">中海地产</div>
-                    </div>
-                    <div class="info-item col-span-2">
-                        <div class="info-label">开发商品牌介绍</div>
-                        <div class="info-value">中国建筑旗下品牌开发商，深耕北京市场15年</div>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <!-- 4. 楼盘特色（9个）-->
-        <div class="section-card mb-6">
-            <div class="section-title">
-                <i class="fa fa-star text-primary"></i>
-                楼盘特色
-            </div>
-            <div class="info-section">
-                <div class="info-grid">
-                    <div class="info-item col-span-2">
-                        <div class="info-label">园林特色</div>
-                        <div class="info-value">欧式园林风格，5重景观设计</div>
+            <!-- Tab内容：文本信息 -->
+            <div id="infoTab" class="tab-content active">
+                <!-- 1. 基本信息（12个）-->
+                <div class="section-card mb-6">
+                    <div class="section-title">
+                        <i class="fa fa-info-circle text-primary"></i>
+                        基本信息
                     </div>
-                    <div class="info-item">
-                        <div class="info-label">是否有水系</div>
-                        <div class="info-value"><i class="fa fa-check text-success mr-1"></i>是</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">园林设计团队</div>
-                        <div class="info-value">贝尔高林</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">建筑风格</div>
-                        <div class="info-value">现代简约</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">建筑设计团队</div>
-                        <div class="info-value">梁志天设计</div>
-                    </div>
-                    <div class="info-item col-span-2">
-                        <div class="info-label">智能科技</div>
-                        <div class="info-value">人脸识别、智能梯控、24小时安防系统</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">环线位置</div>
-                        <div class="info-value">内四环</div>
-                    </div>
-                    <div class="info-item col-span-3">
-                        <div class="info-label">板块利好</div>
-                        <div class="info-value">地铁上盖，自贸区核心位置</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 5. 交通配套（4个）-->
-        <div class="section-card mb-6">
-            <div class="section-title">
-                <i class="fa fa-subway text-primary"></i>
-                交通配套
-            </div>
-            <div class="info-section">
-                <div class="info-grid">
-                    <div class="info-item col-span-4">
-                        <div class="info-label">交通配套描述</div>
-                        <div class="info-value">双轨交汇，15分钟直达国贸，20分钟到达首都机场</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">最近地铁线路</div>
-                        <div class="info-value">14号线</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">最近地铁站名</div>
-                        <div class="info-value">望京南站</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">最近地铁站距离</div>
-                        <div class="info-value">300 米</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 6. 商业配套（3个）-->
-        <div class="section-card mb-6">
-            <div class="section-title">
-                <i class="fa fa-shopping-bag text-primary"></i>
-                商业配套
-            </div>
-            <div class="info-section">
-                <div class="info-grid">
-                    <div class="info-item col-span-4">
-                        <div class="info-label">商业配套描述</div>
-                        <div class="info-value">周边3大商圈环绕，步行10分钟可达凯德MALL</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">最近大型商场名</div>
-                        <div class="info-value">凯德MALL</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">最近商场距离</div>
-                        <div class="info-value">500 米</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 7. 教育配套（7个）-->
-        <div class="section-card mb-6">
-            <div class="section-title">
-                <i class="fa fa-graduation-cap text-primary"></i>
-                教育配套
-            </div>
-            <div class="info-section">
-                <div class="info-grid">
-                    <div class="info-item col-span-4">
-                        <div class="info-label">教育配套描述</div>
-                        <div class="info-value">周边5所重点学校，教育资源丰富</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">最近幼儿园名</div>
-                        <div class="info-value">北京市第六幼儿园</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">最近幼儿园距离</div>
-                        <div class="info-value">300 米</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">最近小学名</div>
-                        <div class="info-value">朝阳区实验小学</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">最近小学距离</div>
-                        <div class="info-value">500 米</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">最近中学名</div>
-                        <div class="info-value">人大附中朝阳学校</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">最近中学距离</div>
-                        <div class="info-value">800 米</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 8. 公园配套（5个）-->
-        <div class="section-card mb-6">
-            <div class="section-title">
-                <i class="fa fa-tree text-primary"></i>
-                公园配套
-            </div>
-            <div class="info-section">
-                <div class="info-grid">
-                    <div class="info-item col-span-4">
-                        <div class="info-label">公园配套描述</div>
-                        <div class="info-value">3公里内3大公园环绕，生态环境优越</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">最近公园名</div>
-                        <div class="info-value">望京公园</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">最近公园距离</div>
-                        <div class="info-value">200 米</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">2公里最大公园名</div>
-                        <div class="info-value">朝阳公园</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">2公里最大公园距离</div>
-                        <div class="info-value">1,500 米</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 9. 医疗配套（4个）-->
-        <div class="section-card mb-6">
-            <div class="section-title">
-                <i class="fa fa-hospital-o text-primary"></i>
-                医疗配套
-            </div>
-            <div class="info-section">
-                <div class="info-grid">
-                    <div class="info-item col-span-4">
-                        <div class="info-label">医疗配套描述</div>
-                        <div class="info-value">2公里内3家三甲医院，就医便捷</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">最近医院名</div>
-                        <div class="info-value">和睦家医院</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">最近医院距离</div>
-                        <div class="info-value">1,000 米</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">最近三甲医院名</div>
-                        <div class="info-value">中日友好医院</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 10. 会所配套（4个）-->
-        <div class="section-card mb-6">
-            <div class="section-title">
-                <i class="fa fa-glass text-primary"></i>
-                会所配套
-            </div>
-            <div class="info-section">
-                <div class="info-grid">
-                    <div class="info-item">
-                        <div class="info-label">是否含自建商街</div>
-                        <div class="info-value"><i class="fa fa-check text-success mr-1"></i>是</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">自建商业体量</div>
-                        <div class="info-value">5,000㎡</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">是否有业主会所</div>
-                        <div class="info-value"><i class="fa fa-check text-success mr-1"></i>是</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">会所设施/特色</div>
-                        <div class="info-value">恒温泳池、健身房、私宴厅</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 11. 价格动态（4个）-->
-        <div class="section-card mb-6">
-            <div class="section-title">
-                <i class="fa fa-rmb text-primary"></i>
-                价格动态
-            </div>
-            <div class="info-section">
-                <div class="info-grid">
-                    <div class="info-item">
-                        <div class="info-label">首付</div>
-                        <div class="info-value">200 万</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">特价房</div>
-                        <div class="info-value">本周特惠10套，工抵房价格</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">工程进展</div>
-                        <div class="info-value">主体结构封顶，正在进行内外装修</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">看房专车</div>
-                        <div class="info-value">免费看房巴士，需提前预约</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 12. 竞品信息（2个）-->
-        <div class="section-card mb-6">
-            <div class="section-title">
-                <i class="fa fa-balance-scale text-primary"></i>
-                竞品信息
-            </div>
-            <div class="info-section">
-                <div class="info-grid">
-                    <div class="info-item col-span-2">
-                        <div class="info-label">竞品二手房及均价</div>
-                        <div class="info-value">附近次新房均价75,000元/㎡</div>
-                    </div>
-                    <div class="info-item col-span-2">
-                        <div class="info-label">竞品新房及均价</div>
-                        <div class="info-value">周边新盘均价85,000元/㎡</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 13. 项目定位（5个）-->
-        <div class="section-card mb-6">
-            <div class="section-title">
-                <i class="fa fa-bullseye text-primary"></i>
-                项目定位
-            </div>
-            <div class="info-section">
-                <div class="info-grid">
-                    <div class="info-item">
-                        <div class="info-label">项目定位</div>
-                        <div class="info-value">高端改善型住宅</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">亮点简述</div>
-                        <div class="info-value">地铁上盖，品牌开发商、智慧社区</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">客群画像关键词</div>
-                        <div class="info-value">改善型,首改,品质追求</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">客群类型</div>
-                        <div class="info-value">改善</div>
-                    </div>
-                    <div class="info-item col-span-2">
-                        <div class="info-label">客群描述</div>
-                        <div class="info-value">30-45岁中高收入家庭，注重生活品质和教育资源</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ========== 7.2 图片字段展示 ========== -->
-        <div class="section-card mb-6">
-            <div class="section-title">
-                <i class="fa fa-photo text-primary"></i>
-                图片展示
-            </div>
-            <div class="p-5 space-y-6">
-                <!-- 区位图 -->
-                <div>
-                    <div class="font-medium mb-3">区位图 <span class="text-danger">*</span></div>
-                    <div class="image-gallery">
-                        <div class="image-thumb"><img src="https://picsum.photos/seed/location/300/225" alt="区位图"></div>
+                    <div class="info-section">
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <div class="info-label">楼盘名称</div>
+                                <div class="info-value">中海汇德里</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">物业总称</div>
+                                <div class="info-value">中海高端系</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">行政区</div>
+                                <div class="info-value">朝阳区</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">商圈/板块名称</div>
+                                <div class="info-value">望京</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">物业类别</div>
+                                <div class="info-value">平层</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">占地面积</div>
+                                <div class="info-value">50,000 ㎡</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">建筑面积</div>
+                                <div class="info-value">120,000 ㎡</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">得房率</div>
+                                <div class="info-value">85%</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">室内层高</div>
+                                <div class="info-value">3.0 米</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">梯户比</div>
+                                <div class="info-value">2梯4户</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">装修情况</div>
+                                <div class="info-value">精装</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">装修标准</div>
+                                <div class="info-value">3,000 元/㎡</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- 沙盘图 -->
-                <div>
-                    <div class="font-medium mb-3">沙盘图 <span class="text-danger">*</span></div>
-                    <div class="image-gallery">
-                        <div class="image-thumb"><img src="https://picsum.photos/seed/sandtable/300/225" alt="沙盘图"></div>
+                <!-- 2. 项目规格（15个）-->
+                <div class="section-card mb-6">
+                    <div class="section-title">
+                        <i class="fa fa-th text-primary"></i>
+                        项目规格
+                    </div>
+                    <div class="info-section">
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <div class="info-label">容积率</div>
+                                <div class="info-value">2.5</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">绿化率</div>
+                                <div class="info-value">35%</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">楼栋总数</div>
+                                <div class="info-value">15 栋</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">总户数</div>
+                                <div class="info-value">1,200 户</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">最大楼间距</div>
+                                <div class="info-value">80 米</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">均价</div>
+                                <div class="info-value text-primary font-bold">83,000 元/㎡</div>
+                            </div>
+                            <div class="info-item col-span-2">
+                                <div class="info-label">总价区间</div>
+                                <div class="info-value">680 - 1,200 万</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">首次开盘时间</div>
+                                <div class="info-value">2025-12-15</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">交房时间</div>
+                                <div class="info-value">2027-06-30</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">房屋状态</div>
+                                <div class="info-value">期房</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">预售证号</div>
+                                <div class="info-value">京房售字2025-088号</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">产权年限</div>
+                                <div class="info-value">70年</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">参考总价</div>
+                                <div class="info-value">680万起</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- 户型图 -->
-                <div>
-                    <div class="font-medium mb-3">户型图 <span class="text-danger">*</span></div>
-                    <div class="image-gallery">
-                        <div class="image-thumb"><img src="https://picsum.photos/seed/floorplan1/300/225" alt="户型图1"></div>
-                        <div class="image-thumb"><img src="https://picsum.photos/seed/floorplan2/300/225" alt="户型图2"></div>
-                        <div class="image-thumb"><img src="https://picsum.photos/seed/floorplan3/300/225" alt="户型图3"></div>
-                        <div class="image-thumb"><img src="https://picsum.photos/seed/floorplan4/300/225" alt="户型图4"></div>
+                <!-- 3. 开发商/物业（11个）-->
+                <div class="section-card mb-6">
+                    <div class="section-title">
+                        <i class="fa fa-building text-primary"></i>
+                        开发商/物业
+                    </div>
+                    <div class="info-section">
+                        <div class="info-grid">
+                            <div class="info-item col-span-2">
+                                <div class="info-label">物业公司</div>
+                                <div class="info-value">中海物业</div>
+                            </div>
+                            <div class="info-item col-span-2">
+                                <div class="info-label">物业公司介绍</div>
+                                <div class="info-value">国家一级资质物业管理企业，专注高端住宅服务20年</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">物业费</div>
+                                <div class="info-value">5.8 元/㎡/月</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">停车位数量</div>
+                                <div class="info-value">1,500 个</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">停车位配比</div>
+                                <div class="info-value">1:1.2</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">是否人车分流</div>
+                                <div class="info-value"><i class="fa fa-check text-success mr-1"></i>是</div>
+                            </div>
+                            <div class="info-item col-span-2">
+                                <div class="info-label">开发商名称</div>
+                                <div class="info-value">中海地产</div>
+                            </div>
+                            <div class="info-item col-span-2">
+                                <div class="info-label">开发商品牌介绍</div>
+                                <div class="info-value">中国建筑旗下品牌开发商，深耕北京市场15年</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- 样板间图 -->
-                <div>
-                    <div class="font-medium mb-3">样板间图</div>
-                    <div class="image-gallery">
-                        <div class="image-thumb"><img src="https://picsum.photos/seed/showroom1/300/225" alt="样板间图1"></div>
-                        <div class="image-thumb"><img src="https://picsum.photos/seed/showroom2/300/225" alt="样板间图2"></div>
+                <!-- 4. 楼盘特色（9个）-->
+                <div class="section-card mb-6">
+                    <div class="section-title">
+                        <i class="fa fa-star text-primary"></i>
+                        楼盘特色
+                    </div>
+                    <div class="info-section">
+                        <div class="info-grid">
+                            <div class="info-item col-span-2">
+                                <div class="info-label">园林特色</div>
+                                <div class="info-value">欧式园林风格，5重景观设计</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">是否有水系</div>
+                                <div class="info-value"><i class="fa fa-check text-success mr-1"></i>是</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">园林设计团队</div>
+                                <div class="info-value">贝尔高林</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">建筑风格</div>
+                                <div class="info-value">现代简约</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">建筑设计团队</div>
+                                <div class="info-value">梁志天设计</div>
+                            </div>
+                            <div class="info-item col-span-2">
+                                <div class="info-label">智能科技</div>
+                                <div class="info-value">人脸识别、智能梯控、24小时安防系统</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">环线位置</div>
+                                <div class="info-value">内四环</div>
+                            </div>
+                            <div class="info-item col-span-3">
+                                <div class="info-label">板块利好</div>
+                                <div class="info-value">地铁上盖，自贸区核心位置</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- 园林效果图/实景图 -->
-                <div>
-                    <div class="font-medium mb-3">园林效果图/实景图 <span class="text-danger">*</span></div>
-                    <div class="image-gallery">
-                        <div class="image-thumb"><img src="https://picsum.photos/seed/garden1/300/225" alt="园林图1"></div>
-                        <div class="image-thumb"><img src="https://picsum.photos/seed/garden2/300/225" alt="园林图2"></div>
+                <!-- 5. 交通配套（4个）-->
+                <div class="section-card mb-6">
+                    <div class="section-title">
+                        <i class="fa fa-subway text-primary"></i>
+                        交通配套
+                    </div>
+                    <div class="info-section">
+                        <div class="info-grid">
+                            <div class="info-item col-span-4">
+                                <div class="info-label">交通配套描述</div>
+                                <div class="info-value">双轨交汇，15分钟直达国贸，20分钟到达首都机场</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">最近地铁线路</div>
+                                <div class="info-value">14号线</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">最近地铁站名</div>
+                                <div class="info-value">望京南站</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">最近地铁站距离</div>
+                                <div class="info-value">300 米</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- 建筑立面效果图/实景图 -->
-                <div>
-                    <div class="font-medium mb-3">建筑立面效果图/实景图 <span class="text-danger">*</span></div>
-                    <div class="image-gallery">
-                        <div class="image-thumb"><img src="https://picsum.photos/seed/facade1/300/225" alt="建筑立面图1"></div>
-                        <div class="image-thumb"><img src="https://picsum.photos/seed/facade2/300/225" alt="建筑立面图2"></div>
+                <!-- 6. 商业配套（3个）-->
+                <div class="section-card mb-6">
+                    <div class="section-title">
+                        <i class="fa fa-shopping-bag text-primary"></i>
+                        商业配套
+                    </div>
+                    <div class="info-section">
+                        <div class="info-grid">
+                            <div class="info-item col-span-4">
+                                <div class="info-label">商业配套描述</div>
+                                <div class="info-value">周边3大商圈环绕，步行10分钟可达凯德MALL</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">最近大型商场名</div>
+                                <div class="info-value">凯德MALL</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">最近商场距离</div>
+                                <div class="info-value">500 米</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- 周边配套图 -->
-                <div>
-                    <div class="font-medium mb-3">周边配套图</div>
-                    <div class="image-gallery">
-                        <div class="image-thumb"><img src="https://picsum.photos/seed/surrounding1/300/225" alt="周边配套图1"></div>
-                        <div class="image-thumb"><img src="https://picsum.photos/seed/surrounding2/300/225" alt="周边配套图2"></div>
-                        <div class="image-thumb"><img src="https://picsum.photos/seed/surrounding3/300/225" alt="周边配套图3"></div>
+                <!-- 7. 教育配套（7个）-->
+                <div class="section-card mb-6">
+                    <div class="section-title">
+                        <i class="fa fa-graduation-cap text-primary"></i>
+                        教育配套
+                    </div>
+                    <div class="info-section">
+                        <div class="info-grid">
+                            <div class="info-item col-span-4">
+                                <div class="info-label">教育配套描述</div>
+                                <div class="info-value">周边5所重点学校，教育资源丰富</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">最近幼儿园名</div>
+                                <div class="info-value">北京市第六幼儿园</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">最近幼儿园距离</div>
+                                <div class="info-value">300 米</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">最近小学名</div>
+                                <div class="info-value">朝阳区实验小学</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">最近小学距离</div>
+                                <div class="info-value">500 米</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">最近中学名</div>
+                                <div class="info-value">人大附中朝阳学校</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">最近中学距离</div>
+                                <div class="info-value">800 米</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- 物业团队图片 -->
-                <div>
-                    <div class="font-medium mb-3">物业团队图片</div>
-                    <div class="image-gallery">
-                        <div class="image-thumb"><img src="https://picsum.photos/seed/team1/300/225" alt="物业团队图1"></div>
+                <!-- 8. 公园配套（5个）-->
+                <div class="section-card mb-6">
+                    <div class="section-title">
+                        <i class="fa fa-tree text-primary"></i>
+                        公园配套
+                    </div>
+                    <div class="info-section">
+                        <div class="info-grid">
+                            <div class="info-item col-span-4">
+                                <div class="info-label">公园配套描述</div>
+                                <div class="info-value">3公里内3大公园环绕，生态环境优越</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">最近公园名</div>
+                                <div class="info-value">望京公园</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">最近公园距离</div>
+                                <div class="info-value">200 米</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">2公里最大公园名</div>
+                                <div class="info-value">朝阳公园</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">2公里最大公园距离</div>
+                                <div class="info-value">1,500 米</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 9. 医疗配套（4个）-->
+                <div class="section-card mb-6">
+                    <div class="section-title">
+                        <i class="fa fa-hospital-o text-primary"></i>
+                        医疗配套
+                    </div>
+                    <div class="info-section">
+                        <div class="info-grid">
+                            <div class="info-item col-span-4">
+                                <div class="info-label">医疗配套描述</div>
+                                <div class="info-value">2公里内3家三甲医院，就医便捷</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">最近医院名</div>
+                                <div class="info-value">和睦家医院</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">最近医院距离</div>
+                                <div class="info-value">1,000 米</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">最近三甲医院名</div>
+                                <div class="info-value">中日友好医院</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 10. 会所配套（4个）-->
+                <div class="section-card mb-6">
+                    <div class="section-title">
+                        <i class="fa fa-glass text-primary"></i>
+                        会所配套
+                    </div>
+                    <div class="info-section">
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <div class="info-label">是否含自建商街</div>
+                                <div class="info-value"><i class="fa fa-check text-success mr-1"></i>是</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">自建商业体量</div>
+                                <div class="info-value">5,000㎡</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">是否有业主会所</div>
+                                <div class="info-value"><i class="fa fa-check text-success mr-1"></i>是</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">会所设施/特色</div>
+                                <div class="info-value">恒温泳池、健身房、私宴厅</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 11. 价格动态（4个）-->
+                <div class="section-card mb-6">
+                    <div class="section-title">
+                        <i class="fa fa-rmb text-primary"></i>
+                        价格动态
+                    </div>
+                    <div class="info-section">
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <div class="info-label">首付</div>
+                                <div class="info-value">200 万</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">特价房</div>
+                                <div class="info-value">本周特惠10套，工抵房价格</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">工程进展</div>
+                                <div class="info-value">主体结构封顶，正在进行内外装修</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">看房专车</div>
+                                <div class="info-value">免费看房巴士，需提前预约</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 12. 竞品信息（2个）-->
+                <div class="section-card mb-6">
+                    <div class="section-title">
+                        <i class="fa fa-balance-scale text-primary"></i>
+                        竞品信息
+                    </div>
+                    <div class="info-section">
+                        <div class="info-grid">
+                            <div class="info-item col-span-2">
+                                <div class="info-label">竞品二手房及均价</div>
+                                <div class="info-value">附近次新房均价75,000元/㎡</div>
+                            </div>
+                            <div class="info-item col-span-2">
+                                <div class="info-label">竞品新房及均价</div>
+                                <div class="info-value">周边新盘均价85,000元/㎡</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 13. 项目定位（5个）-->
+                <div class="section-card mb-6">
+                    <div class="section-title">
+                        <i class="fa fa-bullseye text-primary"></i>
+                        项目定位
+                    </div>
+                    <div class="info-section">
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <div class="info-label">项目定位</div>
+                                <div class="info-value">高端改善型住宅</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">亮点简述</div>
+                                <div class="info-value">地铁上盖，品牌开发商、智慧社区</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">客群画像关键词</div>
+                                <div class="info-value">改善型,首改,品质追求</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">客群类型</div>
+                                <div class="info-value">改善</div>
+                            </div>
+                            <div class="info-item col-span-2">
+                                <div class="info-label">客群描述</div>
+                                <div class="info-value">30-45岁中高收入家庭，注重生活品质和教育资源</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-    </main>
+            <!-- Tab内容：图片 -->
+            <div id="imagesTab" class="tab-content">
+                <div class="section-card mb-6">
+                    <div class="section-title">
+                        <i class="fa fa-photo text-primary"></i>
+                        图片展示
+                    </div>
+                    <div class="p-5 space-y-6">
+                        <!-- 区位图 -->
+                        <div>
+                            <div class="font-medium mb-3">区位图 <span class="text-danger">*</span></div>
+                            <div class="image-gallery">
+                                <div class="image-thumb"><img src="https://picsum.photos/seed/location/300/225" alt="区位图" onclick="previewImage(this.src)"></div>
+                            </div>
+                        </div>
+
+                        <!-- 沙盘图 -->
+                        <div>
+                            <div class="font-medium mb-3">沙盘图 <span class="text-danger">*</span></div>
+                            <div class="image-gallery">
+                                <div class="image-thumb"><img src="https://picsum.photos/seed/sandtable/300/225" alt="沙盘图" onclick="previewImage(this.src)"></div>
+                            </div>
+                        </div>
+
+                        <!-- 户型图 -->
+                        <div>
+                            <div class="font-medium mb-3">户型图 <span class="text-danger">*</span></div>
+                            <div class="image-gallery">
+                                <div class="image-thumb"><img src="https://picsum.photos/seed/floorplan1/300/225" alt="户型图1" onclick="previewImage(this.src)"></div>
+                                <div class="image-thumb"><img src="https://picsum.photos/seed/floorplan2/300/225" alt="户型图2" onclick="previewImage(this.src)"></div>
+                                <div class="image-thumb"><img src="https://picsum.photos/seed/floorplan3/300/225" alt="户型图3" onclick="previewImage(this.src)"></div>
+                                <div class="image-thumb"><img src="https://picsum.photos/seed/floorplan4/300/225" alt="户型图4" onclick="previewImage(this.src)"></div>
+                            </div>
+                        </div>
+
+                        <!-- 样板间图 -->
+                        <div>
+                            <div class="font-medium mb-3">样板间图</div>
+                            <div class="image-gallery">
+                                <div class="image-thumb"><img src="https://picsum.photos/seed/showroom1/300/225" alt="样板间图1" onclick="previewImage(this.src)"></div>
+                                <div class="image-thumb"><img src="https://picsum.photos/seed/showroom2/300/225" alt="样板间图2" onclick="previewImage(this.src)"></div>
+                            </div>
+                        </div>
+
+                        <!-- 园林效果图/实景图 -->
+                        <div>
+                            <div class="font-medium mb-3">园林效果图/实景图 <span class="text-danger">*</span></div>
+                            <div class="image-gallery">
+                                <div class="image-thumb"><img src="https://picsum.photos/seed/garden1/300/225" alt="园林图1" onclick="previewImage(this.src)"></div>
+                                <div class="image-thumb"><img src="https://picsum.photos/seed/garden2/300/225" alt="园林图2" onclick="previewImage(this.src)"></div>
+                            </div>
+                        </div>
+
+                        <!-- 建筑立面效果图/实景图 -->
+                        <div>
+                            <div class="font-medium mb-3">建筑立面效果图/实景图 <span class="text-danger">*</span></div>
+                            <div class="image-gallery">
+                                <div class="image-thumb"><img src="https://picsum.photos/seed/facade1/300/225" alt="建筑立面图1" onclick="previewImage(this.src)"></div>
+                                <div class="image-thumb"><img src="https://picsum.photos/seed/facade2/300/225" alt="建筑立面图2" onclick="previewImage(this.src)"></div>
+                            </div>
+                        </div>
+
+                        <!-- 周边配套图 -->
+                        <div>
+                            <div class="font-medium mb-3">周边配套图</div>
+                            <div class="image-gallery">
+                                <div class="image-thumb"><img src="https://picsum.photos/seed/surrounding1/300/225" alt="周边配套图1" onclick="previewImage(this.src)"></div>
+                                <div class="image-thumb"><img src="https://picsum.photos/seed/surrounding2/300/225" alt="周边配套图2" onclick="previewImage(this.src)"></div>
+                                <div class="image-thumb"><img src="https://picsum.photos/seed/surrounding3/300/225" alt="周边配套图3" onclick="previewImage(this.src)"></div>
+                            </div>
+                        </div>
+
+                        <!-- 物业团队图片 -->
+                        <div>
+                            <div class="font-medium mb-3">物业团队图片</div>
+                            <div class="image-gallery">
+                                <div class="image-thumb"><img src="https://picsum.photos/seed/team1/300/225" alt="物业团队图1" onclick="previewImage(this.src)"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab内容：审核记录 -->
+            <div id="auditTab" class="tab-content">
+                <div class="section-card mb-6">
+                    <div class="section-title">
+                        <i class="fa fa-history text-primary"></i>
+                        审核记录
+                    </div>
+                    <div class="p-6">
+                        <div class="space-y-4">
+                            <div class="flex items-start gap-4 pb-4 border-b border-gray-100">
+                                <div class="w-10 h-10 bg-success text-white rounded-full flex items-center justify-center font-medium">A</div>
+                                <div class="flex-1">
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <span class="font-medium">区域经理A</span>
+                                        <span class="tag tag-approved">审核通过</span>
+                                        <span class="text-xs text-gray-400">2026-04-16 10:30</span>
+                                    </div>
+                                    <p class="text-sm text-gray-600">楼盘信息完整，符合上线标准。</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-4 pb-4 border-b border-gray-100">
+                                <div class="w-10 h-10 bg-warning text-white rounded-full flex items-center justify-center font-medium">B</div>
+                                <div class="flex-1">
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <span class="font-medium">置业顾问B</span>
+                                        <span class="tag tag-pending">待审核</span>
+                                        <span class="text-xs text-gray-400">2026-04-16 09:15</span>
+                                    </div>
+                                    <p class="text-sm text-gray-600">提交审核，等待区域经理审核。</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-4 pb-4 border-b border-gray-100">
+                                <div class="w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center font-medium">B</div>
+                                <div class="flex-1">
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <span class="font-medium">置业顾问B</span>
+                                        <span class="tag tag-draft">草稿</span>
+                                        <span class="text-xs text-gray-400">2026-04-16 09:00</span>
+                                    </div>
+                                    <p class="text-sm text-gray-600">创建楼盘信息。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- 图片预览弹窗 -->
+    <div id="previewModal" class="fixed inset-0 bg-black/80 hidden items-center justify-center z-50" onclick="closePreview()">
+        <img id="previewImage" src="" class="max-w-[90vw] max-h-[90vh] object-contain">
+    </div>
+
+    <script>
+        // Tab切换
+        function switchTab(tabName) {
+            // 切换Tab按钮样式
+            document.querySelectorAll('.tab-btn').forEach(function(btn) {
+                btn.classList.remove('active');
+            });
+            event.target.closest('.tab-btn').classList.add('active');
+            
+            // 切换Tab内容
+            document.querySelectorAll('.tab-content').forEach(function(content) {
+                content.classList.remove('active');
+            });
+            document.getElementById(tabName + 'Tab').classList.add('active');
+        }
+
+        // 图片预览
+        function previewImage(src) {
+            document.getElementById('previewImage').src = src;
+            document.getElementById('previewModal').classList.remove('hidden');
+            document.getElementById('previewModal').classList.add('flex');
+        }
+
+        // 关闭预览
+        function closePreview() {
+            document.getElementById('previewModal').classList.add('hidden');
+            document.getElementById('previewModal').classList.remove('flex');
+        }
+    </script>
 </body>
 </html>
