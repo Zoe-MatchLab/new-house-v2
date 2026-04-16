@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>审核楼盘 - 房产AI作业平台</title>
+    <title>编辑楼盘 - 房产AI作业平台</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <script>
@@ -16,19 +16,43 @@
                         warning: '#FF7D00',
                         danger: '#F53F3F',
                         dark: '#1D2129',
+                        'gray-light': '#F2F3F5',
                     }
                 }
             }
         }
     </script>
     <style>
+        .required-field::before { content: '*'; color: #F53F3F; margin-right: 4px; }
         .tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 500; }
         .tag-draft { background: #F2F3F5; color: #4E5969; }
         .tag-pending { background: #FFF7E8; color: #FF7D00; }
         .tag-approved { background: #E8FFEA; color: #00B42A; }
         .tag-rejected { background: #FFECE8; color: #F53F3F; }
         .tag-published { background: #E8F3FF; color: #165DFF; }
+        .tag-required { background: #FFECE8; color: #F53F3F; }
+        .tag-optional { background: #F2F3F5; color: #4E5969; }
         .section-card { background: #fff; border-radius: 12px; border: 1px solid #E8E9EB; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+        .form-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; padding: 20px; }
+        .form-item.col-span-2 { grid-column: span 2; }
+        .form-item.col-span-3 { grid-column: span 3; }
+        .form-item.col-span-4 { grid-column: span 4; }
+        .form-label { display: block; font-size: 13px; color: #4E5969; margin-bottom: 6px; }
+        .form-input { width: 100%; border: 1px solid #E8E9EB; border-radius: 8px; padding: 8px 12px; font-size: 14px; transition: border-color 0.2s; }
+        .form-input:focus { outline: none; border-color: #165DFF; }
+        .form-select { width: 100%; border: 1px solid #E8E9EB; border-radius: 8px; padding: 8px 12px; font-size: 14px; background: #fff; }
+        .form-textarea { width: 100%; border: 1px solid #E8E9EB; border-radius: 8px; padding: 8px 12px; font-size: 14px; resize: vertical; min-height: 60px; }
+        .switch { position: relative; width: 44px; height: 24px; display: inline-block; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; inset: 0; background-color: #D1D5DB; transition: .3s; border-radius: 24px; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; }
+        input:checked + .slider { background-color: #165DFF; }
+        input:checked + .slider:before { transform: translateX(20px); }
+        .image-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+        .image-item { position: relative; aspect-ratio: 4/3; border-radius: 8px; overflow: hidden; background: #f7f8fa; }
+        .image-item img { width: 100%; height: 100%; object-fit: cover; }
+        .image-item .remove-btn { position: absolute; top: 4px; right: 4px; width: 20px; height: 20px; background: rgba(0,0,0,0.5); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; cursor: pointer; }
+        .section-title { font-size: 16px; font-weight: 600; color: #1D2129; padding: 16px 20px; border-bottom: 1px solid #F2F3F5; display: flex; align-items: center; gap: 8px; }
     </style>
 </head>
 <body class="bg-gray-50 min-h-screen">
@@ -63,7 +87,7 @@
                     <i class="fa fa-building-o mr-3 text-gray-400"></i>楼盘列表
                 </a>
                 <a href="edit.html" class="flex items-center px-3 py-2 text-sm bg-primary/10 text-primary rounded-lg">
-                    <i class="fa fa-check-circle mr-3 text-primary"></i>审核楼盘
+                    <i class="fa fa-edit mr-3 text-primary"></i>编辑楼盘
                 </a>
             </nav>
         </div>
@@ -74,171 +98,750 @@
         <!-- 页面标题 -->
         <div class="mb-6 flex items-center justify-between">
             <div>
-                <h1 class="text-2xl font-bold text-gray-800">审核楼盘</h1>
-                <p class="text-gray-500 text-sm mt-1">审核楼盘信息，确认无误后发布上线</p>
+                <h1 class="text-2xl font-bold text-gray-800">编辑楼盘</h1>
+                <p class="text-gray-500 text-sm mt-1">录入楼盘完整信息，包含81个文本字段 + 8类图片 + 审核功能</p>
             </div>
-            <a href="detail.html" class="text-gray-500 hover:text-gray-700">
-                <i class="fa fa-arrow-left mr-1"></i>返回详情
-            </a>
-        </div>
-
-        <!-- 楼盘基本信息 -->
-        <div class="section-card mb-6">
-            <div class="px-6 py-4 border-b border-gray-100">
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-4">
-                        <h2 class="text-lg font-bold text-gray-800">中海汇德里</h2>
-                        <span class="tag tag-pending">待审核</span>
-                    </div>
-                    <div class="text-sm text-gray-500">
-                        提交时间：2026-04-16 10:30
-                    </div>
-                </div>
-            </div>
-            <div class="p-6">
-                <div class="grid grid-cols-4 gap-6">
-                    <div>
-                        <div class="text-sm text-gray-500 mb-1">楼盘名称</div>
-                        <div class="font-medium">中海汇德里</div>
-                    </div>
-                    <div>
-                        <div class="text-sm text-gray-500 mb-1">行政区</div>
-                        <div class="font-medium">朝阳区</div>
-                    </div>
-                    <div>
-                        <div class="text-sm text-gray-500 mb-1">商圈/板块</div>
-                        <div class="font-medium">望京</div>
-                    </div>
-                    <div>
-                        <div class="text-sm text-gray-500 mb-1">均价</div>
-                        <div class="font-medium text-primary">83,000 元/㎡</div>
-                    </div>
-                    <div>
-                        <div class="text-sm text-gray-500 mb-1">总价区间</div>
-                        <div class="font-medium">680-1200万</div>
-                    </div>
-                    <div>
-                        <div class="text-sm text-gray-500 mb-1">开发商</div>
-                        <div class="font-medium">中海地产</div>
-                    </div>
-                    <div>
-                        <div class="text-sm text-gray-500 mb-1">物业公司</div>
-                        <div class="font-medium">中海物业</div>
-                    </div>
-                    <div>
-                        <div class="text-sm text-gray-500 mb-1">交房时间</div>
-                        <div class="font-medium">2027-06-30</div>
-                    </div>
-                </div>
+            <div class="flex items-center gap-3">
+                <span class="tag tag-pending"><i class="fa fa-clock-o mr-1"></i>待审核</span>
+                <button onclick="saveDraft()" class="px-4 py-2 border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50 flex items-center">
+                    <i class="fa fa-save mr-2"></i>保存草稿
+                </button>
+                <button onclick="submitAudit()" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 flex items-center">
+                    <i class="fa fa-paper-plane mr-2"></i>提交审核
+                </button>
             </div>
         </div>
 
-        <!-- 审核操作 -->
-        <div class="section-card mb-6">
-            <div class="px-6 py-4 border-b border-gray-100">
-                <h3 class="font-semibold text-gray-800">审核操作</h3>
-            </div>
-            <div class="p-6">
-                <div class="mb-6">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">审核意见</label>
-                    <textarea id="auditRemark" rows="4" class="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-primary" placeholder="请输入审核意见，字数不超过200字"></textarea>
-                    <div class="text-right text-xs text-gray-400 mt-1">0/200</div>
+        <!-- 表单区域 -->
+        <form id="buildingForm">
+
+            <!-- ========== 7.1 文本字段（81个）========== -->
+
+            <!-- 1. 基本信息（12个）-->
+            <div class="section-card mb-6">
+                <div class="section-title">
+                    <i class="fa fa-info-circle text-primary"></i>
+                    基本信息
+                    <span class="tag tag-required ml-2 text-xs">12个字段</span>
                 </div>
-                
-                <div class="mb-6">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">附件上传</label>
-                    <div class="border-2 border-dashed border-gray-200 rounded-lg p-6 text-center hover:border-primary cursor-pointer">
-                        <i class="fa fa-cloud-upload text-3xl text-gray-300 mb-2"></i>
-                        <p class="text-sm text-gray-500">点击或拖拽文件到此处上传</p>
-                        <p class="text-xs text-gray-400 mt-1">支持 PDF、Word、图片格式，单个文件不超过 10MB</p>
+                <div class="form-grid">
+                    <div class="form-item">
+                        <label class="form-label required-field">楼盘名称</label>
+                        <input type="text" name="name" value="中海汇德里" class="form-input" required>
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">物业总称</label>
+                        <input type="text" name="property_series" class="form-input" placeholder="品牌系列名，选填">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label required-field">行政区</label>
+                        <select name="district" class="form-select" required>
+                            <option value="">请选择</option>
+                            <option value="chaoyang" selected>朝阳</option>
+                            <option value="haidian">海淀</option>
+                            <option value="xicheng">西城</option>
+                            <option value="dongcheng">东城</option>
+                            <option value="fengtai">丰台</option>
+                            <option value="tongzhou">通州</option>
+                            <option value="daxing">大兴</option>
+                            <option value="changping">昌平</option>
+                            <option value="shunyi">顺义</option>
+                            <option value="fangshan">房山</option>
+                        </select>
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label required-field">商圈/板块名称</label>
+                        <input type="text" name="business_area" value="望京" class="form-input" required>
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label required-field">物业类别</label>
+                        <select name="property_type" class="form-select" required>
+                            <option value="">请选择</option>
+                            <option value="flat" selected>平层</option>
+                            <option value="stack">叠拼</option>
+                            <option value="townhouse">联排</option>
+                            <option value="villa">别墅</option>
+                        </select>
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label required-field">占地面积（㎡）</label>
+                        <input type="number" name="land_area" value="50000" class="form-input" required>
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label required-field">建筑面积（㎡）</label>
+                        <input type="number" name="building_area" value="120000" class="form-input" required>
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">得房率（%）</label>
+                        <input type="number" name="unit_rate" value="85" class="form-input" placeholder="最高得房率">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">室内层高（米）</label>
+                        <input type="number" step="0.1" name="floor_height" value="3.0" class="form-input">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">梯户比</label>
+                        <input type="text" name="elevator_ratio" value="2梯4户" class="form-input" placeholder="电梯与户数比例">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label required-field">装修情况</label>
+                        <select name="decoration_status" class="form-select" required>
+                            <option value="">请选择</option>
+                            <option value="rough">毛坯</option>
+                            <option value="fine" selected>精装</option>
+                        </select>
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">装修标准（元/㎡）</label>
+                        <input type="number" name="decoration_standard" value="3000" class="form-input">
                     </div>
                 </div>
+            </div>
 
-                <div class="flex items-center gap-4">
-                    <button onclick="approve()" class="px-6 py-2.5 bg-success text-white rounded-lg hover:bg-success/90 flex items-center">
-                        <i class="fa fa-check mr-2"></i>审核通过
-                    </button>
-                    <button onclick="reject()" class="px-6 py-2.5 bg-danger text-white rounded-lg hover:bg-danger/90 flex items-center">
-                        <i class="fa fa-times mr-2"></i>驳回
-                    </button>
-                    <button onclick="saveDraft()" class="px-6 py-2.5 border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50">
+            <!-- 2. 项目规格（15个）-->
+            <div class="section-card mb-6">
+                <div class="section-title">
+                    <i class="fa fa-th text-primary"></i>
+                    项目规格
+                    <span class="tag tag-required ml-2 text-xs">15个字段</span>
+                </div>
+                <div class="form-grid">
+                    <div class="form-item">
+                        <label class="form-label required-field">容积率</label>
+                        <input type="number" step="0.01" name="plot_ratio" value="2.5" class="form-input" required>
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label required-field">绿化率（%）</label>
+                        <input type="number" name="greening_rate" value="35" class="form-input" required>
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label required-field">楼栋总数</label>
+                        <input type="number" name="building_count" value="15" class="form-input" required>
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label required-field">总户数</label>
+                        <input type="number" name="total_units" value="1200" class="form-input" required>
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">最大楼间距（米）</label>
+                        <input type="number" name="max_building_spacing" value="80" class="form-input">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label required-field">均价（元/㎡）</label>
+                        <input type="number" name="avg_price" value="83000" class="form-input" required>
+                    </div>
+                    <div class="form-item col-span-2">
+                        <label class="form-label required-field">总价区间（万）</label>
+                        <div class="flex items-center gap-2">
+                            <input type="number" name="min_total_price" value="680" class="form-input" placeholder="最低总价" required>
+                            <span class="text-gray-400">-</span>
+                            <input type="number" name="max_total_price" value="1200" class="form-input" placeholder="最高总价" required>
+                            <span class="text-gray-500">万</span>
+                        </div>
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label required-field">首次开盘时间</label>
+                        <input type="date" name="first_open_date" value="2025-12-15" class="form-input" required>
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label required-field">交房时间</label>
+                        <input type="date" name="delivery_date" value="2027-06-30" class="form-input" required>
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label required-field">房屋状态</label>
+                        <select name="house_status" class="form-select" required>
+                            <option value="">请选择</option>
+                            <option value="presale" selected>期房</option>
+                            <option value="complete">现房</option>
+                            <option value="almost_complete">准现房</option>
+                        </select>
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">预售证号</label>
+                        <input type="text" name="presale_license" value="京房售字2025-088号" class="form-input">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">产权年限</label>
+                        <select name="property_rights" class="form-select">
+                            <option value="70" selected>70年</option>
+                            <option value="50">50年</option>
+                            <option value="40">40年</option>
+                        </select>
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">参考总价（万起）</label>
+                        <input type="number" name="reference_price" value="680" class="form-input">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. 开发商/物业（11个）-->
+            <div class="section-card mb-6">
+                <div class="section-title">
+                    <i class="fa fa-building text-primary"></i>
+                    开发商/物业
+                    <span class="tag tag-required ml-2 text-xs">11个字段</span>
+                </div>
+                <div class="form-grid">
+                    <div class="form-item col-span-2">
+                        <label class="form-label required-field">物业公司</label>
+                        <input type="text" name="property_company" value="中海物业" class="form-input" required>
+                    </div>
+                    <div class="form-item col-span-2">
+                        <label class="form-label">物业公司介绍</label>
+                        <textarea name="property_company_intro" class="form-textarea" placeholder="物业服务介绍">国家一级资质物业管理企业，专注高端住宅服务20年</textarea>
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label required-field">物业费（元/㎡/月）</label>
+                        <input type="number" step="0.1" name="property_fee" value="5.8" class="form-input" required>
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">停车位数量</label>
+                        <input type="number" name="parking_count" value="1500" class="form-input">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">停车位配比</label>
+                        <input type="text" name="parking_ratio" value="1:1.2" class="form-input">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">是否人车分流</label>
+                        <label class="switch">
+                            <input type="checkbox" name="separate_pedestrian_vehicle" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="form-item col-span-2">
+                        <label class="form-label required-field">开发商名称</label>
+                        <input type="text" name="developer_name" value="中海地产" class="form-input" required>
+                    </div>
+                    <div class="form-item col-span-2">
+                        <label class="form-label">开发商品牌介绍</label>
+                        <textarea name="developer_intro" class="form-textarea" placeholder="开发商背景介绍">中国建筑旗下品牌开发商，深耕北京市场15年</textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. 楼盘特色（9个）-->
+            <div class="section-card mb-6">
+                <div class="section-title">
+                    <i class="fa fa-star text-primary"></i>
+                    楼盘特色
+                    <span class="tag tag-optional ml-2 text-xs">9个字段</span>
+                </div>
+                <div class="form-grid">
+                    <div class="form-item col-span-2">
+                        <label class="form-label">园林特色</label>
+                        <input type="text" name="garden_feature" value="欧式园林风格，5重景观设计" class="form-input">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">是否有水系</label>
+                        <label class="switch">
+                            <input type="checkbox" name="has_water_system" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">园林设计团队</label>
+                        <input type="text" name="garden_design_team" value="贝尔高林" class="form-input">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">建筑风格</label>
+                        <input type="text" name="architectural_style" value="现代简约" class="form-input">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">建筑设计团队</label>
+                        <input type="text" name="architectural_design_team" value="梁志天设计" class="form-input">
+                    </div>
+                    <div class="form-item col-span-2">
+                        <label class="form-label">智能科技</label>
+                        <input type="text" name="smart_technology" value="人脸识别、智能梯控、24小时安防系统" class="form-input">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label required-field">环线位置</label>
+                        <select name="ring_position" class="form-select" required>
+                            <option value="">请选择</option>
+                            <option value="inner_one">内一环</option>
+                            <option value="inner_two">内二环</option>
+                            <option value="inner_three">内三环</option>
+                            <option value="inner_four" selected>内四环</option>
+                            <option value="inner_five">内五环</option>
+                            <option value="outer_five">外五环</option>
+                            <option value="sixth_ring">六环外</option>
+                        </select>
+                    </div>
+                    <div class="form-item col-span-2">
+                        <label class="form-label">板块利好</label>
+                        <input type="text" name="area_benefit" value="地铁上盖，自贸区核心位置" class="form-input">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. 交通配套（4个）-->
+            <div class="section-card mb-6">
+                <div class="section-title">
+                    <i class="fa fa-subway text-primary"></i>
+                    交通配套
+                    <span class="tag tag-optional ml-2 text-xs">4个字段</span>
+                </div>
+                <div class="form-grid">
+                    <div class="form-item col-span-4">
+                        <label class="form-label">交通配套描述</label>
+                        <input type="text" name="traffic_description" value="双轨交汇，15分钟直达国贸，20分钟到达首都机场" class="form-input">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label required-field">最近地铁线路</label>
+                        <input type="text" name="nearest_subway_line" value="14号线" class="form-input" required>
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label required-field">最近地铁站名</label>
+                        <input type="text" name="nearest_subway_station" value="望京南站" class="form-input" required>
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label required-field">最近地铁站距离（米）</label>
+                        <input type="number" name="nearest_subway_distance" value="300" class="form-input" required>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6. 商业配套（3个）-->
+            <div class="section-card mb-6">
+                <div class="section-title">
+                    <i class="fa fa-shopping-bag text-primary"></i>
+                    商业配套
+                    <span class="tag tag-optional ml-2 text-xs">3个字段</span>
+                </div>
+                <div class="form-grid">
+                    <div class="form-item col-span-4">
+                        <label class="form-label">商业配套描述</label>
+                        <input type="text" name="commercial_description" value="周边3大商圈环绕，步行10分钟可达凯德MALL" class="form-input">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">最近大型商场名</label>
+                        <input type="text" name="nearest_mall" value="凯德MALL" class="form-input">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">最近商场距离（米）</label>
+                        <input type="number" name="nearest_mall_distance" value="500" class="form-input">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 7. 教育配套（7个）-->
+            <div class="section-card mb-6">
+                <div class="section-title">
+                    <i class="fa fa-graduation-cap text-primary"></i>
+                    教育配套
+                    <span class="tag tag-optional ml-2 text-xs">7个字段</span>
+                </div>
+                <div class="form-grid">
+                    <div class="form-item col-span-4">
+                        <label class="form-label">教育配套描述</label>
+                        <input type="text" name="education_description" value="周边5所重点学校，教育资源丰富" class="form-input">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">最近幼儿园名</label>
+                        <input type="text" name="nearest_kindergarten" value="北京市第六幼儿园" class="form-input">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">最近幼儿园距离（米）</label>
+                        <input type="number" name="nearest_kindergarten_distance" value="300" class="form-input">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">最近小学名</label>
+                        <input type="text" name="nearest_primary_school" value="朝阳区实验小学" class="form-input">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">最近小学距离（米）</label>
+                        <input type="number" name="nearest_primary_school_distance" value="500" class="form-input">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">最近中学名</label>
+                        <input type="text" name="nearest_middle_school" value="人大附中朝阳学校" class="form-input">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">最近中学距离（米）</label>
+                        <input type="number" name="nearest_middle_school_distance" value="800" class="form-input">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 8. 公园配套（5个）-->
+            <div class="section-card mb-6">
+                <div class="section-title">
+                    <i class="fa fa-tree text-primary"></i>
+                    公园配套
+                    <span class="tag tag-optional ml-2 text-xs">5个字段</span>
+                </div>
+                <div class="form-grid">
+                    <div class="form-item col-span-4">
+                        <label class="form-label">公园配套描述</label>
+                        <input type="text" name="park_description" value="3公里内3大公园环绕，生态环境优越" class="form-input">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">最近公园名</label>
+                        <input type="text" name="nearest_park" value="望京公园" class="form-input">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">最近公园距离（米）</label>
+                        <input type="number" name="nearest_park_distance" value="200" class="form-input">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">2公里最大公园名</label>
+                        <input type="text" name="max_park_2km" value="朝阳公园" class="form-input">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">2公里最大公园距离（米）</label>
+                        <input type="number" name="max_park_2km_distance" value="1500" class="form-input">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 9. 医疗配套（4个）-->
+            <div class="section-card mb-6">
+                <div class="section-title">
+                    <i class="fa fa-hospital-o text-primary"></i>
+                    医疗配套
+                    <span class="tag tag-optional ml-2 text-xs">4个字段</span>
+                </div>
+                <div class="form-grid">
+                    <div class="form-item col-span-4">
+                        <label class="form-label">医疗配套描述</label>
+                        <input type="text" name="medical_description" value="2公里内3家三甲医院，就医便捷" class="form-input">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">最近医院名</label>
+                        <input type="text" name="nearest_hospital" value="和睦家医院" class="form-input">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">最近医院距离（米）</label>
+                        <input type="number" name="nearest_hospital_distance" value="1000" class="form-input">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">最近三甲医院名</label>
+                        <input type="text" name="nearest_top_hospital" value="中日友好医院" class="form-input">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 10. 会所配套（4个）-->
+            <div class="section-card mb-6">
+                <div class="section-title">
+                    <i class="fa fa-glass text-primary"></i>
+                    会所配套
+                    <span class="tag tag-optional ml-2 text-xs">4个字段</span>
+                </div>
+                <div class="form-grid">
+                    <div class="form-item">
+                        <label class="form-label">是否含自建商街</label>
+                        <label class="switch">
+                            <input type="checkbox" name="has_self_build_street" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">自建商业体量</label>
+                        <input type="text" name="self_build_commercial_size" value="5000㎡" class="form-input">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">是否有业主会所</label>
+                        <label class="switch">
+                            <input type="checkbox" name="has_club" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">会所设施/特色</label>
+                        <input type="text" name="club_facilities" value="恒温泳池、健身房、私宴厅" class="form-input">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 11. 价格动态（4个）-->
+            <div class="section-card mb-6">
+                <div class="section-title">
+                    <i class="fa fa-rmb text-primary"></i>
+                    价格动态
+                    <span class="tag tag-optional ml-2 text-xs">4个字段</span>
+                </div>
+                <div class="form-grid">
+                    <div class="form-item">
+                        <label class="form-label">首付（万）</label>
+                        <input type="number" name="down_payment" value="200" class="form-input" placeholder="首付金额/起">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">特价房</label>
+                        <input type="text" name="special_price" value="本周特惠10套，工抵房价格" class="form-input">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">工程进展</label>
+                        <input type="text" name="project_progress" value="主体结构封顶，正在进行内外装修" class="form-input">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">看房专车</label>
+                        <input type="text" name="shuttle_bus" value="免费看房巴士，需提前预约" class="form-input">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 12. 竞品信息（2个）-->
+            <div class="section-card mb-6">
+                <div class="section-title">
+                    <i class="fa fa-balance-scale text-primary"></i>
+                    竞品信息
+                    <span class="tag tag-optional ml-2 text-xs">2个字段</span>
+                </div>
+                <div class="form-grid">
+                    <div class="form-item col-span-2">
+                        <label class="form-label">竞品二手房及均价</label>
+                        <input type="text" name="competitor_second_hand" value="附近次新房均价75000元/㎡" class="form-input">
+                    </div>
+                    <div class="form-item col-span-2">
+                        <label class="form-label">竞品新房及均价</label>
+                        <input type="text" name="competitor_new_house" value="周边新盘均价85000元/㎡" class="form-input">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 13. 项目定位（5个）-->
+            <div class="section-card mb-6">
+                <div class="section-title">
+                    <i class="fa fa-bullseye text-primary"></i>
+                    项目定位
+                    <span class="tag tag-optional ml-2 text-xs">5个字段</span>
+                </div>
+                <div class="form-grid">
+                    <div class="form-item">
+                        <label class="form-label">项目定位</label>
+                        <input type="text" name="project_positioning" value="高端改善型住宅" class="form-input">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">亮点简述</label>
+                        <input type="text" name="highlights" value="地铁上盖、品牌开发商、智慧社区" class="form-input">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">客群画像关键词</label>
+                        <input type="text" name="customer_keywords" value="改善型,首改,品质追求" class="form-input">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">客群类型</label>
+                        <select name="customer_type" class="form-select">
+                            <option value="">请选择</option>
+                            <option value="rigid">刚需</option>
+                            <option value="improvement" selected>改善</option>
+                            <option value="investment">投资</option>
+                        </select>
+                    </div>
+                    <div class="form-item col-span-2">
+                        <label class="form-label">客群描述</label>
+                        <textarea name="customer_description" class="form-textarea" placeholder="详细客群描述">30-45岁中高收入家庭，注重生活品质和教育资源</textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== 7.2 图片字段（8种类型）========== -->
+            <div class="section-card mb-6">
+                <div class="section-title">
+                    <i class="fa fa-photo text-primary"></i>
+                    图片上传
+                    <span class="tag tag-optional ml-2 text-xs">8种类型</span>
+                </div>
+                <div class="p-5 space-y-6">
+                    <!-- 区位图 -->
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <div>
+                                <span class="font-medium">区位图</span>
+                                <span class="tag tag-required ml-2 text-xs">必填</span>
+                            </div>
+                        </div>
+                        <div class="image-grid" id="location-images">
+                            <div class="image-item"><img src="https://via.placeholder.com/300x225/165DFF/fff?text=区位图" alt=""><button type="button" class="remove-btn" onclick="this.parentElement.remove()"><i class="fa fa-times"></i></button></div>
+                        </div>
+                        <button type="button" class="mt-2 px-3 py-1.5 border border-primary text-primary text-sm rounded hover:bg-primary/5" onclick="addImage('location')">+ 添加图片</button>
+                    </div>
+
+                    <!-- 沙盘图 -->
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <div>
+                                <span class="font-medium">沙盘图</span>
+                                <span class="tag tag-required ml-2 text-xs">必填</span>
+                            </div>
+                        </div>
+                        <div class="image-grid" id="sandtable-images">
+                            <div class="image-item"><img src="https://via.placeholder.com/300x225/00B42A/fff?text=沙盘图" alt=""><button type="button" class="remove-btn" onclick="this.parentElement.remove()"><i class="fa fa-times"></i></button></div>
+                        </div>
+                        <button type="button" class="mt-2 px-3 py-1.5 border border-primary text-primary text-sm rounded hover:bg-primary/5" onclick="addImage('sandtable')">+ 添加图片</button>
+                    </div>
+
+                    <!-- 户型图 -->
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <div>
+                                <span class="font-medium">户型图</span>
+                                <span class="tag tag-required ml-2 text-xs">必填</span>
+                            </div>
+                        </div>
+                        <div class="image-grid" id="floorplan-images">
+                            <div class="image-item"><img src="https://via.placeholder.com/300x225/FF7D00/fff?text=户型A" alt=""><button type="button" class="remove-btn" onclick="this.parentElement.remove()"><i class="fa fa-times"></i></button></div>
+                            <div class="image-item"><img src="https://via.placeholder.com/300x225/FF7D00/fff?text=户型B" alt=""><button type="button" class="remove-btn" onclick="this.parentElement.remove()"><i class="fa fa-times"></i></button></div>
+                        </div>
+                        <button type="button" class="mt-2 px-3 py-1.5 border border-primary text-primary text-sm rounded hover:bg-primary/5" onclick="addImage('floorplan')">+ 添加图片</button>
+                    </div>
+
+                    <!-- 样板间图 -->
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <div>
+                                <span class="font-medium">样板间图</span>
+                                <span class="tag tag-optional ml-2 text-xs">选填</span>
+                            </div>
+                        </div>
+                        <div class="image-grid" id="showroom-images">
+                            <div class="image-item"><img src="https://via.placeholder.com/300x225/F53F3F/fff?text=样板间" alt=""><button type="button" class="remove-btn" onclick="this.parentElement.remove()"><i class="fa fa-times"></i></button></div>
+                        </div>
+                        <button type="button" class="mt-2 px-3 py-1.5 border border-gray-300 text-gray-600 text-sm rounded hover:bg-gray-50" onclick="addImage('showroom')">+ 添加图片</button>
+                    </div>
+
+                    <!-- 园林效果图/实景图 -->
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <div>
+                                <span class="font-medium">园林效果图/实景图</span>
+                                <span class="tag tag-required ml-2 text-xs">必填</span>
+                            </div>
+                        </div>
+                        <div class="image-grid" id="garden-images">
+                            <div class="image-item"><img src="https://via.placeholder.com/300x225/00B42A/fff?text=园林" alt=""><button type="button" class="remove-btn" onclick="this.parentElement.remove()"><i class="fa fa-times"></i></button></div>
+                        </div>
+                        <button type="button" class="mt-2 px-3 py-1.5 border border-primary text-primary text-sm rounded hover:bg-primary/5" onclick="addImage('garden')">+ 添加图片</button>
+                    </div>
+
+                    <!-- 建筑立面效果图/实景图 -->
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <div>
+                                <span class="font-medium">建筑立面效果图/实景图</span>
+                                <span class="tag tag-required ml-2 text-xs">必填</span>
+                            </div>
+                        </div>
+                        <div class="image-grid" id="facade-images">
+                            <div class="image-item"><img src="https://via.placeholder.com/300x225/165DFF/fff?text=建筑立面" alt=""><button type="button" class="remove-btn" onclick="this.parentElement.remove()"><i class="fa fa-times"></i></button></div>
+                        </div>
+                        <button type="button" class="mt-2 px-3 py-1.5 border border-primary text-primary text-sm rounded hover:bg-primary/5" onclick="addImage('facade')">+ 添加图片</button>
+                    </div>
+
+                    <!-- 周边配套图 -->
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <div>
+                                <span class="font-medium">周边配套图</span>
+                                <span class="tag tag-optional ml-2 text-xs">选填</span>
+                                <span class="text-gray-400 text-xs ml-1">交通/商业/学校/医疗/公园配套图</span>
+                            </div>
+                        </div>
+                        <div class="image-grid" id="surrounding-images"></div>
+                        <button type="button" class="mt-2 px-3 py-1.5 border border-gray-300 text-gray-600 text-sm rounded hover:bg-gray-50" onclick="addImage('surrounding')">+ 添加图片</button>
+                    </div>
+
+                    <!-- 物业团队图片 -->
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <div>
+                                <span class="font-medium">物业团队图片</span>
+                                <span class="tag tag-optional ml-2 text-xs">选填</span>
+                            </div>
+                        </div>
+                        <div class="image-grid" id="property_team-images"></div>
+                        <button type="button" class="mt-2 px-3 py-1.5 border border-gray-300 text-gray-600 text-sm rounded hover:bg-gray-50" onclick="addImage('property_team')">+ 添加图片</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== 审核相关 ========== -->
+            <div class="section-card mb-6">
+                <div class="section-title">
+                    <i class="fa fa-check-circle text-primary"></i>
+                    审核信息
+                    <span class="tag tag-pending ml-2 text-xs">待审核</span>
+                </div>
+                <div class="form-grid">
+                    <div class="form-item">
+                        <label class="form-label">当前状态</label>
+                        <div class="pt-1">
+                            <span class="tag tag-pending">待审核</span>
+                        </div>
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">提交时间</label>
+                        <div class="pt-1 text-sm">2026-04-16 10:30</div>
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">提交人</label>
+                        <div class="pt-1 text-sm">区域经理A</div>
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">审核历史</label>
+                        <button type="button" class="text-primary text-sm hover:underline" onclick="showAuditHistory()">查看审核记录</button>
+                    </div>
+                    <div class="form-item col-span-4">
+                        <label class="form-label">审核意见（本次）</label>
+                        <textarea name="audit_remark" class="form-textarea" rows="3" placeholder="如需填写审核意见请在此输入"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 底部操作按钮 -->
+            <div class="sticky bottom-0 bg-white border-t border-gray-200 p-4 flex items-center justify-between">
+                <div class="text-sm text-gray-500">
+                    <span class="text-danger">*</span> 为必填字段
+                </div>
+                <div class="flex items-center gap-3">
+                    <button type="button" onclick="saveDraft()" class="px-6 py-2.5 border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50">
                         <i class="fa fa-save mr-2"></i>保存草稿
                     </button>
+                    <button type="button" onclick="submitAudit()" class="px-6 py-2.5 bg-primary text-white rounded-lg hover:bg-primary/90">
+                        <i class="fa fa-paper-plane mr-2"></i>提交审核
+                    </button>
                 </div>
             </div>
-        </div>
-
-        <!-- 审核历史 -->
-        <div class="section-card">
-            <div class="px-6 py-4 border-b border-gray-100">
-                <h3 class="font-semibold text-gray-800">审核历史</h3>
-            </div>
-            <div class="p-6">
-                <div class="space-y-4">
-                    <div class="flex items-start gap-4">
-                        <div class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center text-sm">A</div>
-                        <div class="flex-1">
-                            <div class="flex items-center gap-2 mb-1">
-                                <span class="font-medium text-sm">区域经理A</span>
-                                <span class="tag tag-pending text-xs">待审核</span>
-                                <span class="text-xs text-gray-400">2026-04-16 10:30</span>
-                            </div>
-                            <p class="text-sm text-gray-600">提交审核，等待总部审核</p>
-                        </div>
-                    </div>
-                    <div class="flex items-start gap-4">
-                        <div class="w-8 h-8 bg-gray-300 text-white rounded-full flex items-center justify-center text-sm">B</div>
-                        <div class="flex-1">
-                            <div class="flex items-center gap-2 mb-1">
-                                <span class="font-medium text-sm">置业顾问B</span>
-                                <span class="tag tag-draft text-xs">草稿</span>
-                                <span class="text-xs text-gray-400">2026-04-16 09:15</span>
-                            </div>
-                            <p class="text-sm text-gray-600">创建楼盘信息</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        </form>
     </main>
 
     <script>
-        // 审核通过
-        function approve() {
-            const remark = document.getElementById('auditRemark').value.trim();
-            if (!remark) {
-                alert('请填写审核意见');
-                return;
-            }
-            if (confirm('确认审核通过该楼盘？')) {
-                alert('审核通过成功，即将跳转到列表页');
-                window.location.href = 'list.html';
-            }
-        }
-
-        // 驳回
-        function reject() {
-            const remark = document.getElementById('auditRemark').value.trim();
-            if (!remark) {
-                alert('请填写驳回原因');
-                return;
-            }
-            if (confirm('确认驳回该楼盘？')) {
-                alert('已驳回，等待修改');
-                window.location.href = 'list.html';
-            }
+        // 添加图片
+        function addImage(type) {
+            const container = document.getElementById(type + '-images');
+            const colors = ['165DFF', '00B42A', 'FF7D00', 'F53F3F'];
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            const item = document.createElement('div');
+            item.className = 'image-item';
+            item.innerHTML = '<img src="https://via.placeholder.com/300x225/' + color + '/fff?text=' + type + '" alt=""><button type="button" class="remove-btn" onclick="this.parentElement.remove()"><i class="fa fa-times"></i></button>';
+            container.appendChild(item);
         }
 
         // 保存草稿
         function saveDraft() {
-            alert('保存审核草稿成功');
+            alert('保存草稿成功');
         }
 
-        // 监听审核意见字数
-        document.getElementById('auditRemark').addEventListener('input', function() {
-            const count = this.value.length;
-            this.nextElementSibling.textContent = count + '/200';
-        });
+        // 提交审核
+        function submitAudit() {
+            const form = document.getElementById('buildingForm');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+            if (confirm('确认提交审核？提交后将进入待审核状态。')) {
+                alert('提交审核成功');
+                window.location.href = 'detail.html';
+            }
+        }
+
+        // 查看审核历史
+        function showAuditHistory() {
+            alert('审核历史：\n1. 2026-04-16 10:30 区域经理A 提交审核\n2. 2026-04-16 09:15 置业顾问B 创建楼盘信息');
+        }
     </script>
 </body>
 </html>
