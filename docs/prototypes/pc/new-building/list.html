@@ -497,7 +497,8 @@
                         ` : ''}
                         
                         ${item.status === 'pending' ? `
-                            <button onclick="openAudit(${item.id})" class="text-primary text-sm hover:underline">审核</button>
+                            <button onclick="viewDetail(${item.id})" class="text-primary text-sm hover:underline">详情</button>
+                            <button onclick="openAudit(${item.id})" class="text-primary text-sm ml-3 hover:underline">审核</button>
                             <button onclick="withdrawReview(${item.id})" class="text-warning text-sm ml-3 hover:underline">撤回</button>
                         ` : ''}
                         
@@ -514,7 +515,8 @@
                         ` : ''}
                         
                         ${item.status === 'online' ? `
-                            <button onclick="offlineMaterial(${item.id})" class="text-gray-500 text-sm hover:underline">下线</button>
+                            <button onclick="viewDetail(${item.id})" class="text-primary text-sm hover:underline">详情</button>
+                            <button onclick="offlineMaterial(${item.id})" class="text-gray-500 text-sm ml-3 hover:underline">下线</button>
                         ` : ''}
                         
                         ${item.status === 'offline' ? `
