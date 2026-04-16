@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>分析结果 - 房产AI助手</title>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/marked/marked.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
         :root {
             --brand-primary: #FA8C16;
@@ -38,7 +40,7 @@
         html, body {
             font-family: var(--font-family);
             font-size: 14px;
-            line-height: 1.5;
+            line-height: 1.6;
             color: var(--color-text);
             background: var(--color-bg);
             -webkit-font-smoothing: antialiased;
@@ -54,10 +56,10 @@
             display: flex;
             align-items: center;
             gap: var(--spacing-sm);
-            border-bottom: 1px solid #F0F0F0;
             position: sticky;
             top: 0;
             z-index: 100;
+            border-bottom: 1px solid #F0F0F0;
         }
 
         .nav-back {
@@ -80,6 +82,7 @@
             color: var(--brand-primary);
             font-size: 16px;
             cursor: pointer;
+            padding: var(--spacing-xs);
         }
 
         /* 录音信息卡片 */
@@ -111,7 +114,7 @@
             font-size: 16px;
             flex-shrink: 0;
             cursor: pointer;
-            box-shadow: 0 4px 12px rgba(22, 93, 255, 0.3);
+            box-shadow: 0 4px 12px rgba(250, 140, 22, 0.3);
         }
 
         .audio-play-btn.playing {
@@ -152,7 +155,6 @@
 
         .audio-wave.playing span { opacity: 1; }
 
-        /* 播放波形动画 */
         @keyframes wave {
             0% { transform: scaleY(0.4); }
             100% { transform: scaleY(1.2); }
@@ -162,197 +164,184 @@
             animation: wave 0.5s ease-in-out infinite alternate;
         }
 
-        .audio-wave.playing span:nth-child(1) { animation-delay: 0s; }
-        .audio-wave.playing span:nth-child(2) { animation-delay: 0.1s; }
-        .audio-wave.playing span:nth-child(3) { animation-delay: 0.05s; }
-        .audio-wave.playing span:nth-child(4) { animation-delay: 0.15s; }
-        .audio-wave.playing span:nth-child(5) { animation-delay: 0.08s; }
-        .audio-wave.playing span:nth-child(6) { animation-delay: 0.12s; }
-        .audio-wave.playing span:nth-child(7) { animation-delay: 0.03s; }
-        .audio-wave.playing span:nth-child(8) { animation-delay: 0.18s; }
-        .audio-wave.playing span:nth-child(9) { animation-delay: 0.07s; }
-        .audio-wave.playing span:nth-child(10) { animation-delay: 0.14s; }
-
-        /* 综合评分 */
-        /* 录音转文本 */
-        .transcript-card {
+        /* 分析结果区域 */
+        .analysis-section {
             margin: 0 var(--spacing-md) var(--spacing-md);
+        }
+
+        .analysis-card {
             background: white;
             border-radius: var(--radius-xl);
             box-shadow: var(--shadow-sm);
             overflow: hidden;
         }
 
-        .transcript-content {
-            padding: 0 var(--spacing-md) var(--spacing-md);
-        }
-
-        .transcript-text {
-            background: var(--color-bg);
-            border-radius: var(--radius-lg);
-            padding: var(--spacing-md);
-            font-size: 14px;
-            line-height: 1.8;
-            color: var(--color-text);
-        }
-
-        .transcript-text p {
-            margin-bottom: 8px;
-        }
-
-        .transcript-text p:last-child {
-            margin-bottom: 0;
-        }
-
-        .transcript-text .speaker {
-            font-weight: 600;
-            margin-right: 8px;
-        }
-
-        .transcript-text .speaker:first-child {
-            color: var(--brand-primary);
-        }
-
-        .transcript-text .speaker:last-child {
-            color: #34D399;
-        }
-
-        .transcript-toggle {
-            background: none;
-            border: none;
-            padding: 4px 8px;
-            cursor: pointer;
-            color: var(--color-sub);
-            transition: transform 0.3s;
-        }
-
-        .transcript-toggle.expanded {
-            transform: rotate(180deg);
-        }
-
-        /* 综合评分 */
-        .score-card {
-            margin: 0 var(--spacing-md) var(--spacing-md);
-            background: white;
-            border-radius: var(--radius-xl);
-            padding: var(--spacing-lg);
-            box-shadow: var(--shadow-sm);
-            text-align: center;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .score-gauge {
-            position: relative;
-            width: 140px;
-            height: 140px;
-            margin: 0 auto var(--spacing-md);
-        }
-
-        .score-gauge svg {
-            width: 140px;
-            height: 140px;
-            transform: rotate(-90deg);
-        }
-
-        .score-gauge circle {
-            fill: none;
-            stroke-width: 10;
-        }
-
-        .score-gauge .track {
-            stroke: var(--color-border);
-        }
-
-        .score-gauge .fill {
-            stroke-linecap: round;
-            transition: stroke-dashoffset 1s ease;
-        }
-
-        .score-gauge .fill.high { stroke: var(--color-success); }
-        .score-gauge .fill.mid { stroke: var(--color-warning); }
-        .score-gauge .fill.low { stroke: var(--color-danger); }
-
-        .score-number {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-        }
-
-        .score-value {
-            font-size: 36px;
-            font-weight: 800;
-            line-height: 1;
-        }
-
-        .score-value.high { color: var(--color-success); }
-        .score-value.mid { color: var(--color-warning); }
-        .score-value.low { color: var(--color-danger); }
-
-        .score-max {
-            font-size: 14px;
-            color: var(--color-sub);
-            font-weight: 400;
-        }
-
-        .score-label {
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--color-title);
-            margin-bottom: var(--spacing-sm);
-        }
-
-        .score-desc {
-            font-size: 13px;
-            color: var(--color-text);
-        }
-
-        /* 维度评分 */
-        .dimensions-card {
-            margin: 0 var(--spacing-md) var(--spacing-md);
-            background: white;
-            border-radius: var(--radius-xl);
-            padding: var(--spacing-md);
-            box-shadow: var(--shadow-sm);
-        }
-
-        .card-header {
+        /* 切换视图按钮 */
+        .view-toggle {
             display: flex;
-            align-items: center;
+            padding: var(--spacing-md);
             gap: var(--spacing-sm);
-            margin-bottom: var(--spacing-md);
+            border-bottom: 1px solid var(--color-border);
         }
 
-        .card-icon {
-            width: 32px;
-            height: 32px;
-            border-radius: var(--radius-md);
-            background: var(--brand-primary-light);
-            color: var(--brand-primary);
+        .toggle-btn {
+            flex: 1;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border: 1px solid var(--color-border);
+            background: white;
+            border-radius: var(--radius-lg);
+            font-size: 14px;
+            color: var(--color-text);
+            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 14px;
+            gap: var(--spacing-xs);
+            transition: all 0.2s ease;
         }
 
-        .card-title {
-            font-size: 15px;
+        .toggle-btn.active {
+            background: var(--brand-primary);
+            border-color: var(--brand-primary);
+            color: white;
+        }
+
+        .toggle-btn:active {
+            opacity: 0.8;
+        }
+
+        /* Markdown 内容样式 */
+        .markdown-body {
+            padding: var(--spacing-md);
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .markdown-body h1 {
+            font-size: 18px;
             font-weight: 600;
             color: var(--color-title);
+            margin-bottom: var(--spacing-md);
+            padding-bottom: var(--spacing-sm);
+            border-bottom: 2px solid var(--brand-primary);
+        }
+
+        .markdown-body h2 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--color-title);
+            margin-top: var(--spacing-lg);
+            margin-bottom: var(--spacing-sm);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .markdown-body h2:first-of-type {
+            margin-top: 0;
+        }
+
+        .markdown-body h2 .icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .markdown-body h2 .icon.score { background: #E6FFF1; color: var(--color-success); }
+        .markdown-body h2 .icon.skill { background: var(--brand-primary-light); color: var(--brand-primary); }
+        .markdown-body h2 .icon.intent { background: #FFF7E6; color: var(--color-warning); }
+        .markdown-body h2 .icon.needs { background: #F0F7FF; color: #1890FF; }
+        .markdown-body h2 .icon.suggest { background: #F7F0FF; color: #722ED1; }
+
+        .markdown-body p {
+            margin-bottom: var(--spacing-sm);
+            color: var(--color-text);
+        }
+
+        .markdown-body ul, .markdown-body ol {
+            margin: var(--spacing-sm) 0;
+            padding-left: 20px;
+        }
+
+        .markdown-body li {
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .markdown-body strong {
+            font-weight: 600;
+            color: var(--color-title);
+        }
+
+        .markdown-body em {
+            font-style: italic;
+            color: var(--color-sub);
+        }
+
+        .markdown-body blockquote {
+            margin: var(--spacing-sm) 0;
+            padding: var(--spacing-sm) var(--spacing-md);
+            background: var(--color-bg);
+            border-left: 3px solid var(--brand-primary);
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            color: var(--color-sub);
+        }
+
+        .markdown-body code {
+            background: var(--color-bg);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-family: 'Monaco', 'Menlo', monospace;
+        }
+
+        .markdown-body hr {
+            border: none;
+            border-top: 1px solid var(--color-border);
+            margin: var(--spacing-md) 0;
+        }
+
+        /* 评分标签 */
+        .score-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 12px;
+            border-radius: var(--radius-full);
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .score-badge.high { background: #E6FFF1; color: var(--color-success); }
+        .score-badge.mid { background: #FFF7E6; color: var(--color-warning); }
+        .score-badge.low { background: #FFF1F0; color: var(--color-danger); }
+
+        .score-badge .unit {
+            font-size: 14px;
+            font-weight: 400;
+        }
+
+        /* 维度评分条 */
+        .dimension-list {
+            margin: var(--spacing-sm) 0;
         }
 
         .dimension-item {
             display: flex;
             align-items: center;
-            margin-bottom: var(--spacing-md);
+            margin-bottom: var(--spacing-sm);
         }
 
-        .dimension-item:last-child { margin-bottom: 0; }
+        .dimension-item:last-child {
+            margin-bottom: 0;
+        }
 
         .dimension-label {
-            width: 80px;
+            width: 70px;
             font-size: 13px;
             color: var(--color-text);
             flex-shrink: 0;
@@ -373,7 +362,7 @@
         .dimension-fill {
             height: 100%;
             border-radius: var(--radius-full);
-            transition: width 1s ease;
+            transition: width 0.8s ease;
         }
 
         .dimension-fill.high { background: var(--color-success); }
@@ -388,114 +377,50 @@
             color: var(--color-title);
         }
 
-        /* 客户意向 */
-        .intent-card {
-            margin: 0 var(--spacing-md) var(--spacing-md);
-            background: white;
-            border-radius: var(--radius-xl);
-            padding: var(--spacing-md);
-            box-shadow: var(--shadow-sm);
-        }
-
-        .intent-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: var(--spacing-xs);
-            padding: var(--spacing-xs) var(--spacing-md);
-            border-radius: var(--radius-full);
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: var(--spacing-sm);
-        }
-
-        .intent-badge.high {
-            background: #E8FFEA;
-            color: var(--color-success);
-        }
-
-        .intent-badge.mid {
-            background: #FFF7E6;
-            color: var(--color-warning);
-        }
-
-        .intent-badge.low {
-            background: #FFECE8;
-            color: var(--color-danger);
-        }
-
-        .intent-text {
-            font-size: 14px;
-            color: var(--color-text);
-            line-height: 1.6;
-        }
-
-        /* 客户需求 */
-        .needs-card {
-            margin: 0 var(--spacing-md) var(--spacing-md);
-            background: white;
-            border-radius: var(--radius-xl);
-            padding: var(--spacing-md);
-            box-shadow: var(--shadow-sm);
-        }
-
-        .needs-tags {
+        /* 标签 */
+        .tag-list {
             display: flex;
             flex-wrap: wrap;
-            gap: var(--spacing-sm);
-            margin-bottom: var(--spacing-sm);
+            gap: var(--spacing-xs);
+            margin: var(--spacing-sm) 0;
         }
 
-        .needs-tag {
-            padding: var(--spacing-xs) var(--spacing-sm);
+        .tag {
+            padding: 4px 10px;
             background: var(--brand-primary-light);
             color: var(--brand-primary);
             border-radius: var(--radius-sm);
             font-size: 12px;
         }
 
-        .needs-desc {
-            font-size: 14px;
-            color: var(--color-text);
-            line-height: 1.6;
+        /* 建议列表 */
+        .suggestion-list {
+            counter-reset: suggestion;
         }
 
-        /* 改进建议 */
-        .suggestions-card {
-            margin: 0 var(--spacing-md) var(--spacing-md);
-            background: white;
-            border-radius: var(--radius-xl);
-            padding: var(--spacing-md);
-            box-shadow: var(--shadow-sm);
+        .suggestion-list li {
+            list-style: none;
+            position: relative;
+            padding-left: 28px;
+            margin-bottom: var(--spacing-sm);
         }
 
-        .suggestion-item {
-            display: flex;
-            align-items: flex-start;
-            gap: var(--spacing-sm);
-            margin-bottom: var(--spacing-md);
-        }
-
-        .suggestion-item:last-child { margin-bottom: 0; }
-
-        .suggestion-num {
+        .suggestion-list li::before {
+            counter-increment: suggestion;
+            content: counter(suggestion);
+            position: absolute;
+            left: 0;
+            top: 2px;
             width: 20px;
             height: 20px;
-            border-radius: 50%;
             background: var(--brand-primary);
             color: white;
+            border-radius: 50%;
             font-size: 11px;
             font-weight: 700;
             display: flex;
             align-items: center;
             justify-content: center;
-            flex-shrink: 0;
-            margin-top: 2px;
-        }
-
-        .suggestion-text {
-            font-size: 14px;
-            color: var(--color-text);
-            line-height: 1.6;
         }
 
         /* 关联客户 */
@@ -565,27 +490,12 @@
             pointer-events: none;
         }
 
-        .toast.error {
-            background: rgba(250, 81, 81, 0.92);
-        }
-
         @keyframes toastIn {
             from { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
             to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
         }
 
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(8px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .animate-in { animation: fadeInUp 0.3s ease forwards; }
-        .delay-1 { animation-delay: 0.05s; opacity: 0; }
-        .delay-2 { animation-delay: 0.1s; opacity: 0; }
-        .delay-3 { animation-delay: 0.15s; opacity: 0; }
-        .delay-4 { animation-delay: 0.2s; opacity: 0; }
-
-        /* 更换客户确认弹窗 */
+        /* 确认弹窗 */
         .confirm-modal {
             position: fixed;
             top: 0;
@@ -621,6 +531,11 @@
             animation: fadeInUp 0.3s ease;
         }
 
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         .confirm-icon {
             width: 48px;
             height: 48px;
@@ -629,14 +544,8 @@
             align-items: center;
             justify-content: center;
             margin: 0 auto 16px;
-        }
-
-        .confirm-icon.danger {
             background: #FFF1F0;
             color: #FF4D4F;
-        }
-
-        .confirm-icon i {
             font-size: 24px;
         }
 
@@ -677,7 +586,6 @@
             background: #FF4D4F;
             color: white;
         }
-
     </style>
 </head>
 <body>
@@ -688,12 +596,11 @@
             <div class="nav-title">分析结果</div>
             <i class="fa fa-share-alt nav-share" onclick="showToast('已分享')"></i>
             <i class="fa fa-download nav-share" onclick="showToast('下载录音')"></i>
-            <i class="fa fa-file-text-o nav-share" onclick="showToast('导出报告')"></i>
         </div>
 
         <!-- 录音信息 -->
-        <div class="audio-card animate-in">
-            <button class="audio-play-btn" id="playBtn" onclick="togglePlay()">
+        <div class="audio-card" onclick="togglePlay()">
+            <button class="audio-play-btn" id="playBtn">
                 <i class="fa fa-play"></i>
             </button>
             <div class="audio-info">
@@ -714,139 +621,136 @@
             </div>
         </div>
 
-        <!-- 录音转文本 -->
-        <div class="transcript-card animate-in delay-1">
-            <div class="card-header">
-                <div class="card-icon" style="background:#E6F7FF;color:#1890FF"><i class="fa fa-file-text-o"></i></div>
-                <div class="card-title">录音转文本</div>
-                <button class="transcript-toggle" id="transcriptToggleBtn">
-                    <i class="fa fa-chevron-down" id="transcriptIcon"></i>
-                </button>
-            </div>
-            <div class="transcript-content" id="transcriptContent" style="display:none;">
-                <div class="transcript-text" id="transcriptText">
-                    <p><span class="speaker">经纪人：</span>喂您好张先生您好，我是咱们中海汇德里的置业顾问小李，您之前有咨询过我们项目不知道您还有印象吗？</p>
-                    <p><span class="speaker">客户：</span>哦有的有的，你们那个项目在哪个位置来着？</p>
-                    <p><span class="speaker">经纪人：</span>我们在浦东新区张江高科技园区这边，地铁13号线XXX站下来500米就到了。项目主打的是110-130㎡的三室户型，预算的话800-1000万之间可以看看。</p>
-                    <p><span class="speaker">客户：</span>哦800-1000万啊，那你们周边有什么学校吗？我小孩明年要上小学了。</p>
-                    <p><span class="speaker">经纪人：</span>张先生您问得太好了！我们项目旁边就是XX小学和XX中学，都是区重点的。项目还自带一个国际幼儿园，真正实现了目送式教育。</p>
-                    <p><span class="speaker">客户：</span>哦那挺好的。那个户型能看看吗？</p>
-                    <p><span class="speaker">经纪人：</span>当然可以张先生，这样我帮您约一个专属的带看时间，您看明天下午3点方便吗？</p>
-                    <p><span class="speaker">客户：</span>行啊，那明天下午3点我过去看看。</p>
-                    <p><span class="speaker">经纪人：</span>好的张先生，那我这边帮您安排好，到时候我到地铁口接您。您路上注意安全，明天见！</p>
-                    <p><span class="speaker">客户：</span>好的谢谢，明天见。</p>
+        <!-- 分析结果 -->
+        <div class="analysis-section">
+            <div class="analysis-card">
+                <!-- 视图切换 -->
+                <div class="view-toggle">
+                    <button class="toggle-btn active" id="btnCard" onclick="switchView('card')">
+                        <i class="fa fa-th-large"></i> 卡片视图
+                    </button>
+                    <button class="toggle-btn" id="btnMarkdown" onclick="switchView('markdown')">
+                        <i class="fa fa-file-text-o"></i> Markdown
+                    </button>
                 </div>
-            </div>
-        </div>
 
-        <!-- 综合评分 -->
-        <div class="score-card animate-in delay-1" id="scoreCard">
-            <div class="score-gauge">
-                <svg viewBox="0 0 140 140">
-                    <circle class="track" cx="70" cy="70" r="60"/>
-                    <circle class="fill high" id="scoreFill" cx="70" cy="70" r="60"
-                        stroke-dasharray="377" stroke-dashoffset="377"/>
-                </svg>
-                <div class="score-number">
-                    <div class="score-value high" id="scoreValue">85</div>
-                    <div class="score-max">/ 100</div>
-                </div>
-            </div>
-            <div class="score-label">综合评分</div>
-            <div class="score-desc" id="scoreDesc">话术表现良好，有小幅提升空间</div>
-        </div>
+                <!-- 卡片视图 -->
+                <div id="cardView">
+                    <!-- 综合评分 -->
+                    <div style="padding: var(--spacing-md); text-align: center; border-bottom: 1px solid var(--color-border);">
+                        <div class="score-badge high" id="scoreBadge">
+                            85<span class="unit">分</span>
+                        </div>
+                        <div style="font-size: 16px; font-weight: 600; color: var(--color-title); margin-bottom: var(--spacing-sm);">综合评分</div>
+                        <div style="font-size: 13px; color: var(--color-sub);" id="scoreDesc">话术表现良好，有小幅提升空间</div>
+                    </div>
 
-        <!-- 话术技巧 -->
-        <div class="dimensions-card animate-in delay-1">
-            <div class="card-header">
-                <div class="card-icon"><i class="fa fa-star-o"></i></div>
-                <div class="card-title">话术技巧</div>
-            </div>
-            <div class="dimension-item">
-                <div class="dimension-label">开场白</div>
-                <div class="dimension-bar-wrap">
-                    <div class="dimension-bar">
-                        <div class="dimension-fill high" id="dimOpening" style="width:0%"></div>
+                    <!-- 话术技巧 -->
+                    <div style="padding: var(--spacing-md); border-bottom: 1px solid var(--color-border);">
+                        <div style="font-size: 15px; font-weight: 600; color: var(--color-title); margin-bottom: var(--spacing-md); display: flex; align-items: center; gap: var(--spacing-sm);">
+                            <span style="width: 24px; height: 24px; background: var(--brand-primary-light); color: var(--brand-primary); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 12px;">
+                                <i class="fa fa-star-o"></i>
+                            </span>
+                            话术技巧
+                        </div>
+                        <div class="dimension-list">
+                            <div class="dimension-item">
+                                <span class="dimension-label">开场白</span>
+                                <div class="dimension-bar-wrap">
+                                    <div class="dimension-bar">
+                                        <div class="dimension-fill high" id="dimOpening" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                                <span class="dimension-score" id="scoreOpening">85</span>
+                            </div>
+                            <div class="dimension-item">
+                                <span class="dimension-label">需求挖掘</span>
+                                <div class="dimension-bar-wrap">
+                                    <div class="dimension-bar">
+                                        <div class="dimension-fill mid" id="dimNeeds" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                                <span class="dimension-score" id="scoreNeeds">80</span>
+                            </div>
+                            <div class="dimension-item">
+                                <span class="dimension-label">异议处理</span>
+                                <div class="dimension-bar-wrap">
+                                    <div class="dimension-bar">
+                                        <div class="dimension-fill high" id="dimObjection" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                                <span class="dimension-score" id="scoreObjection">90</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 客户意向 -->
+                    <div style="padding: var(--spacing-md); border-bottom: 1px solid var(--color-border);">
+                        <div style="font-size: 15px; font-weight: 600; color: var(--color-title); margin-bottom: var(--spacing-sm); display: flex; align-items: center; gap: var(--spacing-sm);">
+                            <span style="width: 24px; height: 24px; background: #F0F7FF; color: var(--brand-primary); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 12px;">
+                                <i class="fa fa-commenting-o"></i>
+                            </span>
+                            客户意向
+                        </div>
+                        <div style="display: flex; align-items: center; gap: var(--spacing-sm); margin-bottom: var(--spacing-sm);">
+                            <span id="intentBadge" style="padding: 4px 12px; background: #E8FFEA; color: var(--color-success); border-radius: var(--radius-full); font-size: 14px; font-weight: 600;">
+                                <i class="fa fa-long-arrow-up"></i> 高意向
+                            </span>
+                        </div>
+                        <div style="font-size: 14px; color: var(--color-text); line-height: 1.6;" id="intentText">
+                            客户在通话中对户型和价格表现出明显兴趣，主动询问了周边配套和交房时间，表现出较强的购房意向，建议重点跟进。
+                        </div>
+                    </div>
+
+                    <!-- 客户需求 -->
+                    <div style="padding: var(--spacing-md); border-bottom: 1px solid var(--color-border);">
+                        <div style="font-size: 15px; font-weight: 600; color: var(--color-title); margin-bottom: var(--spacing-sm); display: flex; align-items: center; gap: var(--spacing-sm);">
+                            <span style="width: 24px; height: 24px; background: #FFF7E6; color: var(--color-warning); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 12px;">
+                                <i class="fa fa-lightbulb-o"></i>
+                            </span>
+                            客户需求
+                        </div>
+                        <div class="tag-list" id="needsTags">
+                            <span class="tag">三室户型</span>
+                            <span class="tag">价格敏感</span>
+                            <span class="tag">关注学区</span>
+                            <span class="tag">改善型需求</span>
+                        </div>
+                        <div style="font-size: 14px; color: var(--color-text); line-height: 1.6;" id="needsDesc">
+                            客户主要关注110-130㎡的三室户型，预算在800-1000万之间。对学区资源和周边地铁配套有明确需求，属于改善型购房客户。
+                        </div>
+                    </div>
+
+                    <!-- 改进建议 -->
+                    <div style="padding: var(--spacing-md);">
+                        <div style="font-size: 15px; font-weight: 600; color: var(--color-title); margin-bottom: var(--spacing-md); display: flex; align-items: center; gap: var(--spacing-sm);">
+                            <span style="width: 24px; height: 24px; background: #F7F0FF; color: #722ED1; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 12px;">
+                                <i class="fa fa-flag-o"></i>
+                            </span>
+                            改进建议
+                        </div>
+                        <ol class="suggestion-list" id="suggestions">
+                            <li>建议加强需求挖掘环节，在客户回答后追加"为什么"类问题，深入了解真实需求和决策权重。</li>
+                            <li>异议处理环节表现较好，但可以更果断地给出解决方案，减少客户犹豫时间。</li>
+                            <li>开场白略显冗长，建议在前30秒内完成价值主张表达，提高客户注意力。</li>
+                        </ol>
                     </div>
                 </div>
-                <div class="dimension-score" id="scoreOpening">85</div>
-            </div>
-            <div class="dimension-item">
-                <div class="dimension-label">需求挖掘</div>
-                <div class="dimension-bar-wrap">
-                    <div class="dimension-bar">
-                        <div class="dimension-fill mid" id="dimNeeds" style="width:0%"></div>
-                    </div>
+
+                <!-- Markdown 视图 -->
+                <div id="markdownView" style="display: none;">
+                    <div class="markdown-body" id="markdownContent"></div>
                 </div>
-                <div class="dimension-score" id="scoreNeeds">80</div>
-            </div>
-            <div class="dimension-item">
-                <div class="dimension-label">异议处理</div>
-                <div class="dimension-bar-wrap">
-                    <div class="dimension-bar">
-                        <div class="dimension-fill high" id="dimObjection" style="width:0%"></div>
-                    </div>
-                </div>
-                <div class="dimension-score" id="scoreObjection">90</div>
-            </div>
-        </div>
-
-        <!-- 客户意向 -->
-        <div class="intent-card animate-in delay-2">
-            <div class="card-header">
-                <div class="card-icon" style="background:#F0F7FF;color:#FA8C16"><i class="fa fa-commenting-o"></i></div>
-                <div class="card-title">客户意向</div>
-            </div>
-            <div class="intent-badge high" id="intentBadge">
-                <i class="fa fa-long-arrow-up"></i> 购买意向高
-            </div>
-            <div class="intent-text" id="intentText">
-                客户在通话中对户型和价格表现出明显兴趣，主动询问了周边配套和交房时间，表现出较强的购房意向，建议重点跟进。
-            </div>
-        </div>
-
-        <!-- 客户需求 -->
-        <div class="needs-card animate-in delay-2">
-            <div class="card-header">
-                <div class="card-icon" style="background:#FFF7E6;color:#FF7D00"><i class="fa fa-lightbulb-o"></i></div>
-                <div class="card-title">客户需求</div>
-            </div>
-            <div class="needs-tags" id="needsTags">
-                <span class="needs-tag">三室户型</span>
-                <span class="needs-tag">价格敏感</span>
-                <span class="needs-tag">关注学区</span>
-                <span class="needs-tag">改善型需求</span>
-            </div>
-            <div class="needs-desc" id="needsDesc">
-                客户主要关注110-130㎡的三室户型，预算在800-1000万之间。对学区资源和周边地铁配套有明确需求，属于改善型购房客户。
-            </div>
-        </div>
-
-        <!-- 改进建议 -->
-        <div class="suggestions-card animate-in delay-3">
-            <div class="card-header">
-                <div class="card-icon" style="background:#F7F0FF;color:#722ED1"><i class="fa fa-flag-o"></i></div>
-                <div class="card-title">改进建议</div>
-            </div>
-            <div class="suggestion-item">
-                <div class="suggestion-num">1</div>
-                <div class="suggestion-text">建议加强需求挖掘环节，在客户回答后追加"为什么"类问题，深入了解真实需求和决策权重。</div>
-            </div>
-            <div class="suggestion-item">
-                <div class="suggestion-num">2</div>
-                <div class="suggestion-text">异议处理环节表现较好，但可以更果断地给出解决方案，减少客户犹豫时间。</div>
-            </div>
-            <div class="suggestion-item">
-                <div class="suggestion-num">3</div>
-                <div class="suggestion-text">开场白略显冗长，建议在前30秒内完成价值主张表达，提高客户注意力。</div>
             </div>
         </div>
 
         <!-- 关联客户 -->
-        <div class="relation-card animate-in delay-4">
-            <div class="card-header">
-                <div class="card-icon" style="background:#E8FFEA;color:#00B42A"><i class="fa fa-user-circle-o"></i></div>
-                <div class="card-title">关联客户</div>
+        <div class="relation-card">
+            <div style="font-size: 15px; font-weight: 600; color: var(--color-title); margin-bottom: var(--spacing-md); display: flex; align-items: center; gap: var(--spacing-sm);">
+                <span style="width: 24px; height: 24px; background: #E8FFEA; color: var(--color-success); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 12px;">
+                    <i class="fa fa-user-circle-o"></i>
+                </span>
+                关联客户
             </div>
             <div class="relation-row">
                 <div class="relation-info">
@@ -856,20 +760,20 @@
                         <div class="relation-phone" id="customerPhone">138****8821</div>
                     </div>
                 </div>
-                <button class="relation-change-btn" id="changeCustomerBtn">更换客户</button>
+                <span class="relation-action" onclick="changeCustomer()">更换客户</span>
             </div>
         </div>
 
-        <!-- 更换客户二次确认弹窗 -->
+        <!-- 确认弹窗 -->
         <div class="confirm-modal" id="confirmModal">
             <div class="confirm-overlay" onclick="closeConfirmModal()"></div>
             <div class="confirm-dialog">
-                <div class="confirm-icon danger"><i class="fa fa-exclamation-triangle"></i></div>
+                <div class="confirm-icon"><i class="fa fa-exclamation-triangle"></i></div>
                 <div class="confirm-title">确认更换客户？</div>
                 <div class="confirm-desc">更换客户后，原客户与该录音的关联将解除，请确认是否继续操作。</div>
                 <div class="confirm-actions">
-                    <button class="confirm-btn cancel" id="closeConfirmBtn">取消</button>
-                    <button class="confirm-btn danger" id="confirmChangeBtn">确认更换</button>
+                    <button class="confirm-btn cancel" onclick="closeConfirmModal()">取消</button>
+                    <button class="confirm-btn danger" onclick="confirmChangeCustomer()">确认更换</button>
                 </div>
             </div>
         </div>
@@ -878,6 +782,7 @@
     <script>
         let isPlaying = false;
         let waveInterval = null;
+        let currentView = 'card';
 
         // 获取URL参数
         function getQueryParam(key) {
@@ -885,8 +790,8 @@
             return params.get(key);
         }
 
-        // 初始化数据（模拟）
-        const mockResult = {
+        // 分析数据
+        const analysisData = {
             recordId: 'RECORD_001',
             name: '通话录音_20260412.wav',
             customer: '张三',
@@ -901,7 +806,7 @@
                 needs: 80,
                 objection: 90
             },
-            emotionJudgment: '高',
+            intentLevel: '高',
             customerNeeds: '客户主要关注110-130㎡的三室户型，预算在800-1000万之间。对学区资源和周边地铁配套有明确需求，属于改善型购房客户。',
             improvementSuggestions: [
                 '建议加强需求挖掘环节，在客户回答后追加"为什么"类问题，深入了解真实需求和决策权重。',
@@ -910,57 +815,112 @@
             ]
         };
 
+        // 生成 Markdown 内容
+        function generateMarkdown(data) {
+            const getScoreClass = (score) => score >= 85 ? 'high' : score >= 70 ? 'mid' : 'low';
+            const getIntentIcon = (level) => level === '高' ? '↑' : level === '中' ? '→' : '↓';
+            
+            const dimHigh = data.speechSkills.opening >= 85 ? 'high' : data.speechSkills.opening >= 70 ? 'mid' : 'low';
+            const dimMid = data.speechSkills.needs >= 85 ? 'high' : data.speechSkills.needs >= 70 ? 'mid' : 'low';
+            const dimLow = data.speechSkills.objection >= 85 ? 'high' : data.speechSkills.objection >= 70 ? 'mid' : 'low';
+
+            return `# 📊 录音分析报告
+
+## 综合评分
+
+**${data.score}分** ${getIntentIcon(data.intentLevel)} 购买意向${data.intentLevel}
+
+> 话术表现${data.score >= 85 ? '优秀' : data.score >= 70 ? '良好' : '一般'}，${data.score >= 85 ? '继续保持' : '有小幅提升空间'}
+
+---
+
+## 话术技巧
+
+| 维度 | 得分 |
+|:-----|:----:|
+| 开场白 | **${data.speechSkills.opening}**分 |
+| 需求挖掘 | **${data.speechSkills.needs}**分 |
+| 异议处理 | **${data.speechSkills.objection}**分 |
+
+**评分说明：**
+- ${data.speechSkills.opening >= 85 ? '✅' : '⚠️'} 开场白：${data.speechSkills.opening >= 85 ? '话术自然，能快速建立信任' : '开场略显冗长，建议精简'}
+- ${data.speechSkills.needs >= 85 ? '✅' : '⚠️'} 需求挖掘：${data.speechSkills.needs >= 85 ? '提问技巧好，能深入了解客户需求' : '建议加强需求挖掘，追加"为什么"类问题'}
+- ${data.speechSkills.objection >= 85 ? '✅' : '⚠️'} 异议处理：${data.speechSkills.objection >= 85 ? '处理果断，给出明确解决方案' : '可更果断地回应客户疑虑'}
+
+---
+
+## 客户需求
+
+**需求标签：** 三室户型 | 价格敏感 | 关注学区 | 改善型需求
+
+${data.customerNeeds}
+
+---
+
+## 改进建议
+
+1. ${data.improvementSuggestions[0]}
+
+2. ${data.improvementSuggestions[1]}
+
+3. ${data.improvementSuggestions[2]}
+
+---
+
+*分析时间：${data.time}*`;
+        }
+
+        // 获取评分样式
         function getScoreClass(score) {
             if (score >= 85) return 'high';
             if (score >= 70) return 'mid';
             return 'low';
         }
 
-        function getScoreLabel(score) {
-            if (score >= 85) return '优秀';
-            if (score >= 70) return '良好';
-            if (score >= 60) return '一般';
-            return '较差';
-        }
-
-        function getIntentClass(level) {
-            if (level === '高') return 'high';
-            if (level === '中') return 'mid';
-            return 'low';
-        }
-
+        // 获取意向图标
         function getIntentIcon(level) {
             if (level === '高') return 'fa-long-arrow-up';
             if (level === '中') return 'fa-arrows-h';
             return 'fa-long-arrow-down';
         }
 
-        function renderResult() {
-            const data = mockResult;
+        // 切换视图
+        function switchView(view) {
+            currentView = view;
+            const cardView = document.getElementById('cardView');
+            const markdownView = document.getElementById('markdownView');
+            const btnCard = document.getElementById('btnCard');
+            const btnMarkdown = document.getElementById('btnMarkdown');
+
+            if (view === 'card') {
+                cardView.style.display = 'block';
+                markdownView.style.display = 'none';
+                btnCard.classList.add('active');
+                btnMarkdown.classList.remove('active');
+            } else {
+                cardView.style.display = 'none';
+                markdownView.style.display = 'block';
+                btnMarkdown.classList.add('active');
+                btnCard.classList.remove('active');
+
+                // 渲染 Markdown
+                const markdownContent = generateMarkdown(analysisData);
+                document.getElementById('markdownContent').innerHTML = marked.parse(markdownContent);
+            }
+        }
+
+        // 渲染卡片视图
+        function renderCardView(data) {
             const scoreClass = getScoreClass(data.score);
 
-            // 更新录音信息
-            document.getElementById('audioName').textContent = data.name;
-            document.getElementById('audioMeta').textContent =
-                data.customer + ' · ' + data.time + ' · ' + data.duration;
-
             // 更新评分
-            const scoreValue = document.getElementById('scoreValue');
-            scoreValue.textContent = data.score;
-            scoreValue.className = 'score-value ' + scoreClass;
-
-            const scoreFill = document.getElementById('scoreFill');
-            scoreFill.className = 'fill ' + scoreClass;
-            // 动画填充
-            setTimeout(() => {
-                const circumference = 2 * Math.PI * 60;
-                const offset = circumference * (1 - data.score / 100);
-                scoreFill.style.strokeDashoffset = offset;
-            }, 100);
+            const scoreBadge = document.getElementById('scoreBadge');
+            scoreBadge.className = 'score-badge ' + scoreClass;
+            scoreBadge.innerHTML = data.score + '<span class="unit">分</span>';
 
             document.getElementById('scoreDesc').textContent =
-                '话术表现' + getScoreLabel(data.score) + '，' +
-                (scoreClass === 'high' ? '继续保持' : scoreClass === 'mid' ? '有小幅提升空间' : '建议针对性练习');
+                '话术表现' + (data.score >= 85 ? '优秀' : data.score >= 70 ? '良好' : '一般') + '，' +
+                (scoreClass === 'high' ? '继续保持' : '有小幅提升空间');
 
             // 更新维度评分
             const updateDim = (id, scoreDim, label) => {
@@ -980,13 +940,20 @@
 
             // 更新客户意向
             const intentBadge = document.getElementById('intentBadge');
-            intentBadge.className = 'intent-badge ' + getIntentClass(data.emotionJudgment);
-            intentBadge.innerHTML = '<i class="fa ' + getIntentIcon(data.emotionJudgment) + '"></i> 购买意向' + data.emotionJudgment;
+            intentBadge.innerHTML = '<i class="fa ' + getIntentIcon(data.intentLevel) + '"></i> ' + data.intentLevel + '意向';
+            intentBadge.style.background = data.intentLevel === '高' ? '#E8FFEA' : data.intentLevel === '中' ? '#FFF7E6' : '#FFF1F0';
+            intentBadge.style.color = data.intentLevel === '高' ? 'var(--color-success)' : data.intentLevel === '中' ? 'var(--color-warning)' : 'var(--color-danger)';
 
             // 更新客户需求
             document.getElementById('needsDesc').textContent = data.customerNeeds;
+
+            // 更新录音信息
+            document.getElementById('audioName').textContent = data.name;
+            document.getElementById('audioMeta').textContent =
+                data.customer + ' · ' + data.time + ' · ' + data.duration;
         }
 
+        // 播放控制
         function togglePlay() {
             const btn = document.getElementById('playBtn');
             const wave = document.getElementById('audioWave');
@@ -996,7 +963,6 @@
                 btn.classList.add('playing');
                 btn.innerHTML = '<i class="fa fa-pause"></i>';
                 wave.classList.add('playing');
-                // 模拟波形动画
                 animateWave(wave);
                 showToast('正在播放录音');
             } else {
@@ -1007,41 +973,6 @@
             }
         }
 
-        // 录音转文本展开/收起
-        let transcriptExpanded = false;
-        function toggleTranscript() {
-            const content = document.getElementById('transcriptContent');
-            const icon = document.getElementById('transcriptIcon');
-            transcriptExpanded = !transcriptExpanded;
-            if (transcriptExpanded) {
-                content.style.display = 'block';
-                icon.style.transform = 'rotate(180deg)';
-            } else {
-                content.style.display = 'none';
-                icon.style.transform = 'rotate(0deg)';
-            }
-        }
-
-        // 更换客户 - 弹出确认框
-        function changeCustomer() {
-            const modal = document.getElementById('confirmModal');
-            modal.classList.add('show');
-        }
-
-        // 关闭确认弹窗
-        function closeConfirmModal() {
-            const modal = document.getElementById('confirmModal');
-            modal.classList.remove('show');
-        }
-
-        // 确认更换客户 - 跳转到客户选择页
-        function confirmChangeCustomer() {
-            closeConfirmModal();
-            // 获取当前录音ID，跳转到客户选择页
-            const recordId = getQueryParam('id') || 'RECORD_001';
-            window.location.href = 'customer-select.html?recordId=' + recordId + '&action=change';
-        }
-
         function animateWave(wave) {
             const spans = wave.querySelectorAll('span');
             waveInterval = setInterval(() => {
@@ -1050,6 +981,21 @@
                     span.style.background = '#FA8C16';
                 });
             }, 300);
+        }
+
+        // 更换客户
+        function changeCustomer() {
+            document.getElementById('confirmModal').classList.add('show');
+        }
+
+        function closeConfirmModal() {
+            document.getElementById('confirmModal').classList.remove('show');
+        }
+
+        function confirmChangeCustomer() {
+            closeConfirmModal();
+            const recordId = getQueryParam('id') || 'RECORD_001';
+            window.location.href = 'customer-select.html?recordId=' + recordId + '&action=change';
         }
 
         function showToast(msg) {
@@ -1065,33 +1011,10 @@
             }, 2000);
         }
 
-        // 页面加载完成后初始化
+        // 初始化
         window.onload = function() {
-            renderResult();
-            
-            // 绑定录音转文本按钮
-            var toggleBtn = document.getElementById('transcriptToggleBtn');
-            if (toggleBtn) {
-                toggleBtn.onclick = toggleTranscript;
-            }
-            
-            // 绑定更换客户按钮
-            var changeBtn = document.getElementById('changeCustomerBtn');
-            if (changeBtn) {
-                changeBtn.onclick = changeCustomer;
-            }
-            
-            // 绑定确认弹窗按钮
-            var closeBtn = document.getElementById('closeConfirmBtn');
-            if (closeBtn) {
-                closeBtn.onclick = closeConfirmModal;
-            }
-            
-            var confirmBtn = document.getElementById('confirmChangeBtn');
-            if (confirmBtn) {
-                confirmBtn.onclick = confirmChangeCustomer;
-            }
-        }
+            renderCardView(analysisData);
+        };
     </script>
 </body>
 </html>
