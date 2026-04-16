@@ -391,10 +391,47 @@
                     
                     <!-- 执行页 -->
                     <div id="executeTab" class="tab-content hidden">
-                        <!-- 表头 -->
+                        <!-- 表头+筛选 -->
                         <div class="mb-3 flex items-center justify-between">
                             <h4 class="font-semibold">执行情况</h4>
                             <div class="text-sm text-gray-500">共 <span class="font-medium">3</span> 名执行人，整体进度 <span class="font-medium text-primary">67%</span></div>
+                        </div>
+                        
+                        <!-- 筛选器 -->
+                        <div class="bg-white rounded-lg border border-gray-200 p-3 mb-3">
+                            <div class="flex items-center gap-4 flex-wrap">
+                                <!-- 执行人搜索 -->
+                                <div class="flex items-center gap-2">
+                                    <label class="text-sm text-gray-500">执行人：</label>
+                                    <input type="text" placeholder="搜索执行人" class="px-3 py-1.5 border border-gray-200 rounded-lg text-sm w-36 focus:outline-none focus:border-primary">
+                                </div>
+                                
+                                <!-- 状态筛选 -->
+                                <div class="flex items-center gap-2">
+                                    <label class="text-sm text-gray-500">状态：</label>
+                                    <select class="px-3 py-1.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-primary">
+                                        <option value="">全部</option>
+                                        <option value="pending">未开始</option>
+                                        <option value="progress">进行中</option>
+                                        <option value="completed">已完成</option>
+                                    </select>
+                                </div>
+                                
+                                <!-- 子任务状态 -->
+                                <div class="flex items-center gap-2">
+                                    <label class="text-sm text-gray-500">子任务：</label>
+                                    <select class="px-3 py-1.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-primary">
+                                        <option value="">全部</option>
+                                        <option value="roadbook">路书执行</option>
+                                        <option value="training">话术训练</option>
+                                        <option value="recording">录音分析</option>
+                                    </select>
+                                </div>
+                                
+                                <!-- 搜索按钮 -->
+                                <button class="px-4 py-1.5 bg-primary text-white rounded-lg text-sm hover:bg-primary/90">搜索</button>
+                                <button class="px-4 py-1.5 border border-gray-200 rounded-lg text-sm hover:bg-gray-50">重置</button>
+                            </div>
                         </div>
                         
                         <!-- 表格 -->
@@ -625,6 +662,25 @@
                                     </tr>
                                 </tbody>
                             </table>
+                        </div>
+                        
+                        <!-- 分页 -->
+                        <div class="flex items-center justify-between mt-4 px-2">
+                            <div class="text-sm text-gray-500">
+                                共 <span class="font-medium">3</span> 条，每页显示 
+                                <select class="px-2 py-1 border border-gray-200 rounded text-sm">
+                                    <option>10</option>
+                                    <option>20</option>
+                                    <option>50</option>
+                                </select> 条
+                            </div>
+                            <div class="flex items-center gap-1">
+                                <button class="px-3 py-1.5 border border-gray-200 rounded text-sm text-gray-400 cursor-not-allowed" disabled>上一页</button>
+                                <button class="px-3 py-1.5 bg-primary text-white rounded text-sm">1</button>
+                                <button class="px-3 py-1.5 border border-gray-200 rounded text-sm text-gray-600 hover:bg-gray-50">2</button>
+                                <button class="px-3 py-1.5 border border-gray-200 rounded text-sm text-gray-600 hover:bg-gray-50">3</button>
+                                <button class="px-3 py-1.5 border border-gray-200 rounded text-sm text-gray-600 hover:bg-gray-50">下一页</button>
+                            </div>
                         </div>
                     </div>
                 </div>
