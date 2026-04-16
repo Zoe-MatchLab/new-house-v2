@@ -39,7 +39,6 @@
         
         /* 表格样式 */
         .hover-row:hover { background: #f8f9fa; }
-        .sub-task-row:hover { background: #fafafa; }
         
         /* 展开/收起按钮 */
         .expand-btn {
@@ -68,19 +67,22 @@
             text-decoration: underline;
         }
         
-        /* 子任务区域 */
+        /* 子任务展开区域 - 整行横向展开 */
         .sub-task-container {
             display: none;
-            background: #fafafa;
-            border-bottom: 1px solid #e5e6eb;
         }
         .sub-task-container.expanded {
-            display: block;
-            animation: slideDown 0.25s ease-out;
+            display: table-row;
         }
-        @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-8px); }
-            to { opacity: 1; transform: translateY(0); }
+        .sub-task-container td {
+            padding: 0;
+        }
+        .sub-task-inner {
+            background: #fafafa;
+            border-bottom: 1px solid #e5e6eb;
+            padding: 12px 16px;
+            margin: 0 16px 0 56px;
+            border-radius: 0 0 8px 8px;
         }
         
         /* 气泡窗 */
@@ -102,6 +104,49 @@
             color: #1D2129;
         }
         .executor-item:not(:last-child) { border-bottom: 1px solid #f2f3f5; }
+        
+        /* 子任务表格 */
+        .sub-task-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .sub-task-table th {
+            text-align: left;
+            padding: 8px 12px;
+            font-size: 12px;
+            color: #86909C;
+            font-weight: 500;
+            background: #fff;
+            border-bottom: 1px solid #E5E6EB;
+        }
+        .sub-task-table td {
+            padding: 10px 12px;
+            font-size: 13px;
+            color: #1D2129;
+            background: #fff;
+            border-bottom: 1px solid #F2F3F5;
+        }
+        .sub-task-table tr:last-child td {
+            border-bottom: none;
+        }
+        .sub-task-table tr:hover td {
+            background: #F7F8FA;
+        }
+        
+        /* 子任务层级指示 */
+        .sub-task-level {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .sub-task-level::before {
+            content: '';
+            display: inline-block;
+            width: 4px;
+            height: 4px;
+            background: #165DFF;
+            border-radius: 50%;
+        }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -248,21 +293,21 @@
 
             <!-- 任务列表 -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-20">
-                <table class="w-full">
+                <table class="w-full" style="table-layout: fixed;">
                     <thead>
                         <tr class="bg-gray-50">
-                            <th class="w-10 text-center px-4 py-3 text-xs text-gray-500 font-medium">勾选</th>
+                            <th class="w-12 text-center px-4 py-3 text-xs text-gray-500 font-medium">勾选</th>
                             <th class="text-left px-4 py-3 text-xs text-gray-500 font-medium">任务名称</th>
                             <th class="text-left px-4 py-3 text-xs text-gray-500 font-medium">任务类型</th>
-                            <th class="text-left px-4 py-3 text-xs text-gray-500 font-medium">子任务</th>
-                            <th class="text-left px-4 py-3 text-xs text-gray-500 font-medium">任务状态</th>
-                            <th class="text-left px-4 py-3 text-xs text-gray-500 font-medium">完成进度</th>
-                            <th class="text-left px-4 py-3 text-xs text-gray-500 font-medium">创建人</th>
-                            <th class="text-left px-4 py-3 text-xs text-gray-500 font-medium">执行人</th>
-                            <th class="text-left px-4 py-3 text-xs text-gray-500 font-medium">创建时间</th>
-                            <th class="text-left px-4 py-3 text-xs text-gray-500 font-medium">结束时间</th>
-                            <th class="text-left px-4 py-3 text-xs text-gray-500 font-medium">提醒时间</th>
-                            <th class="text-left px-4 py-3 text-xs text-gray-500 font-medium">操作</th>
+                            <th class="text-left px-4 py-3 text-xs text-gray-500 font-medium w-28">子任务</th>
+                            <th class="text-left px-4 py-3 text-xs text-gray-500 font-medium w-20">任务状态</th>
+                            <th class="text-left px-4 py-3 text-xs text-gray-500 font-medium w-16">完成进度</th>
+                            <th class="text-left px-4 py-3 text-xs text-gray-500 font-medium w-20">创建人</th>
+                            <th class="text-left px-4 py-3 text-xs text-gray-500 font-medium w-28">执行人</th>
+                            <th class="text-left px-4 py-3 text-xs text-gray-500 font-medium w-24">创建时间</th>
+                            <th class="text-left px-4 py-3 text-xs text-gray-500 font-medium w-24">结束时间</th>
+                            <th class="text-left px-4 py-3 text-xs text-gray-500 font-medium w-24">提醒时间</th>
+                            <th class="text-left px-4 py-3 text-xs text-gray-500 font-medium w-16">操作</th>
                         </tr>
                     </thead>
                     <tbody id="taskTableBody">
@@ -276,7 +321,7 @@
                             <td class="px-4 py-3">
                                 <button class="expand-btn" data-subtask="subtask-1">
                                     <span class="arrow"><i class="fa fa-chevron-right"></i></span>
-                                    <span>共3个子任务</span>
+                                    <span>共3个</span>
                                 </button>
                             </td>
                             <td class="px-4 py-3"><span class="tag tag-progress">进行中</span></td>
@@ -292,48 +337,48 @@
                                     <div class="executor-item">王五</div>
                                 </div>
                             </td>
-                            <td class="px-4 py-3 text-sm text-gray-500">2026-04-16 10:00</td>
-                            <td class="px-4 py-3 text-sm text-gray-500">2026-04-18 18:00</td>
-                            <td class="px-4 py-3 text-sm text-gray-500">2026-04-17 18:00</td>
+                            <td class="px-4 py-3 text-sm text-gray-500">2026-04-16</td>
+                            <td class="px-4 py-3 text-sm text-gray-500">2026-04-18</td>
+                            <td class="px-4 py-3 text-sm text-gray-500">2026-04-17</td>
                             <td class="px-4 py-3">
                                 <button class="text-sm text-primary hover:underline" onclick="viewTask()">查看</button>
                             </td>
                         </tr>
-                        <!-- 子任务展开区域 -->
+                        <!-- 子任务展开区域 - 横向整行展开 -->
                         <tr id="subtask-1" class="sub-task-container">
-                            <td colspan="12" class="p-0">
-                                <div class="px-4 py-2 bg-gray-50 border-t border-gray-200">
-                                    <table class="w-full">
+                            <td colspan="12">
+                                <div class="sub-task-inner">
+                                    <table class="sub-task-table">
                                         <thead>
-                                            <tr class="bg-white">
-                                                <th class="text-left px-4 py-2 text-xs text-gray-500 font-medium w-10"></th>
-                                                <th class="text-left px-4 py-2 text-xs text-gray-500 font-medium">任务名称</th>
-                                                <th class="text-left px-4 py-2 text-xs text-gray-500 font-medium">任务类型</th>
-                                                <th class="text-left px-4 py-2 text-xs text-gray-500 font-medium">任务状态</th>
-                                                <th class="text-left px-4 py-2 text-xs text-gray-500 font-medium">操作</th>
+                                            <tr>
+                                                <th style="width: 30px;"></th>
+                                                <th>子任务名称</th>
+                                                <th style="width: 100px;">任务类型</th>
+                                                <th style="width: 80px;">任务状态</th>
+                                                <th style="width: 80px;">操作</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr class="sub-task-row border-b border-gray-200 bg-white hover:bg-gray-50">
-                                                <td class="px-4 py-2"></td>
-                                                <td class="px-4 py-2 text-sm">路书执行</td>
-                                                <td class="px-4 py-2 text-sm">路书执行</td>
-                                                <td class="px-4 py-2"><span class="tag tag-completed">已完成</span></td>
-                                                <td class="px-4 py-2"><button class="text-sm text-primary hover:underline" onclick="viewTask()">查看</button></td>
+                                            <tr>
+                                                <td></td>
+                                                <td><span class="sub-task-level">路书执行</span></td>
+                                                <td>路书执行</td>
+                                                <td><span class="tag tag-completed">已完成</span></td>
+                                                <td><button class="text-sm text-primary hover:underline" onclick="viewTask()">查看</button></td>
                                             </tr>
-                                            <tr class="sub-task-row border-b border-gray-200 bg-white hover:bg-gray-50">
-                                                <td class="px-4 py-2"></td>
-                                                <td class="px-4 py-2 text-sm">话术训练</td>
-                                                <td class="px-4 py-2 text-sm">话术训练</td>
-                                                <td class="px-4 py-2"><span class="tag tag-progress">进行中</span></td>
-                                                <td class="px-4 py-2"><button class="text-sm text-primary hover:underline" onclick="viewTask()">查看</button></td>
+                                            <tr>
+                                                <td></td>
+                                                <td><span class="sub-task-level">话术训练</span></td>
+                                                <td>话术训练</td>
+                                                <td><span class="tag tag-progress">进行中</span></td>
+                                                <td><button class="text-sm text-primary hover:underline" onclick="viewTask()">查看</button></td>
                                             </tr>
-                                            <tr class="sub-task-row bg-white hover:bg-gray-50">
-                                                <td class="px-4 py-2"></td>
-                                                <td class="px-4 py-2 text-sm">录音分析</td>
-                                                <td class="px-4 py-2 text-sm">录音分析</td>
-                                                <td class="px-4 py-2"><span class="tag tag-draft">待执行</span></td>
-                                                <td class="px-4 py-2"><button class="text-sm text-primary hover:underline" onclick="viewTask()">查看</button></td>
+                                            <tr>
+                                                <td></td>
+                                                <td><span class="sub-task-level">录音分析</span></td>
+                                                <td>录音分析</td>
+                                                <td><span class="tag tag-draft">待执行</span></td>
+                                                <td><button class="text-sm text-primary hover:underline" onclick="viewTask()">查看</button></td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -351,32 +396,32 @@
                             <td class="px-4 py-3">
                                 <button class="expand-btn" data-subtask="subtask-2">
                                     <span class="arrow"><i class="fa fa-chevron-right"></i></span>
-                                    <span>共1个子任务</span>
+                                    <span>共1个</span>
                                 </button>
                             </td>
                             <td class="px-4 py-3"><span class="tag tag-completed">已完成</span></td>
                             <td class="px-4 py-3 text-sm font-medium">1/1</td>
                             <td class="px-4 py-3 text-sm">区域经理B</td>
                             <td class="px-4 py-3 text-sm text-primary hover:underline cursor-pointer">赵六</td>
-                            <td class="px-4 py-3 text-sm text-gray-500">2026-04-15 09:00</td>
-                            <td class="px-4 py-3 text-sm text-gray-500">2026-04-16 18:00</td>
-                            <td class="px-4 py-3 text-sm text-gray-500">2026-04-16 10:00</td>
+                            <td class="px-4 py-3 text-sm text-gray-500">2026-04-15</td>
+                            <td class="px-4 py-3 text-sm text-gray-500">2026-04-16</td>
+                            <td class="px-4 py-3 text-sm text-gray-500">2026-04-16</td>
                             <td class="px-4 py-3">
                                 <button class="text-sm text-primary hover:underline" onclick="viewTask()">查看</button>
                             </td>
                         </tr>
                         <!-- 子任务展开区域 -->
                         <tr id="subtask-2" class="sub-task-container">
-                            <td colspan="12" class="p-0">
-                                <div class="px-4 py-2 bg-gray-50 border-t border-gray-200">
-                                    <table class="w-full">
+                            <td colspan="12">
+                                <div class="sub-task-inner">
+                                    <table class="sub-task-table">
                                         <tbody>
-                                            <tr class="sub-task-row border-b border-gray-200 bg-white hover:bg-gray-50">
-                                                <td class="px-4 py-2 w-10"></td>
-                                                <td class="px-4 py-2 text-sm">话术训练</td>
-                                                <td class="px-4 py-2 text-sm">话术训练</td>
-                                                <td class="px-4 py-2"><span class="tag tag-completed">已完成</span></td>
-                                                <td class="px-4 py-2"><button class="text-sm text-primary hover:underline" onclick="viewTask()">查看</button></td>
+                                            <tr>
+                                                <td style="width: 30px;"></td>
+                                                <td><span class="sub-task-level">话术训练</span></td>
+                                                <td style="width: 100px;">话术训练</td>
+                                                <td style="width: 80px;"><span class="tag tag-completed">已完成</span></td>
+                                                <td style="width: 80px;"><button class="text-sm text-primary hover:underline" onclick="viewTask()">查看</button></td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -394,39 +439,39 @@
                             <td class="px-4 py-3">
                                 <button class="expand-btn" data-subtask="subtask-3">
                                     <span class="arrow"><i class="fa fa-chevron-right"></i></span>
-                                    <span>共2个子任务</span>
+                                    <span>共2个</span>
                                 </button>
                             </td>
                             <td class="px-4 py-3"><span class="tag tag-timeout">已超时</span></td>
                             <td class="px-4 py-3 text-sm font-medium">1/2</td>
                             <td class="px-4 py-3 text-sm">区域经理A</td>
                             <td class="px-4 py-3 text-sm text-primary hover:underline cursor-pointer">钱七，孙八</td>
-                            <td class="px-4 py-3 text-sm text-gray-500">2026-04-14 10:00</td>
-                            <td class="px-4 py-3 text-sm text-danger">2026-04-15 18:00</td>
-                            <td class="px-4 py-3 text-sm text-gray-500">2026-04-15 10:00</td>
+                            <td class="px-4 py-3 text-sm text-gray-500">2026-04-14</td>
+                            <td class="px-4 py-3 text-sm text-danger">2026-04-15</td>
+                            <td class="px-4 py-3 text-sm text-gray-500">2026-04-15</td>
                             <td class="px-4 py-3">
                                 <button class="text-sm text-primary hover:underline" onclick="viewTask()">查看</button>
                             </td>
                         </tr>
                         <!-- 子任务展开区域 -->
                         <tr id="subtask-3" class="sub-task-container">
-                            <td colspan="12" class="p-0">
-                                <div class="px-4 py-2 bg-gray-50 border-t border-gray-200">
-                                    <table class="w-full">
+                            <td colspan="12">
+                                <div class="sub-task-inner">
+                                    <table class="sub-task-table">
                                         <tbody>
-                                            <tr class="sub-task-row border-b border-gray-200 bg-white hover:bg-gray-50">
-                                                <td class="px-4 py-2 w-10"></td>
-                                                <td class="px-4 py-2 text-sm">录音上传</td>
-                                                <td class="px-4 py-2 text-sm">录音分析</td>
-                                                <td class="px-4 py-2"><span class="tag tag-completed">已完成</span></td>
-                                                <td class="px-4 py-2"><button class="text-sm text-primary hover:underline" onclick="viewTask()">查看</button></td>
+                                            <tr>
+                                                <td style="width: 30px;"></td>
+                                                <td><span class="sub-task-level">录音上传</span></td>
+                                                <td style="width: 100px;">录音分析</td>
+                                                <td style="width: 80px;"><span class="tag tag-completed">已完成</span></td>
+                                                <td style="width: 80px;"><button class="text-sm text-primary hover:underline" onclick="viewTask()">查看</button></td>
                                             </tr>
-                                            <tr class="sub-task-row bg-white hover:bg-gray-50">
-                                                <td class="px-4 py-2 w-10"></td>
-                                                <td class="px-4 py-2 text-sm">AI分析</td>
-                                                <td class="px-4 py-2 text-sm">录音分析</td>
-                                                <td class="px-4 py-2"><span class="tag tag-timeout">已超时</span></td>
-                                                <td class="px-4 py-2"><button class="text-sm text-primary hover:underline" onclick="viewTask()">查看</button></td>
+                                            <tr>
+                                                <td style="width: 30px;"></td>
+                                                <td><span class="sub-task-level">AI分析</span></td>
+                                                <td style="width: 100px;">录音分析</td>
+                                                <td style="width: 80px;"><span class="tag tag-timeout">已超时</span></td>
+                                                <td style="width: 80px;"><button class="text-sm text-primary hover:underline" onclick="viewTask()">查看</button></td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -446,8 +491,8 @@
                             <td class="px-4 py-3 text-sm font-medium">0/0</td>
                             <td class="px-4 py-3 text-sm">区域经理A</td>
                             <td class="px-4 py-3 text-sm text-gray-400">未分配</td>
-                            <td class="px-4 py-3 text-sm text-gray-500">2026-04-16 14:00</td>
-                            <td class="px-4 py-3 text-sm text-gray-500">2026-04-20 18:00</td>
+                            <td class="px-4 py-3 text-sm text-gray-500">2026-04-16</td>
+                            <td class="px-4 py-3 text-sm text-gray-500">2026-04-20</td>
                             <td class="px-4 py-3 text-sm text-gray-500">-</td>
                             <td class="px-4 py-3">
                                 <button class="text-sm text-primary hover:underline" onclick="viewTask()">查看</button>
