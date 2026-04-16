@@ -586,6 +586,162 @@
             background: #FF4D4F;
             color: white;
         }
+
+        /* 录音转文本 */
+        .transcript-card {
+            margin: 0 var(--spacing-md) var(--spacing-md);
+            background: white;
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+        }
+
+        .transcript-header {
+            padding: var(--spacing-md);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+        }
+
+        .transcript-header-left {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .transcript-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-md);
+            background: #E6F7FF;
+            color: #1890FF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .transcript-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--color-title);
+        }
+
+        .transcript-toggle {
+            color: var(--color-sub);
+            font-size: 14px;
+            transition: transform 0.3s ease;
+        }
+
+        .transcript-toggle.expanded {
+            transform: rotate(180deg);
+        }
+
+        .transcript-content {
+            display: none;
+            padding: 0 var(--spacing-md) var(--spacing-md);
+        }
+
+        .transcript-content.show {
+            display: block;
+        }
+
+        .transcript-text {
+            background: var(--color-bg);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-md);
+            font-size: 14px;
+            line-height: 1.8;
+            color: var(--color-text);
+        }
+
+        .transcript-text p {
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .transcript-text p:last-child {
+            margin-bottom: 0;
+        }
+
+        .speaker {
+            font-weight: 600;
+            margin-right: 6px;
+        }
+
+        .speaker.agent {
+            color: var(--brand-primary);
+        }
+
+        .speaker.customer {
+            color: #34D399;
+        }
+
+        /* 客户信息卡片 */
+        .customer-info-card {
+            margin: 0 var(--spacing-md) var(--spacing-md);
+            background: white;
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+        }
+
+        .customer-info-header {
+            padding: var(--spacing-md);
+            border-bottom: 1px solid var(--color-border);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .customer-info-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-md);
+            background: #FFF7E6;
+            color: var(--color-warning);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .customer-info-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--color-title);
+        }
+
+        .customer-info-body {
+            padding: var(--spacing-md);
+        }
+
+        .info-row {
+            display: flex;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .info-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .info-label {
+            width: 70px;
+            font-size: 13px;
+            color: var(--color-sub);
+            flex-shrink: 0;
+        }
+
+        .info-value {
+            flex: 1;
+            font-size: 13px;
+            color: var(--color-text);
+        }
+
+        .info-value.highlight {
+            color: var(--brand-primary);
+            font-weight: 500;
+        }
     </style>
 </head>
 <body>
@@ -618,6 +774,65 @@
                 <span style="height:9px"></span>
                 <span style="height:13px"></span>
                 <span style="height:7px"></span>
+            </div>
+        </div>
+
+        <!-- 录音转文本 -->
+        <div class="transcript-card">
+            <div class="transcript-header" onclick="toggleTranscript()">
+                <div class="transcript-header-left">
+                    <div class="transcript-icon"><i class="fa fa-file-text-o"></i></div>
+                    <span class="transcript-title">录音转文本</span>
+                </div>
+                <i class="fa fa-chevron-down transcript-toggle" id="transcriptToggle"></i>
+            </div>
+            <div class="transcript-content" id="transcriptContent">
+                <div class="transcript-text" id="transcriptText">
+                    <p><span class="speaker agent">经纪人：</span>喂您好张先生您好，我是咱们中海汇德里的置业顾问小李，您之前有咨询过我们项目不知道您还有印象吗？</p>
+                    <p><span class="speaker customer">客户：</span>哦有的有的，你们那个项目在哪个位置来着？</p>
+                    <p><span class="speaker agent">经纪人：</span>我们在浦东新区张江高科技园区这边，地铁13号线XXX站下来500米就到了。项目主打的是110-130㎡的三室户型，预算的话800-1000万之间可以看看。</p>
+                    <p><span class="speaker customer">客户：</span>哦800-1000万啊，那你们周边有什么学校吗？我小孩明年要上小学了。</p>
+                    <p><span class="speaker agent">经纪人：</span>张先生您问得太好了！我们项目旁边就是XX小学和XX中学，都是区重点的。项目还自带一个国际幼儿园，真正实现了目送式教育。</p>
+                    <p><span class="speaker customer">客户：</span>哦那挺好的。那个户型能看看吗？</p>
+                    <p><span class="speaker agent">经纪人：</span>当然可以张先生，这样我帮您约一个专属的带看时间，您看明天下午3点方便吗？</p>
+                    <p><span class="speaker customer">客户：</span>行啊，那明天下午3点我过去看看。</p>
+                    <p><span class="speaker agent">经纪人：</span>好的张先生，那我这边帮您安排好，到时候我到地铁口接您。您路上注意安全，明天见！</p>
+                    <p><span class="speaker customer">客户：</span>好的谢谢，明天见。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 客户信息 -->
+        <div class="customer-info-card">
+            <div class="customer-info-header">
+                <div class="customer-info-icon"><i class="fa fa-user-circle-o"></i></div>
+                <span class="customer-info-title">客户画像</span>
+            </div>
+            <div class="customer-info-body">
+                <div class="info-row">
+                    <span class="info-label">客户姓名</span>
+                    <span class="info-value highlight" id="extractName">张先生</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">手机号</span>
+                    <span class="info-value" id="extractPhone">未在录音中提及</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">预算范围</span>
+                    <span class="info-value highlight" id="extractBudget">800-1000万</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">意向户型</span>
+                    <span class="info-value" id="extractLayout">110-130㎡三室</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">核心需求</span>
+                    <span class="info-value" id="extractCoreNeeds">学区资源、地铁配套</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">购房目的</span>
+                    <span class="info-value" id="extractPurpose">改善型需求</span>
+                </div>
             </div>
         </div>
 
@@ -808,6 +1023,26 @@
             },
             intentLevel: '高',
             customerNeeds: '客户主要关注110-130㎡的三室户型，预算在800-1000万之间。对学区资源和周边地铁配套有明确需求，属于改善型购房客户。',
+            // 从录音中提取的客户信息
+            extractedInfo: {
+                name: '张先生',
+                phone: '未在录音中提及',
+                budget: '800-1000万',
+                layout: '110-130㎡三室',
+                coreNeeds: '学区资源、地铁配套',
+                purpose: '改善型需求'
+            },
+            // 录音转文本
+            transcript: `经纪人：喂您好张先生您好，我是咱们中海汇德里的置业顾问小李，您之前有咨询过我们项目不知道您还有印象吗？
+客户：哦有的有的，你们那个项目在哪个位置来着？
+经纪人：我们在浦东新区张江高科技园区这边，地铁13号线XXX站下来500米就到了。项目主打的是110-130㎡的三室户型，预算的话800-1000万之间可以看看。
+客户：哦800-1000万啊，那你们周边有什么学校吗？我小孩明年要上小学了。
+经纪人：张先生您问得太好了！我们项目旁边就是XX小学和XX中学，都是区重点的。项目还自带一个国际幼儿园，真正实现了目送式教育。
+客户：哦那挺好的。那个户型能看看吗？
+经纪人：当然可以张先生，这样我帮您约一个专属的带看时间，您看明天下午3点方便吗？
+客户：行啊，那明天下午3点我过去看看。
+经纪人：好的张先生，那我这边帮您安排好，到时候我到地铁口接您。您路上注意安全，明天见！
+客户：好的谢谢，明天见。`,
             improvementSuggestions: [
                 '建议加强需求挖掘环节，在客户回答后追加"为什么"类问题，深入了解真实需求和决策权重。',
                 '异议处理环节表现较好，但可以更果断地给出解决方案，减少客户犹豫时间。',
@@ -815,14 +1050,28 @@
             ]
         };
 
+        // 录音转文本（对话格式）
+        const transcriptDialogue = [
+            { speaker: 'agent', text: '喂您好张先生您好，我是咱们中海汇德里的置业顾问小李，您之前有咨询过我们项目不知道您还有印象吗？' },
+            { speaker: 'customer', text: '哦有的有的，你们那个项目在哪个位置来着？' },
+            { speaker: 'agent', text: '我们在浦东新区张江高科技园区这边，地铁13号线XXX站下来500米就到了。项目主打的是110-130㎡的三室户型，预算的话800-1000万之间可以看看。' },
+            { speaker: 'customer', text: '哦800-1000万啊，那你们周边有什么学校吗？我小孩明年要上小学了。' },
+            { speaker: 'agent', text: '张先生您问得太好了！我们项目旁边就是XX小学和XX中学，都是区重点的。项目还自带一个国际幼儿园，真正实现了目送式教育。' },
+            { speaker: 'customer', text: '哦那挺好的。那个户型能看看吗？' },
+            { speaker: 'agent', text: '当然可以张先生，这样我帮您约一个专属的带看时间，您看明天下午3点方便吗？' },
+            { speaker: 'customer', text: '行啊，那明天下午3点我过去看看。' },
+            { speaker: 'agent', text: '好的张先生，那我这边帮您安排好，到时候我到地铁口接您。您路上注意安全，明天见！' },
+            { speaker: 'customer', text: '好的谢谢，明天见。' }
+        ];
+
         // 生成 Markdown 内容
         function generateMarkdown(data) {
-            const getScoreClass = (score) => score >= 85 ? 'high' : score >= 70 ? 'mid' : 'low';
             const getIntentIcon = (level) => level === '高' ? '↑' : level === '中' ? '→' : '↓';
-            
-            const dimHigh = data.speechSkills.opening >= 85 ? 'high' : data.speechSkills.opening >= 70 ? 'mid' : 'low';
-            const dimMid = data.speechSkills.needs >= 85 ? 'high' : data.speechSkills.needs >= 70 ? 'mid' : 'low';
-            const dimLow = data.speechSkills.objection >= 85 ? 'high' : data.speechSkills.objection >= 70 ? 'mid' : 'low';
+
+            // 构建对话HTML
+            const dialogueHtml = transcriptDialogue.map(d => 
+                `<p><strong>${d.speaker === 'agent' ? '经纪人' : '客户'}：</strong>${d.text}</p>`
+            ).join('\n');
 
             return `# 📊 录音分析报告
 
@@ -834,6 +1083,19 @@
 
 ---
 
+## 客户画像
+
+| 属性 | 信息 |
+|:-----|:-----|
+| 客户姓名 | ${data.extractedInfo.name} |
+| 手机号 | ${data.extractedInfo.phone} |
+| 预算范围 | **${data.extractedInfo.budget}** |
+| 意向户型 | ${data.extractedInfo.layout} |
+| 核心需求 | ${data.extractedInfo.coreNeeds} |
+| 购房目的 | ${data.extractedInfo.purpose} |
+
+---
+
 ## 话术技巧
 
 | 维度 | 得分 |
@@ -841,11 +1103,6 @@
 | 开场白 | **${data.speechSkills.opening}**分 |
 | 需求挖掘 | **${data.speechSkills.needs}**分 |
 | 异议处理 | **${data.speechSkills.objection}**分 |
-
-**评分说明：**
-- ${data.speechSkills.opening >= 85 ? '✅' : '⚠️'} 开场白：${data.speechSkills.opening >= 85 ? '话术自然，能快速建立信任' : '开场略显冗长，建议精简'}
-- ${data.speechSkills.needs >= 85 ? '✅' : '⚠️'} 需求挖掘：${data.speechSkills.needs >= 85 ? '提问技巧好，能深入了解客户需求' : '建议加强需求挖掘，追加"为什么"类问题'}
-- ${data.speechSkills.objection >= 85 ? '✅' : '⚠️'} 异议处理：${data.speechSkills.objection >= 85 ? '处理果断，给出明确解决方案' : '可更果断地回应客户疑虑'}
 
 ---
 
@@ -868,6 +1125,20 @@ ${data.customerNeeds}
 ---
 
 *分析时间：${data.time}*`;
+        }
+
+        // 切换录音转文本展开/收起
+        function toggleTranscript() {
+            const content = document.getElementById('transcriptContent');
+            const toggle = document.getElementById('transcriptToggle');
+            
+            if (content.classList.contains('show')) {
+                content.classList.remove('show');
+                toggle.classList.remove('expanded');
+            } else {
+                content.classList.add('show');
+                toggle.classList.add('expanded');
+            }
         }
 
         // 获取评分样式
