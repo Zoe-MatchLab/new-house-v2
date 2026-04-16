@@ -40,20 +40,112 @@
         .form-label { display: block; font-size: 13px; color: #4E5969; margin-bottom: 6px; }
         .form-input { width: 100%; border: 1px solid #E8E9EB; border-radius: 8px; padding: 8px 12px; font-size: 14px; transition: border-color 0.2s; }
         .form-input:focus { outline: none; border-color: #165DFF; }
+        .form-input[readonly] { background: #F7F8FA; cursor: not-allowed; }
         .form-select { width: 100%; border: 1px solid #E8E9EB; border-radius: 8px; padding: 8px 12px; font-size: 14px; background: #fff; }
+        .form-select[disabled] { background: #F7F8FA; cursor: not-allowed; }
         .form-textarea { width: 100%; border: 1px solid #E8E9EB; border-radius: 8px; padding: 8px 12px; font-size: 14px; resize: vertical; min-height: 60px; }
+        .form-textarea[readonly] { background: #F7F8FA; cursor: not-allowed; }
         .switch { position: relative; width: 44px; height: 24px; display: inline-block; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; cursor: pointer; inset: 0; background-color: #D1D5DB; transition: .3s; border-radius: 24px; }
         .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; }
         input:checked + .slider { background-color: #165DFF; }
         input:checked + .slider:before { transform: translateX(20px); }
+        .switch-readonly .slider { background-color: #E8E9EB; cursor: not-allowed; }
+        .switch-readonly .slider:before { display: none; }
         .image-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
         .image-item { position: relative; aspect-ratio: 4/3; border-radius: 8px; overflow: hidden; background: #f7f8fa; }
         .image-item img { width: 100%; height: 100%; object-fit: cover; }
         .image-item .remove-btn { position: absolute; top: 4px; right: 4px; width: 20px; height: 20px; background: rgba(0,0,0,0.5); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; cursor: pointer; }
+        .image-item.readonly .remove-btn { display: none; }
         .section-title { font-size: 16px; font-weight: 600; color: #1D2129; padding: 16px 20px; border-bottom: 1px solid #F2F3F5; display: flex; align-items: center; gap: 8px; }
+        .readonly-hint { background: #FFF7E8; border: 1px solid #FF7D00; border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; display: none; }
+        .readonly-hint.show { display: block; }
     </style>
+    <script>
+        // 根据URL参数判断模式
+        const urlParams = new URLSearchParams(window.location.search);
+        const pageMode = urlParams.get('mode') || 'edit'; // 默认编辑模式
+        
+        // 初始化页面
+        document.addEventListener('DOMContentLoaded', function() {
+            if (pageMode === 'audit') {
+                // 审核模式
+                document.title = '审核楼盘 - 房产AI作业平台';
+                document.getElementById('pageTitle').textContent = '审核楼盘';
+                document.getElementById('pageSubtitle').textContent = '审核楼盘信息，确认无误后发布上线';
+                document.getElementById('statusBadge').innerHTML = '<i class="fa fa-clock-o mr-1"></i>待审核';
+                
+                // 显示只读提示
+                document.getElementById('readonlyHint').classList.add('show');
+                
+                // 显示审核信息区块
+                document.getElementById('auditSection').style.display = 'block';
+                
+                // 隐藏编辑相关按钮，显示审核按钮
+                document.getElementById('editActions').style.display = 'none';
+                document.getElementById('auditActions').style.display = 'flex';
+                
+                // 设置字段只读
+                setFieldsReadonly(true);
+            } else {
+                // 编辑模式
+                document.title = '编辑楼盘 - 房产AI作业平台';
+                document.getElementById('pageTitle').textContent = '编辑楼盘';
+                document.getElementById('pageSubtitle').textContent = '编辑楼盘完整信息';
+                document.getElementById('statusBadge').innerHTML = '<i class="fa fa-edit mr-1"></i>编辑中';
+                
+                // 隐藏审核信息区块
+                document.getElementById('auditSection').style.display = 'none';
+                
+                // 显示编辑按钮
+                document.getElementById('editActions').style.display = 'flex';
+                document.getElementById('auditActions').style.display = 'none';
+            }
+        });
+        
+        // 设置字段只读状态
+        function setFieldsReadonly(readonly) {
+            // 所有输入框
+            document.querySelectorAll('input[type="text"], input[type="number"], input[type="date"], input[type="datetime-local"]').forEach(function(input) {
+                input.readOnly = readonly;
+            });
+            
+            // 所有选择框
+            document.querySelectorAll('select').forEach(function(select) {
+                select.disabled = readonly;
+            });
+            
+            // 所有文本域
+            document.querySelectorAll('textarea').forEach(function(textarea) {
+                textarea.readOnly = readonly;
+            });
+            
+            // 开关 - 审核模式只显示状态不可点击
+            document.querySelectorAll('.switch').forEach(function(sw) {
+                if (readonly) {
+                    sw.classList.add('switch-readonly');
+                } else {
+                    sw.classList.remove('switch-readonly');
+                }
+            });
+            
+            // 图片项 - 隐藏删除按钮
+            document.querySelectorAll('.image-item').forEach(function(item) {
+                if (readonly) {
+                    item.classList.add('readonly');
+                } else {
+                    item.classList.remove('readonly');
+                }
+            });
+            
+            // 隐藏添加图片按钮
+            var addBtns = document.querySelectorAll('button[onclick^="addImage"]');
+            addBtns.forEach(function(btn) {
+                btn.style.display = readonly ? 'none' : 'inline-block';
+            });
+        }
+    </script>
 </head>
 <body class="bg-gray-50 min-h-screen">
     <!-- 顶部导航 -->
@@ -95,20 +187,20 @@
 
     <!-- 主内容区 -->
     <main class="ml-56 pt-[60px] p-6">
+        <!-- 只读提示 -->
+        <div id="readonlyHint" class="readonly-hint">
+            <i class="fa fa-info-circle text-warning mr-2"></i>
+            <strong>审核模式</strong>：当前为只读状态，仅可查看和审核楼盘信息。如需修改，请返回列表点击"编辑"。
+        </div>
+        
         <!-- 页面标题 -->
         <div class="mb-6 flex items-center justify-between">
             <div>
-                <h1 class="text-2xl font-bold text-gray-800">编辑楼盘</h1>
-                <p class="text-gray-500 text-sm mt-1">录入楼盘完整信息，包含81个文本字段 + 8类图片 + 审核功能</p>
+                <h1 id="pageTitle" class="text-2xl font-bold text-gray-800">编辑楼盘</h1>
+                <p id="pageSubtitle" class="text-gray-500 text-sm mt-1">录入楼盘完整信息，包含81个文本字段 + 8类图片</p>
             </div>
             <div class="flex items-center gap-3">
-                <span class="tag tag-pending"><i class="fa fa-clock-o mr-1"></i>待审核</span>
-                <button onclick="saveDraft()" class="px-4 py-2 border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50 flex items-center">
-                    <i class="fa fa-save mr-2"></i>保存草稿
-                </button>
-                <button onclick="submitAudit()" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 flex items-center">
-                    <i class="fa fa-paper-plane mr-2"></i>提交审核
-                </button>
+                <span id="statusBadge" class="tag tag-pending"><i class="fa fa-edit mr-1"></i>编辑中</span>
             </div>
         </div>
 
@@ -758,8 +850,8 @@
                 </div>
             </div>
 
-            <!-- ========== 审核相关 ========== -->
-            <div class="section-card mb-6">
+            <!-- ========== 审核相关（仅审核模式显示）========== -->
+            <div id="auditSection" class="section-card mb-6" style="display: none;">
                 <div class="section-title">
                     <i class="fa fa-check-circle text-primary"></i>
                     审核信息
@@ -791,8 +883,8 @@
                 </div>
             </div>
 
-            <!-- 底部操作按钮 -->
-            <div class="sticky bottom-0 bg-white border-t border-gray-200 p-4 flex items-center justify-between">
+            <!-- 底部操作按钮（编辑模式） -->
+            <div id="editActions" class="sticky bottom-0 bg-white border-t border-gray-200 p-4 flex items-center justify-between">
                 <div class="text-sm text-gray-500">
                     <span class="text-danger">*</span> 为必填字段
                 </div>
@@ -805,12 +897,30 @@
                     </button>
                 </div>
             </div>
+
+            <!-- 底部操作按钮（审核模式） -->
+            <div id="auditActions" class="sticky bottom-0 bg-white border-t border-gray-200 p-4 flex items-center justify-between" style="display: none;">
+                <div>
+                    <a href="detail.html" class="text-gray-500 hover:text-gray-700">
+                        <i class="fa fa-arrow-left mr-1"></i>返回详情
+                    </a>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button type="button" onclick="rejectBuilding()" class="px-6 py-2.5 border border-danger text-danger rounded-lg hover:bg-danger/5">
+                        <i class="fa fa-times mr-2"></i>驳回
+                    </button>
+                    <button type="button" onclick="approveBuilding()" class="px-6 py-2.5 bg-success text-white rounded-lg hover:bg-success/90">
+                        <i class="fa fa-check mr-2"></i>审核通过
+                    </button>
+                </div>
+            </div>
         </form>
     </main>
 
     <script>
         // 添加图片
         function addImage(type) {
+            if (pageMode === 'audit') return; // 审核模式不允许添加
             const container = document.getElementById(type + '-images');
             const colors = ['165DFF', '00B42A', 'FF7D00', 'F53F3F'];
             const color = colors[Math.floor(Math.random() * colors.length)];
@@ -835,6 +945,32 @@
             if (confirm('确认提交审核？提交后将进入待审核状态。')) {
                 alert('提交审核成功');
                 window.location.href = 'detail.html';
+            }
+        }
+
+        // 审核通过
+        function approveBuilding() {
+            const remark = document.querySelector('textarea[name="audit_remark"]').value.trim();
+            if (!remark) {
+                alert('请填写审核意见');
+                return;
+            }
+            if (confirm('确认审核通过该楼盘？')) {
+                alert('审核通过成功');
+                window.location.href = 'list.html';
+            }
+        }
+
+        // 驳回
+        function rejectBuilding() {
+            const remark = document.querySelector('textarea[name="audit_remark"]').value.trim();
+            if (!remark) {
+                alert('请填写驳回原因');
+                return;
+            }
+            if (confirm('确认驳回该楼盘？')) {
+                alert('已驳回，请等待修改');
+                window.location.href = 'list.html';
             }
         }
 
