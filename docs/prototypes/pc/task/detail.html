@@ -212,21 +212,137 @@
                 <div class="p-6">
                     <!-- 配置页 -->
                     <div id="configTab" class="tab-content">
-                        <h4 class="font-semibold mb-4">探盘配置</h4>
+                        <h4 class="font-semibold mb-4">探盘配置（只读）</h4>
                         <div class="space-y-4">
+                            <!-- 楼盘信息 -->
                             <div class="bg-gray-50 rounded-lg p-4">
-                                <div class="text-sm text-gray-500 mb-1">楼盘信息</div>
-                                <div class="font-medium">万科城市花园</div>
-                                <div class="text-sm text-gray-500">朝阳区建国路88号</div>
+                                <div class="flex items-center gap-2 mb-3">
+                                    <i class="fa fa-building text-primary"></i>
+                                    <span class="font-semibold">楼盘信息</span>
+                                    <span class="tag tag-success text-xs">在售</span>
+                                </div>
+                                <div class="grid grid-cols-3 gap-3 text-sm">
+                                    <div><span class="text-gray-500">楼盘名称：</span><span class="font-medium">万科城市花园</span></div>
+                                    <div><span class="text-gray-500">物业类型：</span><span class="font-medium">住宅</span></div>
+                                    <div><span class="text-gray-500">均价：</span><span class="font-medium text-primary">68,000 元/㎡</span></div>
+                                    <div><span class="text-gray-500">楼盘地址：</span><span class="font-medium">朝阳区建国路88号</span></div>
+                                    <div><span class="text-gray-500">开发商：</span><span class="font-medium">万科地产</span></div>
+                                    <div><span class="text-gray-500">开盘时间：</span><span class="font-medium">2026-03-01</span></div>
+                                </div>
                             </div>
+
+                            <!-- 探盘路书配置 -->
                             <div class="bg-gray-50 rounded-lg p-4">
-                                <div class="text-sm text-gray-500 mb-1">路书配置</div>
-                                <div class="font-medium">标准探盘路线（3个点位）</div>
-                                <div class="text-sm text-gray-500">包含：楼盘大厅、沙盘、样板间</div>
+                                <div class="flex items-center gap-2 mb-3">
+                                    <i class="fa fa-map text-primary"></i>
+                                    <span class="font-semibold">探盘路书配置</span>
+                                </div>
+                                
+                                <!-- 路书内容 -->
+                                <div class="mb-4">
+                                    <div class="text-sm font-medium mb-2">路书内容</div>
+                                    <div class="bg-white rounded p-3 text-sm">
+                                        <div class="mb-2"><span class="text-gray-500">探盘路线：</span>从大门进入，经过营销中心→示范区→样板间→会所</div>
+                                        <div><span class="text-gray-500">重点介绍：</span>项目主打智能化社区，配备人脸识别系统、智能梯控等</div>
+                                    </div>
+                                </div>
+
+                                <!-- 打卡配置 -->
+                                <div class="mb-4">
+                                    <div class="text-sm font-medium mb-2">打卡配置</div>
+                                    <div class="bg-white rounded p-3 text-sm space-y-2">
+                                        <div class="flex items-center gap-4">
+                                            <span><span class="text-gray-500">打卡范围：</span><span class="font-medium">200米</span></span>
+                                            <span><span class="text-gray-500">偏移阈值：</span><span class="font-medium">500米</span></span>
+                                            <span class="tag tag-success text-xs">已开启补卡</span>
+                                        </div>
+                                        <div class="flex items-center gap-4">
+                                            <span><span class="text-gray-500">拍照要求：</span><span class="font-medium">必填</span></span>
+                                            <span><span class="text-gray-500">打卡话术：</span><span class="font-medium">必填</span></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- 采集点位 -->
+                                <div>
+                                    <div class="text-sm font-medium mb-2">采集点位（3个）</div>
+                                    <div class="space-y-2">
+                                        <div class="bg-white rounded p-3 flex items-center gap-3">
+                                            <span class="w-6 h-6 rounded-full bg-primary text-white text-xs flex items-center justify-center">1</span>
+                                            <div class="flex-1">
+                                                <div class="font-medium text-sm">接待处</div>
+                                                <div class="text-xs text-gray-500">必打卡点 | 拍照+填写内容</div>
+                                            </div>
+                                            <span class="tag tag-info text-xs">必打卡</span>
+                                        </div>
+                                        <div class="bg-white rounded p-3 flex items-center gap-3">
+                                            <span class="w-6 h-6 rounded-full bg-primary text-white text-xs flex items-center justify-center">2</span>
+                                            <div class="flex-1">
+                                                <div class="font-medium text-sm">沙盘区</div>
+                                                <div class="text-xs text-gray-500">必打卡点 | 拍照+录制视频</div>
+                                            </div>
+                                            <span class="tag tag-info text-xs">必打卡</span>
+                                        </div>
+                                        <div class="bg-white rounded p-3 flex items-center gap-3">
+                                            <span class="w-6 h-6 rounded-full bg-primary text-white text-xs flex items-center justify-center">3</span>
+                                            <div class="flex-1">
+                                                <div class="font-medium text-sm">样板间</div>
+                                                <div class="text-xs text-gray-500">选打卡点 | 拍照</div>
+                                            </div>
+                                            <span class="tag tag-default text-xs">选打卡</span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
+
+                            <!-- 话术训练配置 -->
                             <div class="bg-gray-50 rounded-lg p-4">
-                                <div class="text-sm text-gray-500 mb-1">话术训练配置</div>
-                                <div class="font-medium">金牌销售话术（10题）</div>
+                                <div class="flex items-center gap-2 mb-3">
+                                    <i class="fa fa-graduation-cap text-primary"></i>
+                                    <span class="font-semibold">话术训练配置</span>
+                                    <span class="tag tag-success text-xs">已启用</span>
+                                </div>
+                                <div class="bg-white rounded p-3 text-sm">
+                                    <div class="mb-2"><span class="text-gray-500">训练项目：</span><span class="font-medium">产品知识、竞品对比、话术技巧</span></div>
+                                    <div><span class="text-gray-500">题库：</span><span class="font-medium">金牌销售话术（120题）</span></div>
+                                </div>
+                            </div>
+
+                            <!-- 录音分析配置 -->
+                            <div class="bg-gray-50 rounded-lg p-4">
+                                <div class="flex items-center gap-2 mb-3">
+                                    <i class="fa fa-microphone text-primary"></i>
+                                    <span class="font-semibold">录音分析配置</span>
+                                    <span class="tag tag-success text-xs">已启用</span>
+                                </div>
+                                <div class="bg-white rounded p-3 text-sm">
+                                    <div class="mb-2"><span class="text-gray-500">分析维度：</span></div>
+                                    <div class="flex flex-wrap gap-2">
+                                        <span class="tag tag-info text-xs">话术规范</span>
+                                        <span class="tag tag-info text-xs">情绪识别</span>
+                                        <span class="tag tag-info text-xs">关键词覆盖</span>
+                                        <span class="tag tag-info text-xs">邀约意向</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 任务时间配置 -->
+                            <div class="bg-gray-50 rounded-lg p-4">
+                                <div class="flex items-center gap-2 mb-3">
+                                    <i class="fa fa-clock-o text-primary"></i>
+                                    <span class="font-semibold">任务时间配置</span>
+                                </div>
+                                <div class="bg-white rounded p-3 text-sm">
+                                    <div class="mb-2"><span class="text-gray-500">任务结束时间：</span><span class="font-medium">2026-04-18 18:00</span></div>
+                                    <div class="space-y-1">
+                                        <div class="flex items-center gap-2"><span class="tag tag-success text-xs">轻度</span><span class="text-gray-500">截止前24小时提醒</span></div>
+                                        <div class="flex items-center gap-2"><span class="tag tag-warning text-xs">中度</span><span class="text-gray-500">截止前12小时强提醒</span></div>
+                                        <div class="flex items-center gap-2"><span class="tag tag-danger text-xs">严重</span><span class="text-gray-500">截止前2小时电话催办</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                                 <div class="text-sm text-gray-500">涵盖：开场白、需求挖掘、异议处理、逼定</div>
                             </div>
                             <div class="bg-gray-50 rounded-lg p-4">
