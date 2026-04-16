@@ -59,33 +59,6 @@
                     class="w-full px-3 py-2.5 bg-gray-50 rounded-lg text-sm focus:outline-none focus:bg-white border border-gray-200">
             </div>
 
-            <div class="mb-4">
-                <label class="block text-xs text-gray-500 mb-1">意向楼盘</label>
-                <div class="relative">
-                    <select id="buildingSelect" class="w-full px-3 py-2.5 bg-gray-50 rounded-lg text-sm text-gray-400 focus:outline-none focus:bg-white border border-gray-200 appearance-none">
-                        <option value="">请选择意向楼盘</option>
-                        <option value="1">万科城市花园</option>
-                        <option value="2">中海汇德里</option>
-                        <option value="3">金隅学府</option>
-                        <option value="4">远洋LAVIE</option>
-                        <option value="5">招商公园1872</option>
-                    </select>
-                    <i class="fa fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                </div>
-            </div>
-
-            <div class="mb-4">
-                <label class="block text-xs text-gray-500 mb-1">客户状态</label>
-                <div class="relative">
-                    <select id="statusSelect" class="w-full px-3 py-2.5 bg-gray-50 rounded-lg text-sm text-gray-400 focus:outline-none focus:bg-white border border-gray-200 appearance-none">
-                        <option value="potential">潜在</option>
-                        <option value="following">跟进中</option>
-                        <option value="dealed">成交</option>
-                        <option value="lost">流失</option>
-                    </select>
-                    <i class="fa fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                </div>
-            </div>
         </div>
 
         <div class="bg-white rounded-lg p-4 mb-4">
@@ -124,15 +97,7 @@
                 document.getElementById('customerPhone').classList.remove('text-gray-400');
                 document.getElementById('customerPhone').classList.add('text-gray-800');
                 
-                document.getElementById('buildingSelect').value = '1';
-                document.getElementById('buildingSelect').classList.remove('text-gray-400');
-                document.getElementById('buildingSelect').classList.add('text-gray-800');
-                
-                document.getElementById('statusSelect').value = 'following';
-                document.getElementById('statusSelect').classList.remove('text-gray-400');
-                document.getElementById('statusSelect').classList.add('text-gray-800');
-                
-                document.getElementById('customerRemark').value = '客户对万科城市花园120平米户型感兴趣，预算800-900万。';
+                document.getElementById('customerRemark').value = '客户对房产有兴趣，预算800-900万。
             }
         }
 
