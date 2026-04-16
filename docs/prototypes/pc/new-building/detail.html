@@ -854,8 +854,8 @@
         // 审核通过
         function approveBuilding() {
             const reason = document.getElementById('auditReason').value.trim();
-            if (confirm('确认审核通过该楼盘？')) {
-                alert('审核通过成功，楼盘已上线！');
+            if (confirm('确认审核通过该楼盘？\n\n审核通过后请到列表页点击"配置"为楼盘配置探盘模板，然后点击"上线"发布楼盘。')) {
+                alert('审核通过成功！\n\n请到列表页为楼盘配置探盘模板并上线。');
                 window.location.href = 'list.html';
             }
         }
