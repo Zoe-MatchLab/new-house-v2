@@ -299,6 +299,20 @@
             <!-- 任务列表 -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-20">
                 <table class="w-full" style="table-layout: fixed;">
+                    <colgroup>
+                        <col style="width: 40px;">
+                        <col style="width: 40px;">
+                        <col style="min-width: 180px;">
+                        <col style="width: 100px;">
+                        <col style="width: 80px;">
+                        <col style="width: 70px;">
+                        <col style="width: 80px;">
+                        <col style="width: 100px;">
+                        <col style="width: 80px;">
+                        <col style="width: 80px;">
+                        <col style="width: 80px;">
+                        <col style="width: 60px;">
+                    </colgroup>
                     <thead>
                         <tr class="bg-gray-50">
                             <th class="w-10 text-center px-4 py-3 text-xs text-gray-500 font-medium">勾选</th>
@@ -477,16 +491,18 @@
                             <td class="px-4 py-3 text-center">
                                 <input type="checkbox" class="rounded">
                             </td>
+                            <td class="px-4 py-3">
+                                <!-- 无子任务，不显示展开按钮 -->
+                            </td>
                             <td class="px-4 py-3 text-sm font-medium">自定义任务-周报收集</td>
                             <td class="px-4 py-3 text-sm">自定义任务</td>
-                            <td class="px-4 py-3 text-gray-400 text-sm">-</td>
                             <td class="px-4 py-3"><span class="tag tag-draft">草稿</span></td>
                             <td class="px-4 py-3 text-sm font-medium">0/0</td>
                             <td class="px-4 py-3 text-sm">区域经理A</td>
                             <td class="px-4 py-3 text-sm text-gray-400">未分配</td>
                             <td class="px-4 py-3 text-sm text-gray-500">2026-04-16</td>
                             <td class="px-4 py-3 text-sm text-gray-500">2026-04-20</td>
-                            <td class="px-4 py-3 text-sm text-gray-500">-</td>
+                            <td class="px-4 py-3 text-sm text-gray-400">-</td>
                             <td class="px-4 py-3">
                                 <button class="text-sm text-primary hover:underline" onclick="viewTask()">查看</button>
                             </td>
