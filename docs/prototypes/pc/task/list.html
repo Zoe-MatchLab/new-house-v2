@@ -105,10 +105,11 @@
         }
         .executor-item:not(:last-child) { border-bottom: 1px solid #f2f3f5; }
         
-        /* 子任务表格 */
+        /* 子任务表格 - 均分列 */
         .sub-task-table {
             width: 100%;
             border-collapse: collapse;
+            table-layout: fixed;
         }
         .sub-task-table th {
             text-align: left;
@@ -120,11 +121,15 @@
             border-bottom: 1px solid #E5E6EB;
         }
         .sub-task-table td {
+            text-align: left;
             padding: 10px 12px;
             font-size: 13px;
             color: #1D2129;
             background: #fff;
             border-bottom: 1px solid #F2F3F5;
+        }
+        .sub-task-table colgroup col {
+            width: 25%;
         }
         .sub-task-table tr:last-child td {
             border-bottom: none;
@@ -296,18 +301,18 @@
                 <table class="w-full" style="table-layout: fixed;">
                     <thead>
                         <tr class="bg-gray-50">
-                            <th class="w-12 text-center px-4 py-3 text-xs text-gray-500 font-medium">勾选</th>
+                            <th class="w-10 text-center px-4 py-3 text-xs text-gray-500 font-medium">勾选</th>
+                            <th class="w-10 text-left px-4 py-3 text-xs text-gray-500 font-medium"></th>
                             <th class="text-left px-4 py-3 text-xs text-gray-500 font-medium">任务名称</th>
                             <th class="text-left px-4 py-3 text-xs text-gray-500 font-medium">任务类型</th>
-                            <th class="text-left px-4 py-3 text-xs text-gray-500 font-medium w-28">子任务</th>
-                            <th class="text-left px-4 py-3 text-xs text-gray-500 font-medium w-20">任务状态</th>
-                            <th class="text-left px-4 py-3 text-xs text-gray-500 font-medium w-16">完成进度</th>
-                            <th class="text-left px-4 py-3 text-xs text-gray-500 font-medium w-20">创建人</th>
-                            <th class="text-left px-4 py-3 text-xs text-gray-500 font-medium w-28">执行人</th>
-                            <th class="text-left px-4 py-3 text-xs text-gray-500 font-medium w-24">创建时间</th>
-                            <th class="text-left px-4 py-3 text-xs text-gray-500 font-medium w-24">结束时间</th>
-                            <th class="text-left px-4 py-3 text-xs text-gray-500 font-medium w-24">提醒时间</th>
-                            <th class="text-left px-4 py-3 text-xs text-gray-500 font-medium w-16">操作</th>
+                            <th class="text-left px-4 py-3 text-xs text-gray-500 font-medium">任务状态</th>
+                            <th class="text-left px-4 py-3 text-xs text-gray-500 font-medium">完成进度</th>
+                            <th class="text-left px-4 py-3 text-xs text-gray-500 font-medium">创建人</th>
+                            <th class="text-left px-4 py-3 text-xs text-gray-500 font-medium">执行人</th>
+                            <th class="text-left px-4 py-3 text-xs text-gray-500 font-medium">创建时间</th>
+                            <th class="text-left px-4 py-3 text-xs text-gray-500 font-medium">结束时间</th>
+                            <th class="text-left px-4 py-3 text-xs text-gray-500 font-medium">提醒时间</th>
+                            <th class="text-left px-4 py-3 text-xs text-gray-500 font-medium">操作</th>
                         </tr>
                     </thead>
                     <tbody id="taskTableBody">
@@ -316,14 +321,13 @@
                             <td class="px-4 py-3 text-center">
                                 <input type="checkbox" class="rounded">
                             </td>
-                            <td class="px-4 py-3 text-sm font-medium">万科城市花园探盘任务</td>
-                            <td class="px-4 py-3 text-sm">探盘任务</td>
                             <td class="px-4 py-3">
                                 <button class="expand-btn" data-subtask="subtask-1">
                                     <span class="arrow"><i class="fa fa-chevron-right"></i></span>
-                                    <span>共3个</span>
                                 </button>
                             </td>
+                            <td class="px-4 py-3 text-sm font-medium">万科城市花园探盘任务</td>
+                            <td class="px-4 py-3 text-sm">探盘任务</td>
                             <td class="px-4 py-3"><span class="tag tag-progress">进行中</span></td>
                             <td class="px-4 py-3 text-sm font-medium">2/3</td>
                             <td class="px-4 py-3 text-sm">区域经理A</td>
@@ -349,32 +353,26 @@
                             <td colspan="12">
                                 <div class="sub-task-inner">
                                     <table class="sub-task-table">
-                                        <thead>
-                                            <tr>
-                                                <th style="width: 30px;"></th>
-                                                <th>子任务名称</th>
-                                                <th style="width: 100px;">任务类型</th>
-                                                <th style="width: 80px;">任务状态</th>
-                                                <th style="width: 80px;">操作</th>
-                                            </tr>
-                                        </thead>
+                                        <colgroup>
+                                            <col style="width: 40%;">
+                                            <col style="width: 20%;">
+                                            <col style="width: 20%;">
+                                            <col style="width: 20%;">
+                                        </colgroup>
                                         <tbody>
                                             <tr>
-                                                <td></td>
                                                 <td><span class="sub-task-level">路书执行</span></td>
                                                 <td>路书执行</td>
                                                 <td><span class="tag tag-completed">已完成</span></td>
                                                 <td><button class="text-sm text-primary hover:underline" onclick="viewTask()">查看</button></td>
                                             </tr>
                                             <tr>
-                                                <td></td>
                                                 <td><span class="sub-task-level">话术训练</span></td>
                                                 <td>话术训练</td>
                                                 <td><span class="tag tag-progress">进行中</span></td>
                                                 <td><button class="text-sm text-primary hover:underline" onclick="viewTask()">查看</button></td>
                                             </tr>
                                             <tr>
-                                                <td></td>
                                                 <td><span class="sub-task-level">录音分析</span></td>
                                                 <td>录音分析</td>
                                                 <td><span class="tag tag-draft">待执行</span></td>
@@ -391,14 +389,13 @@
                             <td class="px-4 py-3 text-center">
                                 <input type="checkbox" class="rounded">
                             </td>
-                            <td class="px-4 py-3 text-sm font-medium">话术训练任务-新手培训</td>
-                            <td class="px-4 py-3 text-sm">话术训练任务</td>
                             <td class="px-4 py-3">
                                 <button class="expand-btn" data-subtask="subtask-2">
                                     <span class="arrow"><i class="fa fa-chevron-right"></i></span>
-                                    <span>共1个</span>
                                 </button>
                             </td>
+                            <td class="px-4 py-3 text-sm font-medium">话术训练任务-新手培训</td>
+                            <td class="px-4 py-3 text-sm">话术训练任务</td>
                             <td class="px-4 py-3"><span class="tag tag-completed">已完成</span></td>
                             <td class="px-4 py-3 text-sm font-medium">1/1</td>
                             <td class="px-4 py-3 text-sm">区域经理B</td>
@@ -417,11 +414,10 @@
                                     <table class="sub-task-table">
                                         <tbody>
                                             <tr>
-                                                <td style="width: 30px;"></td>
                                                 <td><span class="sub-task-level">话术训练</span></td>
-                                                <td style="width: 100px;">话术训练</td>
-                                                <td style="width: 80px;"><span class="tag tag-completed">已完成</span></td>
-                                                <td style="width: 80px;"><button class="text-sm text-primary hover:underline" onclick="viewTask()">查看</button></td>
+                                                <td>话术训练</td>
+                                                <td><span class="tag tag-completed">已完成</span></td>
+                                                <td><button class="text-sm text-primary hover:underline" onclick="viewTask()">查看</button></td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -434,14 +430,13 @@
                             <td class="px-4 py-3 text-center">
                                 <input type="checkbox" class="rounded">
                             </td>
-                            <td class="px-4 py-3 text-sm font-medium">录音分析任务-客户跟进</td>
-                            <td class="px-4 py-3 text-sm">录音分析任务</td>
                             <td class="px-4 py-3">
                                 <button class="expand-btn" data-subtask="subtask-3">
                                     <span class="arrow"><i class="fa fa-chevron-right"></i></span>
-                                    <span>共2个</span>
                                 </button>
                             </td>
+                            <td class="px-4 py-3 text-sm font-medium">录音分析任务-客户跟进</td>
+                            <td class="px-4 py-3 text-sm">录音分析任务</td>
                             <td class="px-4 py-3"><span class="tag tag-timeout">已超时</span></td>
                             <td class="px-4 py-3 text-sm font-medium">1/2</td>
                             <td class="px-4 py-3 text-sm">区域经理A</td>
@@ -460,18 +455,16 @@
                                     <table class="sub-task-table">
                                         <tbody>
                                             <tr>
-                                                <td style="width: 30px;"></td>
                                                 <td><span class="sub-task-level">录音上传</span></td>
-                                                <td style="width: 100px;">录音分析</td>
-                                                <td style="width: 80px;"><span class="tag tag-completed">已完成</span></td>
-                                                <td style="width: 80px;"><button class="text-sm text-primary hover:underline" onclick="viewTask()">查看</button></td>
+                                                <td>录音分析</td>
+                                                <td><span class="tag tag-completed">已完成</span></td>
+                                                <td><button class="text-sm text-primary hover:underline" onclick="viewTask()">查看</button></td>
                                             </tr>
                                             <tr>
-                                                <td style="width: 30px;"></td>
                                                 <td><span class="sub-task-level">AI分析</span></td>
-                                                <td style="width: 100px;">录音分析</td>
-                                                <td style="width: 80px;"><span class="tag tag-timeout">已超时</span></td>
-                                                <td style="width: 80px;"><button class="text-sm text-primary hover:underline" onclick="viewTask()">查看</button></td>
+                                                <td>录音分析</td>
+                                                <td><span class="tag tag-timeout">已超时</span></td>
+                                                <td><button class="text-sm text-primary hover:underline" onclick="viewTask()">查看</button></td>
                                             </tr>
                                         </tbody>
                                     </table>
