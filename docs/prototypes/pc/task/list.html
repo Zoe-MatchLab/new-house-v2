@@ -172,11 +172,11 @@
             <!-- 筛选区域 -->
             <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100 mb-6">
                 <div class="grid grid-cols-4 gap-4">
-                    <!-- 关键词搜索 -->
+                    <!-- 关键词搜索（任务名称） -->
                     <div>
                         <label class="text-xs text-gray-500 mb-1 block">关键词搜索</label>
                         <div class="relative">
-                            <input type="text" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm pl-8" placeholder="任务名称/楼盘名称">
+                            <input type="text" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm pl-8" placeholder="输入任务名称搜索">
                             <i class="fa fa-search absolute left-2.5 top-2.5 text-gray-400 text-xs"></i>
                         </div>
                     </div>
@@ -207,10 +207,7 @@
                     <!-- 创建人 -->
                     <div>
                         <label class="text-xs text-gray-500 mb-1 block">创建人</label>
-                        <select class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm">
-                            <option value="">全部</option>
-                            <option value="mine">我的</option>
-                        </select>
+                        <input type="text" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" placeholder="输入用户姓名搜索">
                     </div>
                 </div>
                 <div class="grid grid-cols-4 gap-4 mt-4">
@@ -219,15 +216,23 @@
                         <label class="text-xs text-gray-500 mb-1 block">执行人</label>
                         <input type="text" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" placeholder="输入人员姓名搜索">
                     </div>
-                    <!-- 创建时间 -->
+                    <!-- 创建时间范围 -->
                     <div>
                         <label class="text-xs text-gray-500 mb-1 block">创建时间</label>
-                        <input type="date" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm">
+                        <div class="flex items-center gap-1">
+                            <input type="date" class="flex-1 border border-gray-300 rounded-lg px-2 py-2 text-sm">
+                            <span class="text-gray-400 text-xs">至</span>
+                            <input type="date" class="flex-1 border border-gray-300 rounded-lg px-2 py-2 text-sm">
+                        </div>
                     </div>
-                    <!-- 结束时间 -->
+                    <!-- 结束时间范围 -->
                     <div>
                         <label class="text-xs text-gray-500 mb-1 block">结束时间</label>
-                        <input type="date" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm">
+                        <div class="flex items-center gap-1">
+                            <input type="date" class="flex-1 border border-gray-300 rounded-lg px-2 py-2 text-sm">
+                            <span class="text-gray-400 text-xs">至</span>
+                            <input type="date" class="flex-1 border border-gray-300 rounded-lg px-2 py-2 text-sm">
+                        </div>
                     </div>
                     <!-- 操作按钮 -->
                     <div class="flex items-end gap-2">
