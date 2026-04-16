@@ -411,9 +411,11 @@
                                     <label class="text-sm text-gray-500">状态：</label>
                                     <select class="px-3 py-1.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-primary">
                                         <option value="">全部</option>
-                                        <option value="pending">未开始</option>
+                                        <option value="pending">待执行</option>
                                         <option value="progress">进行中</option>
                                         <option value="completed">已完成</option>
+                                        <option value="timeout">已超时</option>
+                                        <option value="stopped">已停止</option>
                                     </select>
                                 </div>
                                 
@@ -590,7 +592,7 @@
                                         </td>
                                     </tr>
 
-                                    <!-- 执行人3 - 未开始（收起） -->
+                                    <!-- 执行人3 - 待执行（收起） -->
                                     <tr class="hover:bg-gray-50 cursor-pointer" onclick="toggleSubTask('executor-3', this)">
                                         <td class="px-4 py-3 text-center">
                                             <button class="expand-btn">
@@ -603,7 +605,7 @@
                                                 <span class="font-medium text-sm">王五</span>
                                             </div>
                                         </td>
-                                        <td class="px-4 py-3"><span class="tag tag-pending text-xs">未开始</span></td>
+                                        <td class="px-4 py-3"><span class="tag tag-draft text-xs">待执行</span></td>
                                         <td class="px-4 py-3">
                                             <div class="flex items-center gap-2">
                                                 <div class="w-24 h-2 bg-gray-200 rounded-full overflow-hidden">
@@ -640,19 +642,19 @@
                                                         <tr class="opacity-50">
                                                             <td class="py-2"><span class="sub-task-level">路书执行</span></td>
                                                             <td class="py-2 text-sm text-gray-400">内容生成</td>
-                                                            <td class="py-2"><span class="tag tag-pending text-xs">待开始</span></td>
+                                                            <td class="py-2"><span class="tag tag-draft text-xs">待执行</span></td>
                                                             <td class="py-2 text-right"><button class="text-sm text-gray-400 cursor-not-allowed" disabled>查看</button></td>
                                                         </tr>
                                                         <tr class="opacity-50">
                                                             <td class="py-2"><span class="sub-task-level">话术训练</span></td>
                                                             <td class="py-2 text-sm text-gray-400">AI训练</td>
-                                                            <td class="py-2"><span class="tag tag-pending text-xs">待开始</span></td>
+                                                            <td class="py-2"><span class="tag tag-draft text-xs">待执行</span></td>
                                                             <td class="py-2 text-right"><button class="text-sm text-gray-400 cursor-not-allowed" disabled>查看</button></td>
                                                         </tr>
                                                         <tr class="opacity-50">
                                                             <td class="py-2"><span class="sub-task-level">录音分析</span></td>
                                                             <td class="py-2 text-sm text-gray-400">AI分析</td>
-                                                            <td class="py-2"><span class="tag tag-pending text-xs">待开始</span></td>
+                                                            <td class="py-2"><span class="tag tag-draft text-xs">待执行</span></td>
                                                             <td class="py-2 text-right"><button class="text-sm text-gray-400 cursor-not-allowed" disabled>查看</button></td>
                                                         </tr>
                                                     </tbody>
