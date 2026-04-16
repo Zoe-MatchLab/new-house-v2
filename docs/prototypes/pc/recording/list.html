@@ -314,12 +314,6 @@
                     <td class="px-4 py-4 text-sm text-gray-500">${item.uploadTime}</td>
                     <td class="px-4 py-4 text-sm text-right whitespace-nowrap">
                         <button onclick="viewDetail(${item.id})" class="text-primary hover:underline">详情</button>
-                        ${item.status === 'completed' ? `
-                            <button onclick="reAnalyze(${item.id})" class="text-gray-500 hover:underline ml-3">重新分析</button>
-                        ` : ''}
-                        ${item.status === 'failed' ? `
-                            <button onclick="retryAnalyze(${item.id})" class="text-warning hover:underline ml-3">重试</button>
-                        ` : ''}
                     </td>
                 </tr>
             `).join('');
@@ -372,20 +366,6 @@
             }
 
             renderTable(filtered);
-        }
-
-        // 重新分析
-        function reAnalyze(id) {
-            if (confirm('确认重新分析该录音？')) {
-                alert('已提交重新分析任务');
-            }
-        }
-
-        // 重试
-        function retryAnalyze(id) {
-            if (confirm('确认重试分析该录音？')) {
-                alert('已提交重试任务');
-            }
         }
 
         // 初始化
