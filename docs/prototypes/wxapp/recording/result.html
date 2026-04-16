@@ -82,7 +82,7 @@
             padding: var(--spacing-xs);
         }
 
-        /* 录音信息卡片 */
+        /* 录音播放卡片 */
         .audio-card {
             margin: var(--spacing-md);
             background: white;
@@ -92,7 +92,11 @@
             display: flex;
             align-items: center;
             gap: var(--spacing-md);
+            cursor: pointer;
+            transition: transform 0.15s;
         }
+
+        .audio-card:active { transform: scale(0.99); }
 
         .audio-play-btn {
             width: 48px;
@@ -106,7 +110,13 @@
             justify-content: center;
             font-size: 16px;
             flex-shrink: 0;
+            cursor: pointer;
             box-shadow: 0 4px 12px rgba(250, 140, 22, 0.3);
+        }
+
+        .audio-play-btn.playing {
+            background: var(--color-danger);
+            box-shadow: 0 4px 12px rgba(245, 63, 63, 0.3);
         }
 
         .audio-info { flex: 1; min-width: 0; }
@@ -124,6 +134,228 @@
             font-size: 12px;
             color: var(--color-sub);
             margin-top: 2px;
+        }
+
+        .audio-wave {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            height: 20px;
+        }
+
+        .audio-wave span {
+            width: 3px;
+            background: var(--brand-primary);
+            border-radius: 2px;
+            opacity: 0.5;
+        }
+
+        .audio-wave.playing span { opacity: 1; }
+
+        @keyframes wave {
+            0% { transform: scaleY(0.4); }
+            100% { transform: scaleY(1.2); }
+        }
+
+        .audio-wave.playing span {
+            animation: wave 0.5s ease-in-out infinite alternate;
+        }
+
+        /* 录音转文本 */
+        .transcript-card {
+            margin: 0 var(--spacing-md) var(--spacing-md);
+            background: white;
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+        }
+
+        .transcript-header {
+            padding: var(--spacing-md);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+        }
+
+        .transcript-header-left {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .transcript-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-md);
+            background: #E6F7FF;
+            color: #1890FF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .transcript-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--color-title);
+        }
+
+        .transcript-toggle {
+            color: var(--color-sub);
+            font-size: 14px;
+            transition: transform 0.3s ease;
+        }
+
+        .transcript-toggle.expanded {
+            transform: rotate(180deg);
+        }
+
+        .transcript-content {
+            display: none;
+            padding: 0 var(--spacing-md) var(--spacing-md);
+        }
+
+        .transcript-content.show {
+            display: block;
+        }
+
+        .transcript-text {
+            background: var(--color-bg);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-md);
+            font-size: 14px;
+            line-height: 1.8;
+            color: var(--color-text);
+        }
+
+        .transcript-text p {
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .transcript-text p:last-child {
+            margin-bottom: 0;
+        }
+
+        .speaker {
+            font-weight: 600;
+            margin-right: 6px;
+        }
+
+        .speaker.agent {
+            color: var(--brand-primary);
+        }
+
+        .speaker.customer {
+            color: #34D399;
+        }
+
+        /* 关联客户卡片 */
+        .relation-card {
+            margin: 0 var(--spacing-md) var(--spacing-md);
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-md);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .relation-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .relation-header-left {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .relation-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-md);
+            background: #E8FFEA;
+            color: var(--color-success);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .relation-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--color-title);
+        }
+
+        .relation-change {
+            color: var(--brand-primary);
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .relation-info {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            padding: var(--spacing-md);
+            background: var(--color-bg);
+            border-radius: var(--radius-lg);
+        }
+
+        .relation-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--brand-primary-light);
+            color: var(--brand-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .relation-detail {
+            flex: 1;
+        }
+
+        .relation-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--color-title);
+        }
+
+        .relation-phone {
+            font-size: 13px;
+            color: var(--color-sub);
+        }
+
+        .relation-empty {
+            text-align: center;
+            padding: var(--spacing-lg);
+            color: var(--color-sub);
+        }
+
+        .relation-empty-icon {
+            font-size: 32px;
+            margin-bottom: var(--spacing-sm);
+            color: var(--color-border);
+        }
+
+        .relation-select-btn {
+            width: 100%;
+            padding: var(--spacing-md);
+            background: var(--brand-primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius-lg);
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
         }
 
         /* 分析结果卡片 */
@@ -236,6 +468,98 @@
             from { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
             to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
         }
+
+        /* 确认弹窗 */
+        .confirm-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 10000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .confirm-modal.show {
+            display: flex;
+        }
+
+        .confirm-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .confirm-dialog {
+            position: relative;
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            width: 300px;
+            text-align: center;
+            animation: fadeInUp 0.3s ease;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .confirm-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            background: #FFF7E6;
+            color: var(--color-warning);
+            font-size: 24px;
+        }
+
+        .confirm-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1F1F1F;
+            margin-bottom: 8px;
+        }
+
+        .confirm-desc {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 24px;
+        }
+
+        .confirm-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .confirm-btn {
+            flex: 1;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+        }
+
+        .confirm-btn.cancel {
+            background: #F5F5F5;
+            color: #666;
+        }
+
+        .confirm-btn.primary {
+            background: var(--brand-primary);
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -247,29 +571,128 @@
             <i class="fa fa-share-alt nav-share" onclick="showToast('已分享')"></i>
         </div>
 
-        <!-- 录音信息 -->
-        <div class="audio-card">
-            <button class="audio-play-btn">
+        <!-- 录音播放卡片 -->
+        <div class="audio-card" onclick="togglePlay()">
+            <button class="audio-play-btn" id="playBtn">
                 <i class="fa fa-play"></i>
             </button>
             <div class="audio-info">
-                <div class="audio-name">通话录音_20260412.wav</div>
-                <div class="audio-meta">张三 · 2026-04-12 14:30 · 5分32秒</div>
+                <div class="audio-name" id="audioName">通话录音_20260412.wav</div>
+                <div class="audio-meta" id="audioMeta">张三 · 2026-04-12 14:30 · 5分32秒</div>
+            </div>
+            <div class="audio-wave" id="audioWave">
+                <span style="height:8px"></span>
+                <span style="height:14px"></span>
+                <span style="height:10px"></span>
+                <span style="height:18px"></span>
+                <span style="height:12px"></span>
+                <span style="height:6px"></span>
+                <span style="height:16px"></span>
+                <span style="height:9px"></span>
+                <span style="height:13px"></span>
+                <span style="height:7px"></span>
             </div>
         </div>
 
-        <!-- Markdown 分析结果 -->
+        <!-- 录音转文本 -->
+        <div class="transcript-card">
+            <div class="transcript-header" onclick="toggleTranscript()">
+                <div class="transcript-header-left">
+                    <div class="transcript-icon"><i class="fa fa-file-text-o"></i></div>
+                    <span class="transcript-title">录音转文本</span>
+                </div>
+                <i class="fa fa-chevron-down transcript-toggle" id="transcriptToggle"></i>
+            </div>
+            <div class="transcript-content" id="transcriptContent">
+                <div class="transcript-text" id="transcriptText">
+                    <p><span class="speaker agent">经纪人：</span>喂您好张先生您好，我是咱们中海汇德里的置业顾问小李，您之前有咨询过我们项目不知道您还有印象吗？</p>
+                    <p><span class="speaker customer">客户：</span>哦有的有的，你们那个项目在哪个位置来着？</p>
+                    <p><span class="speaker agent">经纪人：</span>我们在浦东新区张江高科技园区这边，地铁13号线XXX站下来500米就到了。项目主打的是110-130㎡的三室户型，预算的话800-1000万之间可以看看。</p>
+                    <p><span class="speaker customer">客户：</span>哦800-1000万啊，那你们周边有什么学校吗？我小孩明年要上小学了。</p>
+                    <p><span class="speaker agent">经纪人：</span>张先生您问得太好了！我们项目旁边就是XX小学和XX中学，都是区重点的。项目还自带一个国际幼儿园，真正实现了目送式教育。</p>
+                    <p><span class="speaker customer">客户：</span>哦那挺好的。那个户型能看看吗？</p>
+                    <p><span class="speaker agent">经纪人：</span>当然可以张先生，这样我帮您约一个专属的带看时间，您看明天下午3点方便吗？</p>
+                    <p><span class="speaker customer">客户：</span>行啊，那明天下午3点我过去看看。</p>
+                    <p><span class="speaker agent">经纪人：</span>好的张先生，那我这边帮您安排好，到时候我到地铁口接您。您路上注意安全，明天见！</p>
+                    <p><span class="speaker customer">客户：</span>好的谢谢，明天见。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 关联客户 -->
+        <div class="relation-card">
+            <div class="relation-header">
+                <div class="relation-header-left">
+                    <div class="relation-icon"><i class="fa fa-user-circle-o"></i></div>
+                    <span class="relation-title">关联客户</span>
+                </div>
+                <span class="relation-change" onclick="changeCustomer()">更换客户</span>
+            </div>
+            <div id="relationContent">
+                <!-- 有客户时显示 -->
+                <div class="relation-info" id="relationInfo">
+                    <div class="relation-avatar">张</div>
+                    <div class="relation-detail">
+                        <div class="relation-name" id="customerName">张三</div>
+                        <div class="relation-phone" id="customerPhone">138****8821</div>
+                    </div>
+                </div>
+                <!-- 无客户时显示 -->
+                <div class="relation-empty" id="relationEmpty" style="display: none;">
+                    <div class="relation-empty-icon"><i class="fa fa-user-plus"></i></div>
+                    <div>暂未关联客户</div>
+                </div>
+            </div>
+            <button class="relation-select-btn" onclick="selectCustomer()">
+                <i class="fa fa-plus"></i> 选择关联客户
+            </button>
+        </div>
+
+        <!-- 分析结果 -->
         <div class="analysis-card">
             <div class="markdown-body" id="markdownContent"></div>
+        </div>
+
+        <!-- 确认弹窗 -->
+        <div class="confirm-modal" id="confirmModal">
+            <div class="confirm-overlay" onclick="closeConfirmModal()"></div>
+            <div class="confirm-dialog">
+                <div class="confirm-icon"><i class="fa fa-question-circle-o"></i></div>
+                <div class="confirm-title" id="confirmTitle">确认更换客户？</div>
+                <div class="confirm-desc" id="confirmDesc">更换客户后，原客户与该录音的关联将解除。</div>
+                <div class="confirm-actions">
+                    <button class="confirm-btn cancel" onclick="closeConfirmModal()">取消</button>
+                    <button class="confirm-btn primary" id="confirmBtn" onclick="confirmAction()">确认</button>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
+        let isPlaying = false;
+        let waveInterval = null;
+        let pendingAction = null;
+
+        // 录音转文本（对话格式）
+        const transcriptDialogue = [
+            { speaker: 'agent', text: '喂您好张先生您好，我是咱们中海汇德里的置业顾问小李，您之前有咨询过我们项目不知道您还有印象吗？' },
+            { speaker: 'customer', text: '哦有的有的，你们那个项目在哪个位置来着？' },
+            { speaker: 'agent', text: '我们在浦东新区张江高科技园区这边，地铁13号线XXX站下来500米就到了。项目主打的是110-130㎡的三室户型，预算的话800-1000万之间可以看看。' },
+            { speaker: 'customer', text: '哦800-1000万啊，那你们周边有什么学校吗？我小孩明年要上小学了。' },
+            { speaker: 'agent', text: '张先生您问得太好了！我们项目旁边就是XX小学和XX中学，都是区重点的。项目还自带一个国际幼儿园，真正实现了目送式教育。' },
+            { speaker: 'customer', text: '哦那挺好的。那个户型能看看吗？' },
+            { speaker: 'agent', text: '当然可以张先生，这样我帮您约一个专属的带看时间，您看明天下午3点方便吗？' },
+            { speaker: 'customer', text: '行啊，那明天下午3点我过去看看。' },
+            { speaker: 'agent', text: '好的张先生，那我这边帮您安排好，到时候我到地铁口接您。您路上注意安全，明天见！' },
+            { speaker: 'customer', text: '好的谢谢，明天见。' }
+        ];
+
         // 分析数据
         const analysisData = {
             recordId: 'RECORD_001',
             name: '通话录音_20260412.wav',
             customer: '张三',
+            phone: '138****8821',
             duration: '5分32秒',
             time: '2026-04-12 14:30',
             score: 85,
@@ -344,13 +767,91 @@ ${data.customerNeeds}
 
 1. ${data.improvementSuggestions[0]}
 
-2. ${data.improvementSuggestions[1]}
+2. ${data.improcentSuggestions[1]}
 
 3. ${data.improvementSuggestions[2]}
 
 ---
 
 *分析时间：${data.time}*`;
+        }
+
+        // 播放控制
+        function togglePlay() {
+            const btn = document.getElementById('playBtn');
+            const wave = document.getElementById('audioWave');
+
+            isPlaying = !isPlaying;
+            if (isPlaying) {
+                btn.classList.add('playing');
+                btn.innerHTML = '<i class="fa fa-pause"></i>';
+                wave.classList.add('playing');
+                animateWave(wave);
+                showToast('正在播放录音');
+            } else {
+                btn.classList.remove('playing');
+                btn.innerHTML = '<i class="fa fa-play"></i>';
+                wave.classList.remove('playing');
+                clearInterval(waveInterval);
+            }
+        }
+
+        function animateWave(wave) {
+            const spans = wave.querySelectorAll('span');
+            waveInterval = setInterval(() => {
+                spans.forEach(span => {
+                    span.style.height = (Math.random() * 16 + 4) + 'px';
+                    span.style.background = '#FA8C16';
+                });
+            }, 300);
+        }
+
+        // 录音转文本展开/收起
+        function toggleTranscript() {
+            const content = document.getElementById('transcriptContent');
+            const toggle = document.getElementById('transcriptToggle');
+            
+            if (content.classList.contains('show')) {
+                content.classList.remove('show');
+                toggle.classList.remove('expanded');
+            } else {
+                content.classList.add('show');
+                toggle.classList.add('expanded');
+            }
+        }
+
+        // 更换客户
+        function changeCustomer() {
+            if (!analysisData.customer) {
+                selectCustomer();
+                return;
+            }
+            document.getElementById('confirmTitle').textContent = '确认更换客户？';
+            document.getElementById('confirmDesc').textContent = '更换客户后，原客户与该录音的关联将解除。';
+            document.getElementById('confirmBtn').onclick = confirmChangeCustomer;
+            document.getElementById('confirmModal').classList.add('show');
+        }
+
+        // 选择客户
+        function selectCustomer() {
+            showToast('跳转到客户选择页');
+            // 实际跳转 window.location.href = 'customer-select.html'
+        }
+
+        // 确认更换客户
+        function confirmChangeCustomer() {
+            closeConfirmModal();
+            showToast('已解除原客户关联');
+            // 清除关联
+            document.getElementById('relationInfo').style.display = 'none';
+            document.getElementById('relationEmpty').style.display = 'block';
+            analysisData.customer = null;
+            analysisData.phone = null;
+        }
+
+        // 关闭确认弹窗
+        function closeConfirmModal() {
+            document.getElementById('confirmModal').classList.remove('show');
         }
 
         function showToast(msg) {
@@ -366,7 +867,7 @@ ${data.customerNeeds}
             }, 2000);
         }
 
-        // 初始化 - 渲染 Markdown
+        // 初始化
         window.onload = function() {
             const markdownContent = generateMarkdown(analysisData);
             document.getElementById('markdownContent').innerHTML = marked.parse(markdownContent);
