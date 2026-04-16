@@ -171,6 +171,13 @@
                             <textarea id="sceneDesc" placeholder="请输入场景描述（可选）" rows="2" class="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-primary resize-none"></textarea>
                         </div>
                         <div class="mb-4">
+                            <label class="block text-sm text-gray-600 mb-2">
+                                分析提示词
+                                <span class="text-xs text-gray-400 ml-1">用于AI分析录音的Prompt模板</span>
+                            </label>
+                            <textarea id="promptTemplate" placeholder="请输入分析提示词模板，使用{transcript}作为录音转文本占位符" rows="4" class="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-primary resize-none"></textarea>
+                        </div>
+                        <div class="mb-4">
                             <label class="flex items-center gap-3 cursor-pointer">
                                 <input type="checkbox" id="isEnabled" class="w-5 h-5 rounded border-gray-300 text-primary focus:ring-primary" checked>
                                 <span class="text-sm text-gray-600">启用该配置</span>
@@ -195,6 +202,7 @@
                 scene: 'invitation',
                 sceneText: '邀约录音分析',
                 desc: '用于分析经纪人邀约客户的录音，提升邀约能力',
+                promptTemplate: '你是一位专业的房产销售培训师。请分析以下经纪人邀约客户的录音，从产品熟悉度、需求挖掘、应变能力、成交意识四个维度进行评估，并给出具体的改进建议。\n\n录音内容：\n{transcript}\n\n请按照以下格式输出：\n1. 各维度得分（满分100）\n2. 关键话术点评（好的话术和需改进的话术）\n3. 改进建议',
                 enabled: true,
                 createTime: '2026-04-10 10:00'
             }
@@ -243,6 +251,7 @@
             document.getElementById('configName').value = '';
             document.getElementById('sceneType').value = 'invitation';
             document.getElementById('sceneDesc').value = '';
+            document.getElementById('promptTemplate').value = '';
             document.getElementById('isEnabled').checked = true;
             document.getElementById('configModal').classList.remove('hidden');
         }
@@ -257,6 +266,7 @@
             document.getElementById('configName').value = config.name;
             document.getElementById('sceneType').value = config.scene;
             document.getElementById('sceneDesc').value = config.desc || '';
+            document.getElementById('promptTemplate').value = config.promptTemplate || '';
             document.getElementById('isEnabled').checked = config.enabled;
             document.getElementById('configModal').classList.remove('hidden');
         }
@@ -284,6 +294,7 @@
             const name = document.getElementById('configName').value.trim();
             const scene = document.getElementById('sceneType').value;
             const desc = document.getElementById('sceneDesc').value.trim();
+            const promptTemplate = document.getElementById('promptTemplate').value.trim();
             const enabled = document.getElementById('isEnabled').checked;
 
             if (!name) {
@@ -306,6 +317,7 @@
                     config.scene = scene;
                     config.sceneText = sceneMap[scene];
                     config.desc = desc;
+                    config.promptTemplate = promptTemplate;
                     config.enabled = enabled;
                 }
             } else {
@@ -317,6 +329,8 @@
                     scene,
                     sceneText: sceneMap[scene],
                     desc,
+                    promptTemplate,
+                    enabled,
                     enabled,
                     createTime: new Date().toLocaleString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }).replace(/\//g, '-')
                 });
