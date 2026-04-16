@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>客户管理 - 房产AI作业平台</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#165DFF',
+                        success: '#00B42A',
+                        warning: '#FF7D00',
+                        danger: '#F53F3F',
+                        dark: '#1D2129',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <!-- 顶部导航 -->
+    <div class="bg-primary text-white px-4 py-3 sticky top-0 z-50">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <a href="list.html" class="text-white">
+                    <i class="fa fa-chevron-left"></i>
+                </a>
+                <div class="text-lg font-medium" id="pageTitle">新增客户</div>
+            </div>
+            <button onclick="saveCustomer()" class="text-white">
+                保存
+            </button>
+        </div>
+    </div>
+
+    <!-- 表单 -->
+    <div class="p-4">
+        <div class="bg-white rounded-lg p-4 mb-4">
+            <div class="text-sm font-medium text-gray-800 mb-3">基本信息</div>
+            
+            <div class="mb-4">
+                <label class="block text-xs text-gray-500 mb-1">
+                    客户姓名 <span class="text-danger">*</span>
+                </label>
+                <input type="text" id="customerName" placeholder="请输入客户姓名" 
+                    class="w-full px-3 py-2.5 bg-gray-50 rounded-lg text-sm focus:outline-none focus:bg-white border border-gray-200">
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-xs text-gray-500 mb-1">
+                    手机号 <span class="text-danger">*</span>
+                </label>
+                <input type="tel" id="customerPhone" placeholder="请输入手机号" 
+                    class="w-full px-3 py-2.5 bg-gray-50 rounded-lg text-sm focus:outline-none focus:bg-white border border-gray-200">
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-xs text-gray-500 mb-1">意向楼盘</label>
+                <div class="relative">
+                    <select id="buildingSelect" class="w-full px-3 py-2.5 bg-gray-50 rounded-lg text-sm text-gray-400 focus:outline-none focus:bg-white border border-gray-200 appearance-none">
+                        <option value="">请选择意向楼盘</option>
+                        <option value="1">万科城市花园</option>
+                        <option value="2">中海汇德里</option>
+                        <option value="3">金隅学府</option>
+                        <option value="4">远洋LAVIE</option>
+                        <option value="5">招商公园1872</option>
+                    </select>
+                    <i class="fa fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-xs text-gray-500 mb-1">客户状态</label>
+                <div class="relative">
+                    <select id="statusSelect" class="w-full px-3 py-2.5 bg-gray-50 rounded-lg text-sm text-gray-400 focus:outline-none focus:bg-white border border-gray-200 appearance-none">
+                        <option value="potential">潜在</option>
+                        <option value="following">跟进中</option>
+                        <option value="dealed">成交</option>
+                        <option value="lost">流失</option>
+                    </select>
+                    <i class="fa fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg p-4 mb-4">
+            <div class="text-sm font-medium text-gray-800 mb-3">备注信息</div>
+            
+            <textarea id="customerRemark" rows="4" placeholder="请输入备注信息（可选）" 
+                class="w-full px-3 py-2.5 bg-gray-50 rounded-lg text-sm focus:outline-none focus:bg-white border border-gray-200 resize-none"></textarea>
+        </div>
+
+        <!-- 删除按钮（仅编辑模式显示） -->
+        <div id="deleteBtnWrapper" class="hidden">
+            <button onclick="deleteCustomer()" class="w-full py-3 text-danger text-center">
+                删除客户
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // 判断是新增还是编辑
+        const urlParams = new URLSearchParams(window.location.search);
+        const customerId = urlParams.get('id');
+        const isEditMode = !!customerId;
+
+        // 初始化
+        function init() {
+            if (isEditMode) {
+                document.getElementById('pageTitle').textContent = '编辑客户';
+                document.getElementById('deleteBtnWrapper').classList.remove('hidden');
+                
+                // 填充数据
+                document.getElementById('customerName').value = '王女士';
+                document.getElementById('customerName').classList.remove('text-gray-400');
+                document.getElementById('customerName').classList.add('text-gray-800');
+                
+                document.getElementById('customerPhone').value = '138****1234';
+                document.getElementById('customerPhone').classList.remove('text-gray-400');
+                document.getElementById('customerPhone').classList.add('text-gray-800');
+                
+                document.getElementById('buildingSelect').value = '1';
+                document.getElementById('buildingSelect').classList.remove('text-gray-400');
+                document.getElementById('buildingSelect').classList.add('text-gray-800');
+                
+                document.getElementById('statusSelect').value = 'following';
+                document.getElementById('statusSelect').classList.remove('text-gray-400');
+                document.getElementById('statusSelect').classList.add('text-gray-800');
+                
+                document.getElementById('customerRemark').value = '客户对万科城市花园120平米户型感兴趣，预算800-900万。';
+            }
+        }
+
+        // 保存客户
+        function saveCustomer() {
+            const name = document.getElementById('customerName').value.trim();
+            const phone = document.getElementById('customerPhone').value.trim();
+
+            if (!name) {
+                alert('请输入客户姓名');
+                return;
+            }
+
+            if (!phone) {
+                alert('请输入手机号');
+                return;
+            }
+
+            // 模拟保存
+            alert(isEditMode ? '保存成功' : '添加成功');
+            window.location.href = 'list.html';
+        }
+
+        // 删除客户
+        function deleteCustomer() {
+            if (confirm('确定删除该客户吗？删除后无法恢复。')) {
+                alert('删除成功');
+                window.location.href = 'list.html';
+            }
+        }
+
+        init();
+    </script>
+</body>
+</html>

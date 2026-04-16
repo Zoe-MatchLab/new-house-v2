@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>客户管理 - 房产AI作业平台</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#165DFF',
+                        success: '#00B42A',
+                        warning: '#FF7D00',
+                        danger: '#F53F3F',
+                        dark: '#1D2129',
+                        'gray-light': '#F2F3F5',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 500; }
+        .tag-potential { background: #F0F5FF; color: #165DFF; }
+        .tag-following { background: #FFF7E8; color: #FF7D00; }
+        .tag-dealed { background: #E8FFEA; color: #00B42A; }
+        .tag-lost { background: #F2F3F5; color: #4E5969; }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- 顶部导航 -->
+    <nav class="bg-white shadow-sm fixed top-0 left-0 right-0 z-50">
+        <div class="flex justify-between items-center px-6 py-3">
+            <div class="flex items-center space-x-2">
+                <i class="fa fa-home text-primary text-2xl"></i>
+                <span class="text-xl font-bold text-dark">房产AI作业平台</span>
+                <span class="text-sm text-gray-500 ml-2">管理后台</span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button class="text-gray-600 hover:text-primary relative">
+                    <i class="fa fa-bell-o text-lg"></i>
+                    <span class="absolute top-0 right-0 bg-danger text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">5</span>
+                </button>
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center">管</div>
+                    <span class="text-sm font-medium">区域经理A</span>
+                    <i class="fa fa-angle-down text-gray-400"></i>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 侧边栏 -->
+    <div class="flex pt-14">
+        <aside class="w-64 bg-white h-[calc(100vh-56px)] fixed left-0 shadow-sm">
+            <nav class="py-4">
+                <div class="px-4 py-2 text-xs text-gray-400 uppercase font-medium">功能菜单</div>
+                <a href="../new-building/list.html" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50">
+                    <i class="fa fa-building-o w-5 text-center"></i>
+                    <span class="ml-3">新盘管理</span>
+                </a>
+                <a href="../task/list.html" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50">
+                    <i class="fa fa-tasks w-5 text-center"></i>
+                    <span class="ml-3">任务管理</span>
+                </a>
+                <a href="../recording/list.html" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50">
+                    <i class="fa fa-microphone w-5 text-center"></i>
+                    <span class="ml-3">录音分析</span>
+                </a>
+                <a href="../material/list.html" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50">
+                    <i class="fa fa-cubes w-5 text-center"></i>
+                    <span class="ml-3">物料管理</span>
+                </a>
+                <a href="list.html" class="flex items-center px-4 py-3 text-primary bg-blue-50 border-r-4 border-primary">
+                    <i class="fa fa-users w-5 text-center"></i>
+                    <span class="ml-3">客户管理</span>
+                </a>
+                <a href="../dashboard/overview.html" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50">
+                    <i class="fa fa-line-chart w-5 text-center"></i>
+                    <span class="ml-3">数据看板</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- 主内容区 -->
+        <main class="ml-64 flex-1 p-6">
+            <!-- 页面标题 -->
+            <div class="mb-6">
+                <h1 class="text-2xl font-bold text-gray-800">客户管理</h1>
+                <p class="text-gray-500 text-sm mt-1">管理所有客户的跟进信息</p>
+            </div>
+
+            <!-- 筛选栏 -->
+            <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
+                <div class="grid grid-cols-5 gap-4">
+                    <div>
+                        <label class="block text-xs text-gray-500 mb-1">客户姓名</label>
+                        <input type="text" id="filterName" placeholder="搜索客户姓名" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-500 mb-1">手机号</label>
+                        <input type="text" id="filterPhone" placeholder="搜索手机号" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-500 mb-1">客户状态</label>
+                        <select id="filterStatus" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
+                            <option value="">全部</option>
+                            <option value="potential">潜在</option>
+                            <option value="following">跟进中</option>
+                            <option value="dealed">成交</option>
+                            <option value="lost">流失</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-500 mb-1">经纪人</label>
+                        <select id="filterAgent" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
+                            <option value="">全部</option>
+                            <option value="zhangsan">张三</option>
+                            <option value="lisi">李四</option>
+                            <option value="wangwu">王五</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-500 mb-1">意向楼盘</label>
+                        <input type="text" id="filterBuilding" placeholder="搜索楼盘" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
+                    </div>
+                </div>
+                <div class="flex justify-end mt-3 space-x-3">
+                    <button onclick="resetFilters()" class="px-3 py-1.5 border border-gray-200 rounded-lg text-gray-600 text-sm hover:bg-gray-50">
+                        重置
+                    </button>
+                    <button onclick="applyFilters()" class="px-3 py-1.5 bg-primary text-white rounded-lg text-sm hover:bg-primary/90">
+                        搜索
+                    </button>
+                </div>
+            </div>
+
+            <!-- 客户列表 -->
+            <div class="bg-white rounded-lg shadow-sm">
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="text-left text-gray-500 text-sm bg-gray-50">
+                                <th class="px-4 py-3 text-xs font-medium">客户姓名</th>
+                                <th class="px-4 py-3 text-xs font-medium">手机号</th>
+                                <th class="px-4 py-3 text-xs font-medium">意向楼盘</th>
+                                <th class="px-4 py-3 text-xs font-medium">经纪人</th>
+                                <th class="px-4 py-3 text-xs font-medium">客户状态</th>
+                                <th class="px-4 py-3 text-xs font-medium">跟进录音数</th>
+                                <th class="px-4 py-3 text-xs font-medium">最近跟进</th>
+                                <th class="px-4 py-3 text-xs font-medium text-right">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="customerTableBody">
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- 分页 -->
+                <div class="flex items-center justify-between px-4 py-3 border-t border-gray-100">
+                    <div class="text-sm text-gray-500">
+                        共 <span class="font-medium" id="totalCount">5</span> 条
+                    </div>
+                    <div class="flex items-center gap-1">
+                        <button class="px-3 py-1.5 border border-gray-200 rounded text-sm text-gray-400 cursor-not-allowed" disabled>上一页</button>
+                        <button class="px-3 py-1.5 bg-primary text-white rounded text-sm">1</button>
+                        <button class="px-3 py-1.5 border border-gray-200 rounded text-sm text-gray-600 hover:bg-gray-50">2</button>
+                        <button class="px-3 py-1.5 border border-gray-200 rounded text-sm text-gray-600 hover:bg-gray-50">下一页</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // 客户数据
+        const customersData = [
+            {
+                id: 1,
+                name: '王女士',
+                phone: '138****1234',
+                buildingName: '万科城市花园',
+                agentName: '张三',
+                status: 'following',
+                statusText: '跟进中',
+                recordCount: 8,
+                lastFollowTime: '2026-04-16 14:30'
+            },
+            {
+                id: 2,
+                name: '李先生',
+                phone: '139****5678',
+                buildingName: '中海汇德里',
+                agentName: '张三',
+                status: 'dealed',
+                statusText: '成交',
+                recordCount: 12,
+                lastFollowTime: '2026-04-15 10:20'
+            },
+            {
+                id: 3,
+                name: '张女士',
+                phone: '137****9012',
+                buildingName: '金隅学府',
+                agentName: '李四',
+                status: 'potential',
+                statusText: '潜在',
+                recordCount: 2,
+                lastFollowTime: '2026-04-14 16:45'
+            },
+            {
+                id: 4,
+                name: '刘先生',
+                phone: '136****3456',
+                buildingName: '远洋LAVIE',
+                agentName: '李四',
+                status: 'lost',
+                statusText: '流失',
+                recordCount: 5,
+                lastFollowTime: '2026-04-10 09:30'
+            },
+            {
+                id: 5,
+                name: '陈女士',
+                phone: '135****7890',
+                buildingName: '招商公园1872',
+                agentName: '王五',
+                status: 'following',
+                statusText: '跟进中',
+                recordCount: 6,
+                lastFollowTime: '2026-04-16 11:15'
+            }
+        ];
+
+        // 渲染表格
+        function renderTable(data) {
+            const tbody = document.getElementById('customerTableBody');
+            document.getElementById('totalCount').textContent = data.length;
+
+            tbody.innerHTML = data.map(item => `
+                <tr class="border-b border-gray-100 hover:bg-gray-50">
+                    <td class="px-4 py-4">
+                        <div class="font-medium text-gray-800">${item.name}</div>
+                    </td>
+                    <td class="px-4 py-4 text-sm text-gray-600">${item.phone}</td>
+                    <td class="px-4 py-4 text-sm text-primary hover:underline cursor-pointer">${item.buildingName}</td>
+                    <td class="px-4 py-4 text-sm text-gray-600">${item.agentName}</td>
+                    <td class="px-4 py-4">
+                        <span class="tag tag-${item.status}">${item.statusText}</span>
+                    </td>
+                    <td class="px-4 py-4 text-sm text-gray-600">
+                        <span class="text-primary font-medium">${item.recordCount}</span> 条
+                    </td>
+                    <td class="px-4 py-4 text-sm text-gray-500">${item.lastFollowTime}</td>
+                    <td class="px-4 py-4 text-sm text-right whitespace-nowrap">
+                        <button onclick="viewDetail(${item.id})" class="text-primary hover:underline">详情</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // 查看详情
+        function viewDetail(id) {
+            window.location.href = `detail.html?id=${id}`;
+        }
+
+        // 重置筛选
+        function resetFilters() {
+            document.getElementById('filterName').value = '';
+            document.getElementById('filterPhone').value = '';
+            document.getElementById('filterStatus').value = '';
+            document.getElementById('filterAgent').value = '';
+            document.getElementById('filterBuilding').value = '';
+            renderTable(customersData);
+        }
+
+        // 应用筛选
+        function applyFilters() {
+            const name = document.getElementById('filterName').value.toLowerCase();
+            const phone = document.getElementById('filterPhone').value.toLowerCase();
+            const status = document.getElementById('filterStatus').value;
+            const agent = document.getElementById('filterAgent').value;
+            const building = document.getElementById('filterBuilding').value.toLowerCase();
+
+            let filtered = customersData;
+
+            if (name) {
+                filtered = filtered.filter(item => item.name.toLowerCase().includes(name));
+            }
+            if (phone) {
+                filtered = filtered.filter(item => item.phone.includes(phone));
+            }
+            if (status) {
+                filtered = filtered.filter(item => item.status === status);
+            }
+            if (agent) {
+                filtered = filtered.filter(item => item.agentName === agent);
+            }
+            if (building) {
+                filtered = filtered.filter(item => item.buildingName.toLowerCase().includes(building));
+            }
+
+            renderTable(filtered);
+        }
+
+        // 初始化
+        renderTable(customersData);
+    </script>
+</body>
+</html>

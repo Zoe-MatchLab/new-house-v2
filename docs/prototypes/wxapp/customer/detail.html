@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>客户详情 - 房产AI作业平台</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#165DFF',
+                        success: '#00B42A',
+                        warning: '#FF7D00',
+                        danger: '#F53F3F',
+                        dark: '#1D2129',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 500; }
+        .tag-potential { background: #F0F5FF; color: #165DFF; }
+        .tag-following { background: #FFF7E8; color: #FF7D00; }
+        .tag-dealed { background: #E8FFEA; color: #00B42A; }
+        .tag-lost { background: #F2F3F5; color: #4E5969; }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <!-- 顶部导航 -->
+    <div class="bg-primary text-white px-4 py-3 sticky top-0 z-50">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <a href="list.html" class="text-white">
+                    <i class="fa fa-chevron-left"></i>
+                </a>
+                <div class="text-lg font-medium">客户详情</div>
+            </div>
+            <a href="form.html?id=1" class="text-white">
+                <i class="fa fa-edit text-lg"></i>
+            </a>
+        </div>
+    </div>
+
+    <!-- 客户信息卡片 -->
+    <div class="bg-white p-4 mb-3">
+        <div class="flex items-center gap-4 mb-4">
+            <div class="w-14 h-14 rounded-full bg-primary text-white flex items-center justify-center text-xl font-medium">
+                王
+            </div>
+            <div class="flex-1">
+                <div class="flex items-center gap-2 mb-1">
+                    <span class="text-lg font-medium text-gray-800">王女士</span>
+                    <span class="tag tag-following">跟进中</span>
+                </div>
+                <div class="text-sm text-gray-500">138****1234</div>
+            </div>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-3 text-sm">
+            <div class="bg-gray-50 rounded-lg p-3">
+                <div class="text-xs text-gray-400 mb-1">意向楼盘</div>
+                <div class="text-gray-800 font-medium">万科城市花园</div>
+            </div>
+            <div class="bg-gray-50 rounded-lg p-3">
+                <div class="text-xs text-gray-400 mb-1">跟进录音</div>
+                <div class="text-primary font-medium">8 条</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tab切换 -->
+    <div class="bg-white sticky top-14 z-40">
+        <div class="flex border-b border-gray-200">
+            <button onclick="switchTab('info')" id="tabInfo" class="flex-1 py-3 text-sm font-medium text-primary text-center border-b-2 border-primary">
+                基本信息
+            </button>
+            <button onclick="switchTab('records')" id="tabRecords" class="flex-1 py-3 text-sm font-medium text-gray-500 text-center">
+                跟进记录
+            </button>
+        </div>
+    </div>
+
+    <!-- 基本信息Tab -->
+    <div id="panelInfo" class="p-4">
+        <div class="bg-white rounded-lg divide-y divide-gray-100">
+            <div class="px-4 py-3 flex justify-between">
+                <span class="text-sm text-gray-500">客户姓名</span>
+                <span class="text-sm text-gray-800">王女士</span>
+            </div>
+            <div class="px-4 py-3 flex justify-between">
+                <span class="text-sm text-gray-500">手机号</span>
+                <span class="text-sm text-gray-800">138****1234</span>
+            </div>
+            <div class="px-4 py-3 flex justify-between">
+                <span class="text-sm text-gray-500">意向楼盘</span>
+                <span class="text-sm text-primary">万科城市花园</span>
+            </div>
+            <div class="px-4 py-3 flex justify-between">
+                <span class="text-sm text-gray-500">客户状态</span>
+                <span class="tag tag-following">跟进中</span>
+            </div>
+            <div class="px-4 py-3 flex justify-between">
+                <span class="text-sm text-gray-500">创建时间</span>
+                <span class="text-sm text-gray-800">2026-04-01</span>
+            </div>
+        </div>
+        
+        <div class="bg-white rounded-lg p-4 mt-3">
+            <div class="text-sm text-gray-500 mb-2">备注</div>
+            <div class="text-sm text-gray-700">客户对万科城市花园120平米户型感兴趣，预算800-900万。首付预算充足，意向度较高。</div>
+        </div>
+    </div>
+
+    <!-- 跟进记录Tab -->
+    <div id="panelRecords" class="p-4 hidden">
+        <div class="text-sm text-gray-500 mb-3">共 <span class="text-primary font-medium">8</span> 条跟进记录</div>
+        
+        <div class="relative">
+            <!-- 时间线 -->
+            <div class="absolute left-5 top-0 bottom-0 w-0.5 bg-gray-200"></div>
+            
+            <div class="space-y-3">
+                <!-- 记录1 -->
+                <div class="relative flex gap-3">
+                    <div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-xs font-medium z-10 shrink-0">8</div>
+                    <div class="flex-1 bg-white rounded-lg p-3">
+                        <div class="flex items-center justify-between mb-1">
+                            <span class="text-sm font-medium text-gray-800">录音分析</span>
+                            <span class="text-xs text-gray-400">04-16 14:30</span>
+                        </div>
+                        <div class="text-xs text-gray-500 mb-1">张三-万科城市花园-20260416</div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs text-gray-500">评分：<span class="text-success">85分</span></span>
+                            <a href="../recording/detail.html?id=1" class="text-xs text-primary">查看 →</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 记录2 -->
+                <div class="relative flex gap-3">
+                    <div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-xs font-medium z-10 shrink-0">7</div>
+                    <div class="flex-1 bg-white rounded-lg p-3">
+                        <div class="flex items-center justify-between mb-1">
+                            <span class="text-sm font-medium text-gray-800">录音分析</span>
+                            <span class="text-xs text-gray-400">04-15 10:20</span>
+                        </div>
+                        <div class="text-xs text-gray-500 mb-1">李四-万科城市花园-20260415</div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs text-gray-500">评分：<span class="text-success">92分</span></span>
+                            <a href="../recording/detail.html?id=2" class="text-xs text-primary">查看 →</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 记录3 -->
+                <div class="relative flex gap-3">
+                    <div class="w-8 h-8 rounded-full bg-gray-300 text-white flex items-center justify-center text-xs font-medium z-10 shrink-0">6</div>
+                    <div class="flex-1 bg-white rounded-lg p-3">
+                        <div class="flex items-center justify-between mb-1">
+                            <span class="text-sm font-medium text-gray-800">状态变更</span>
+                            <span class="text-xs text-gray-400">04-10 09:00</span>
+                        </div>
+                        <div class="text-xs text-gray-500">潜在 → <span class="tag tag-following text-xs">跟进中</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部操作 -->
+    <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 flex gap-3">
+        <a href="../recording/form.html?customer_id=1" class="flex-1 py-3 bg-primary text-white text-center rounded-lg font-medium">
+            <i class="fa fa-microphone mr-2"></i>添加录音
+        </a>
+        <button class="flex-1 py-3 bg-gray-100 text-gray-600 text-center rounded-lg font-medium">
+            <i class="fa fa-phone mr-2"></i>拨打电话
+        </button>
+    </div>
+
+    <script>
+        // Tab切换
+        function switchTab(tab) {
+            const tabInfo = document.getElementById('tabInfo');
+            const tabRecords = document.getElementById('tabRecords');
+            const panelInfo = document.getElementById('panelInfo');
+            const panelRecords = document.getElementById('panelRecords');
+
+            if (tab === 'info') {
+                tabInfo.classList.add('text-primary', 'border-b-2', 'border-primary');
+                tabInfo.classList.remove('text-gray-500');
+                tabRecords.classList.remove('text-primary', 'border-b-2', 'border-primary');
+                tabRecords.classList.add('text-gray-500');
+                panelInfo.classList.remove('hidden');
+                panelRecords.classList.add('hidden');
+            } else {
+                tabRecords.classList.add('text-primary', 'border-b-2', 'border-primary');
+                tabRecords.classList.remove('text-gray-500');
+                tabInfo.classList.remove('text-primary', 'border-b-2', 'border-primary');
+                tabInfo.classList.add('text-gray-500');
+                panelRecords.classList.remove('hidden');
+                panelInfo.classList.add('hidden');
+            }
+        }
+    </script>
+</body>
+</html>
