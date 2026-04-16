@@ -108,8 +108,8 @@
                         <input type="text" id="filterUser" placeholder="搜索用户名称" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
                     </div>
                     <div>
-                        <label class="block text-xs text-gray-500 mb-1">关联楼盘</label>
-                        <input type="text" id="filterBuilding" placeholder="搜索楼盘名称" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
+                        <label class="block text-xs text-gray-500 mb-1">任务名称</label>
+                        <input type="text" id="filterTask" placeholder="搜索任务名称" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
                     </div>
                     <div>
                         <label class="block text-xs text-gray-500 mb-1">分析状态</label>
@@ -165,6 +165,7 @@
                                 <th class="px-4 py-3 text-xs font-medium">来源</th>
                                 <th class="px-4 py-3 text-xs font-medium">分析状态</th>
                                 <th class="px-4 py-3 text-xs font-medium">综合评分</th>
+                                <th class="px-4 py-3 text-xs font-medium">Token消耗</th>
                                 <th class="px-4 py-3 text-xs font-medium">上传时间</th>
                                 <th class="px-4 py-3 text-xs font-medium text-right">操作</th>
                             </tr>
@@ -203,6 +204,7 @@
                 id: 1,
                 name: '张三-万科城市花园-20260416',
                 userName: '张三',
+                taskName: '万科城市花园探盘任务',
                 buildingName: '万科城市花园',
                 duration: '05:32',
                 source: 'task',
@@ -210,12 +212,14 @@
                 status: 'completed',
                 statusText: '分析完成',
                 score: 85,
+                token: 12500,
                 uploadTime: '2026-04-16 14:30'
             },
             {
                 id: 2,
                 name: '李四-中海汇德里-20260416',
                 userName: '李四',
+                taskName: '中海汇德里探盘任务',
                 buildingName: '中海汇德里',
                 duration: '08:15',
                 source: 'task',
@@ -223,12 +227,14 @@
                 status: 'completed',
                 statusText: '分析完成',
                 score: 92,
+                token: 18200,
                 uploadTime: '2026-04-16 11:20'
             },
             {
                 id: 3,
                 name: '王五-金隅学府-20260415',
                 userName: '王五',
+                taskName: '',
                 buildingName: '金隅学府',
                 duration: '03:45',
                 source: 'self',
@@ -236,12 +242,14 @@
                 status: 'progress',
                 statusText: '分析中',
                 score: null,
+                token: null,
                 uploadTime: '2026-04-15 16:45'
             },
             {
                 id: 4,
                 name: '赵六-远洋LAVIE-20260415',
                 userName: '赵六',
+                taskName: '远洋LAVIE探盘任务',
                 buildingName: '远洋LAVIE',
                 duration: '06:20',
                 source: 'task',
@@ -249,12 +257,14 @@
                 status: 'completed',
                 statusText: '分析完成',
                 score: 78,
+                token: 15800,
                 uploadTime: '2026-04-15 10:15'
             },
             {
                 id: 5,
                 name: '孙七-招商公园1872-20260414',
                 userName: '孙七',
+                taskName: '',
                 buildingName: '招商公园1872',
                 duration: '04:10',
                 source: 'self',
@@ -262,12 +272,14 @@
                 status: 'pending',
                 statusText: '待分析',
                 score: null,
+                token: null,
                 uploadTime: '2026-04-14 15:30'
             },
             {
                 id: 6,
                 name: '周八-华润橡树湾-20260414',
                 userName: '周八',
+                taskName: '华润橡树湾探盘任务',
                 buildingName: '华润橡树湾',
                 duration: '07:05',
                 source: 'task',
@@ -275,6 +287,7 @@
                 status: 'failed',
                 statusText: '分析失败',
                 score: null,
+                token: 8200,
                 uploadTime: '2026-04-14 09:45'
             }
         ];
@@ -311,6 +324,9 @@
                     <td class="px-4 py-4 text-sm">
                         ${item.score ? `<span class="font-medium ${item.score >= 90 ? 'text-success' : item.score >= 80 ? 'text-primary' : item.score >= 70 ? 'text-warning' : 'text-danger'}">${item.score}分</span>` : '-'}
                     </td>
+                    <td class="px-4 py-4 text-sm text-gray-500">
+                        ${item.token ? item.token.toLocaleString() : '-'}
+                    </td>
                     <td class="px-4 py-4 text-sm text-gray-500">${item.uploadTime}</td>
                     <td class="px-4 py-4 text-sm text-right whitespace-nowrap">
                         <button onclick="viewDetail(${item.id})" class="text-primary hover:underline">详情</button>
@@ -337,7 +353,7 @@
         // 重置筛选
         function resetFilters() {
             document.getElementById('filterUser').value = '';
-            document.getElementById('filterBuilding').value = '';
+            document.getElementById('filterTask').value = '';
             document.getElementById('filterStatus').value = '';
             document.getElementById('filterSource').value = '';
             renderTable(recordingsData);
@@ -346,7 +362,7 @@
         // 应用筛选
         function applyFilters() {
             const userName = document.getElementById('filterUser').value.toLowerCase();
-            const buildingName = document.getElementById('filterBuilding').value.toLowerCase();
+            const taskName = document.getElementById('filterTask').value.toLowerCase();
             const status = document.getElementById('filterStatus').value;
             const source = document.getElementById('filterSource').value;
 
@@ -355,8 +371,8 @@
             if (userName) {
                 filtered = filtered.filter(item => item.userName.toLowerCase().includes(userName));
             }
-            if (buildingName) {
-                filtered = filtered.filter(item => (item.buildingName || '').toLowerCase().includes(buildingName));
+            if (taskName) {
+                filtered = filtered.filter(item => (item.taskName || '').toLowerCase().includes(taskName));
             }
             if (status) {
                 filtered = filtered.filter(item => item.status === status);
