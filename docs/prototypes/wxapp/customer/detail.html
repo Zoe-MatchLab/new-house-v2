@@ -18,7 +18,10 @@
             --color-sub: #86909C;
             --color-border: #E5E6EB;
             --color-bg: #F7F8FA;
-            --color-card: #FFFFFF;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --spacing-md: 16px;
+            --spacing-sm: 8px;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -26,14 +29,14 @@
         html, body {
             font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif;
             font-size: 14px;
-            line-height: 1.5;
             color: var(--color-text);
             background: var(--color-bg);
+            -webkit-font-smoothing: antialiased;
         }
 
         .page {
             min-height: 100vh;
-            padding-bottom: 80px;
+            padding-bottom: calc(60px + env(safe-area-inset-bottom));
         }
 
         /* 顶部导航 */
@@ -47,17 +50,23 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 16px;
+            padding: 0 var(--spacing-md);
             z-index: 100;
             border-bottom: 1px solid var(--color-border);
         }
 
         .nav-back {
             color: var(--brand-primary);
-            font-size: 16px;
+            font-size: 15px;
             display: flex;
             align-items: center;
             gap: 4px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .nav-back:active {
+            opacity: 0.7;
         }
 
         .nav-title {
@@ -66,143 +75,340 @@
             color: var(--color-title);
         }
 
-        .nav-more {
-            color: var(--color-text);
-            font-size: 16px;
-        }
-
-        /* 基本信息卡片 */
-        .info-card {
-            background: white;
-            margin: 16px;
-            border-radius: 12px;
-            padding: 16px;
-        }
-
-        .info-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 12px;
-        }
-
-        .info-name {
-            font-size: 18px;
-            font-weight: 600;
-            color: var(--color-title);
-        }
-
-        .info-tag {
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-        }
-
-        .tag-danger { background: #FFF1F0; color: var(--color-danger); }
-        .tag-warning { background: #FFF7E6; color: var(--color-warning); }
-        .tag-success { background: #E6FFF1; color: var(--color-success); }
-
-        .info-row {
-            display: flex;
-            padding: 8px 0;
-            border-top: 1px solid var(--color-border);
-        }
-
-        .info-label {
-            width: 80px;
-            color: var(--color-sub);
-            font-size: 13px;
-        }
-
-        .info-value {
-            flex: 1;
-            color: var(--color-text);
-            font-size: 13px;
-        }
-
-        /* 跟进记录 */
-        .section-title {
+        .nav-edit {
+            color: var(--brand-primary);
             font-size: 15px;
-            font-weight: 600;
-            color: var(--color-title);
-            padding: 16px;
-            padding-bottom: 8px;
+            cursor: pointer;
+            user-select: none;
         }
 
-        .record-item {
-            background: white;
-            margin: 0 16px 12px;
-            border-radius: 12px;
-            padding: 12px;
-            border-left: 3px solid var(--brand-primary);
+        .nav-edit:active {
+            opacity: 0.7;
         }
 
-        .record-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-        }
-
-        .record-title {
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--color-title);
-        }
-
-        .record-time {
-            font-size: 12px;
-            color: var(--color-sub);
-        }
-
-        .record-content {
-            font-size: 13px;
-            color: var(--color-text);
-            margin-bottom: 8px;
-        }
-
-        .record-footer {
-            font-size: 12px;
-            color: var(--color-sub);
-            display: flex;
-            justify-content: space-between;
-        }
-
-        /* 底部按钮 */
-        .bottom-actions {
+        /* Tab切换 */
+        .tab-bar {
             position: fixed;
-            bottom: 0;
+            top: 44px;
             left: 0;
             right: 0;
             background: white;
-            padding: 12px 16px;
             display: flex;
-            gap: 12px;
-            border-top: 1px solid var(--color-border);
-            z-index: 100;
+            border-bottom: 1px solid var(--color-border);
+            z-index: 99;
         }
 
-        .btn {
+        .tab-item {
             flex: 1;
             height: 44px;
-            border-radius: 22px;
-            font-size: 15px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
-            border: none;
-        }
-
-        .btn-outline {
-            background: white;
+            font-size: 15px;
             color: var(--color-text);
-            border: 1px solid var(--color-border);
+            cursor: pointer;
+            user-select: none;
+            position: relative;
         }
 
-        .btn-primary {
+        .tab-item.active {
+            color: var(--brand-primary);
+            font-weight: 500;
+        }
+
+        .tab-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 3px;
+            background: var(--brand-primary);
+            border-radius: 2px;
+        }
+
+        /* 客户信息区域 */
+        .customer-header {
+            background: white;
+            padding: var(--spacing-md);
+            padding-top: 100px;
+        }
+
+        .customer-name {
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--color-title);
+            margin-bottom: 4px;
+        }
+
+        .customer-phone {
+            font-size: 14px;
+            color: var(--color-sub);
+        }
+
+        .customer-meta {
+            display: flex;
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-md);
+            padding-top: var(--spacing-md);
+            border-top: 1px solid var(--color-border);
+        }
+
+        .meta-item {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .meta-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--color-title);
+        }
+
+        .meta-value.highlight {
+            color: var(--brand-primary);
+        }
+
+        .meta-label {
+            font-size: 12px;
+            color: var(--color-sub);
+        }
+
+        /* 备注区域 */
+        .remark-card {
+            background: white;
+            margin: var(--spacing-md);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-md);
+        }
+
+        .remark-title {
+            font-size: 13px;
+            color: var(--color-sub);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .remark-content {
+            font-size: 14px;
+            color: var(--color-text);
+            line-height: 1.6;
+        }
+
+        .remark-empty {
+            font-size: 14px;
+            color: #C9CDD4;
+        }
+
+        /* 录音列表区域 */
+        .recording-section {
+            padding: var(--spacing-md);
+            padding-top: 88px;
+        }
+
+        .recording-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .recording-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--color-title);
+        }
+
+        .recording-count {
+            font-size: 13px;
+            color: var(--color-sub);
+        }
+
+        /* 录音筛选 */
+        .recording-filters {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .filter-row {
+            display: flex;
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .filter-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .filter-input {
+            flex: 1;
+            height: 36px;
+            background: var(--color-bg);
+            border: none;
+            border-radius: 18px;
+            padding: 0 var(--spacing-md);
+            font-size: 13px;
+            outline: none;
+        }
+
+        .filter-input:focus {
+            background: #fff;
+            box-shadow: 0 0 0 2px var(--brand-primary-light);
+        }
+
+        .filter-select {
+            height: 36px;
+            background: var(--color-bg);
+            border: none;
+            border-radius: 18px;
+            padding: 0 12px;
+            font-size: 13px;
+            outline: none;
+            min-width: 90px;
+        }
+
+        .filter-btn {
+            height: 36px;
+            padding: 0 14px;
             background: var(--brand-primary);
             color: white;
+            border: none;
+            border-radius: 18px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .filter-btn-reset {
+            background: var(--color-bg);
+            color: var(--color-text);
+        }
+
+        /* 录音卡片 */
+        .recording-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+            cursor: pointer;
+            transition: box-shadow 0.2s ease, transform 0.15s ease;
+        }
+
+        .recording-card:active {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transform: scale(0.98);
+        }
+
+        .recording-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .recording-name {
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--color-title);
+            flex: 1;
+        }
+
+        .recording-status {
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+            flex-shrink: 0;
+        }
+
+        .status-completed {
+            background: #E6FFF1;
+            color: var(--color-success);
+        }
+
+        .status-progress {
+            background: #FFF7E6;
+            color: var(--color-warning);
+        }
+
+        .status-pending {
+            background: var(--color-bg);
+            color: var(--color-sub);
+        }
+
+        .status-failed {
+            background: #FFF1F0;
+            color: var(--color-danger);
+        }
+
+        .recording-meta {
+            display: flex;
+            gap: var(--spacing-md);
+            font-size: 13px;
+            color: var(--color-sub);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .recording-score {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+        }
+
+        .score-value {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .score-value.high {
+            color: var(--color-success);
+        }
+
+        .score-value.medium {
+            color: var(--brand-primary);
+        }
+
+        .score-value.low {
+            color: var(--color-warning);
+        }
+
+        .score-value.danger {
+            color: var(--color-danger);
+        }
+
+        .recording-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: var(--color-sub);
+            padding-top: var(--spacing-sm);
+            border-top: 1px solid var(--color-border);
+        }
+
+        .recording-action {
+            color: var(--brand-primary);
+            font-size: 12px;
+        }
+
+        /* 空状态 */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .empty-icon {
+            font-size: 48px;
+            color: var(--color-border);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .empty-text {
+            font-size: 14px;
+            color: var(--color-sub);
         }
 
         /* Toast */
@@ -229,66 +435,6 @@
             from { opacity: 0; }
             to { opacity: 1; }
         }
-
-        /* 删除确认弹窗 */
-        .modal {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            display: none;
-        }
-
-        .modal.show {
-            display: flex;
-        }
-
-        .modal-content {
-            background: white;
-            border-radius: 16px;
-            width: 280px;
-            text-align: center;
-            padding: 24px;
-        }
-
-        .modal-title {
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--color-title);
-            margin-bottom: 8px;
-        }
-
-        .modal-desc {
-            font-size: 13px;
-            color: var(--color-sub);
-            margin-bottom: 24px;
-        }
-
-        .modal-actions {
-            display: flex;
-            gap: 12px;
-        }
-
-        .modal-btn {
-            flex: 1;
-            height: 40px;
-            border-radius: 20px;
-            font-size: 14px;
-            border: none;
-        }
-
-        .modal-btn-cancel {
-            background: var(--color-bg);
-            color: var(--color-text);
-        }
-
-        .modal-btn-confirm {
-            background: var(--color-danger);
-            color: white;
-        }
     </style>
 </head>
 <body>
@@ -300,128 +446,122 @@
                 <span>返回</span>
             </div>
             <span class="nav-title">客户详情</span>
-            <div class="nav-more" onclick="showMore()">
-                <i class="fa fa-ellipsis-h"></i>
+            <div class="nav-edit" onclick="editCustomer()">
+                <i class="fa fa-edit"></i>
             </div>
         </div>
 
-        <!-- 基本信息 -->
-        <div class="info-card" style="margin-top: 60px;">
-            <div class="info-header">
-                <div>
-                    <div class="info-name">张先生</div>
-                    <div style="font-size: 13px; color: var(--color-sub); margin-top: 2px;">ID: CUST_001</div>
+        <!-- Tab切换 -->
+        <div class="tab-bar">
+            <div class="tab-item active" id="tabInfo" onclick="switchTab('info')">客户信息</div>
+            <div class="tab-item" id="tabRecords" onclick="switchTab('records')">关联录音</div>
+        </div>
+
+        <!-- 客户信息面板 -->
+        <div id="panelInfo">
+            <div class="customer-header">
+                <div class="customer-name" id="customerName">张先生</div>
+                <div class="customer-phone" id="customerPhone">138****8888</div>
+                
+                <div class="customer-meta">
+                    <div class="meta-item">
+                        <span class="meta-value highlight" id="recordCount">5</span>
+                        <span class="meta-label">关联录音</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-value" id="createTime">2026-04-10</span>
+                        <span class="meta-label">创建时间</span>
+                    </div>
                 </div>
-                <span class="info-tag tag-danger">高意向</span>
             </div>
 
-            <div class="info-row">
-                <div class="info-label">联系电话</div>
-                <div class="info-value">138****8888</div>
-            </div>
-            <div class="info-row">
-                <div class="info-label">性别</div>
-                <div class="info-value">男</div>
-            </div>
-            <div class="info-row">
-                <div class="info-label">意向楼盘</div>
-                <div class="info-value">中海汇德里</div>
-            </div>
-            <div class="info-row">
-                <div class="info-label">客户来源</div>
-                <div class="info-value">线上获客</div>
-            </div>
-            <div class="info-row">
-                <div class="info-label">经纪人</div>
-                <div class="info-value">陈佳佳</div>
-            </div>
-            <div class="info-row">
-                <div class="info-label">创建时间</div>
-                <div class="info-value">2026-03-15 10:30</div>
-            </div>
-        </div>
-
-        <!-- 备注 -->
-        <div class="info-card">
-            <div style="font-size: 13px; color: var(--color-sub); margin-bottom: 8px;">备注</div>
-            <div style="font-size: 13px; color: var(--color-text); line-height: 1.6;">
-                客户预算800-1000万，关注学区配套，意向户型三房。与家人商量后决定购房。
-            </div>
-        </div>
-
-        <!-- 跟进记录 -->
-        <div class="section-title">跟进记录</div>
-
-        <div class="record-item">
-            <div class="record-header">
-                <span class="record-title">初次咨询</span>
-                <span class="record-time">今天 14:30</span>
-            </div>
-            <div class="record-content">客户来电咨询中海汇德里项目，了解户型和价格。客户表示对项目比较感兴趣，需要进一步了解详细信息。</div>
-            <div class="record-footer">
-                <span>跟进人：陈佳佳</span>
-                <span class="text-primary" style="font-size: 12px;">编辑</span>
-            </div>
-        </div>
-
-        <div class="record-item" style="border-left-color: var(--color-success);">
-            <div class="record-header">
-                <span class="record-title">带看预约</span>
-                <span class="record-time">昨天 16:20</span>
-            </div>
-            <div class="record-content">预约明天下午3点带看，现场了解样板间和小区环境。</div>
-            <div class="record-footer">
-                <span>跟进人：陈佳佳</span>
-                <span class="text-primary" style="font-size: 12px;">编辑</span>
-            </div>
-        </div>
-
-        <div class="record-item" style="border-left-color: var(--color-warning);">
-            <div class="record-header">
-                <span class="record-title">意向确认</span>
-                <span class="record-time">3天前 10:15</span>
-            </div>
-            <div class="record-content">客户表示有较强意向，需要和家人商量后决定购房。已约定下次跟进时间。</div>
-            <div class="record-footer">
-                <span>跟进人：陈佳佳</span>
-                <span class="text-primary" style="font-size: 12px;">编辑</span>
-            </div>
-        </div>
-
-        <!-- 新增跟进按钮 -->
-        <div class="info-card" style="margin-bottom: 80px; text-align: center; background: var(--brand-primary-light); border: 1px dashed var(--brand-primary);" onclick="addRecord()">
-            <span style="color: var(--brand-primary); font-size: 14px;">
-                <i class="fa fa-plus"></i> 新增跟进记录
-            </span>
-        </div>
-
-        <!-- 底部操作按钮 -->
-        <div class="bottom-actions">
-            <button class="btn btn-outline" onclick="editCustomer()">
-                <i class="fa fa-edit"></i> 编辑
-            </button>
-            <button class="btn btn-primary" onclick="addRecord()">
-                <i class="fa fa-commenting"></i> 跟进
-            </button>
-        </div>
-
-        <!-- Toast -->
-        <div class="toast" id="toast"></div>
-
-        <!-- 删除确认弹窗 -->
-        <div class="modal" id="deleteModal">
-            <div class="modal-content">
-                <div class="modal-title">确认删除客户？</div>
-                <div class="modal-desc">删除后数据将无法恢复，请谨慎操作</div>
-                <div class="modal-actions">
-                    <button class="modal-btn modal-btn-cancel" onclick="closeDeleteModal()">取消</button>
-                    <button class="modal-btn modal-btn-confirm" onclick="confirmDelete()">确认删除</button>
+            <!-- 备注 -->
+            <div class="remark-card">
+                <div class="remark-title">备注</div>
+                <div class="remark-content" id="remarkContent">
+                    对中海汇德里感兴趣，预算800万左右。客户比较谨慎，需要多次跟进。
                 </div>
+            </div>
+        </div>
+
+        <!-- 关联录音面板 -->
+        <div id="panelRecords" style="display: none;">
+            <div class="recording-section">
+                <div class="recording-header">
+                    <span class="recording-title">录音列表</span>
+                    <span class="recording-count">共 <span id="recordingTotalCount">3</span> 条</span>
+                </div>
+
+                <!-- 筛选 -->
+                <div class="recording-filters">
+                    <div class="filter-row">
+                        <input type="text" class="filter-input" id="filterName" placeholder="搜索录音名称">
+                    </div>
+                    <div class="filter-row">
+                        <select class="filter-select" id="filterStatus">
+                            <option value="">全部状态</option>
+                            <option value="completed">分析完成</option>
+                            <option value="progress">分析中</option>
+                            <option value="pending">待分析</option>
+                            <option value="failed">分析失败</option>
+                        </select>
+                        <button class="filter-btn filter-btn-reset" onclick="resetFilters()">重置</button>
+                        <button class="filter-btn" onclick="applyFilters()">搜索</button>
+                    </div>
+                </div>
+
+                <!-- 录音列表 -->
+                <div id="recordingList"></div>
             </div>
         </div>
     </div>
 
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
     <script>
+        // 客户数据
+        const customerData = {
+            id: 'CUST_001',
+            name: '张先生',
+            phone: '138****8888',
+            recordCount: 5,
+            createTime: '2026-04-10',
+            remark: '对中海汇德里感兴趣，预算800万左右。客户比较谨慎，需要多次跟进。'
+        };
+
+        // 录音数据
+        const recordingsData = [
+            {
+                id: 1,
+                name: '张先生-中海汇德里-20260416',
+                duration: '05:32',
+                status: 'completed',
+                statusText: '分析完成',
+                score: 85,
+                uploadTime: '2026-04-16 14:30'
+            },
+            {
+                id: 2,
+                name: '张先生-中海汇德里-20260415',
+                duration: '08:15',
+                status: 'completed',
+                statusText: '分析完成',
+                score: 92,
+                uploadTime: '2026-04-15 10:20'
+            },
+            {
+                id: 3,
+                name: '张先生-万科城市花园-20260412',
+                duration: '06:20',
+                status: 'progress',
+                statusText: '分析中',
+                score: null,
+                uploadTime: '2026-04-12 16:45'
+            }
+        ];
+
+        // 显示Toast
         function showToast(message) {
             const toast = document.getElementById('toast');
             toast.textContent = message;
@@ -431,33 +571,135 @@
             }, 2000);
         }
 
+        // 返回
         function goBack() {
-            window.history.back();
+            window.location.href = 'list.html';
         }
 
-        function showMore() {
-            showToast('更多操作');
-        }
-
+        // 编辑客户
         function editCustomer() {
-            window.location.href = 'edit.html?id=CUST_001';
+            window.location.href = 'edit.html?id=' + customerData.id;
         }
 
-        function addRecord() {
-            window.location.href = '新增跟进.html?id=CUST_001';
+        // Tab切换
+        function switchTab(tab) {
+            const tabInfo = document.getElementById('tabInfo');
+            const tabRecords = document.getElementById('tabRecords');
+            const panelInfo = document.getElementById('panelInfo');
+            const panelRecords = document.getElementById('panelRecords');
+
+            if (tab === 'info') {
+                tabInfo.classList.add('active');
+                tabRecords.classList.remove('active');
+                panelInfo.style.display = 'block';
+                panelRecords.style.display = 'none';
+            } else {
+                tabRecords.classList.add('active');
+                tabInfo.classList.remove('active');
+                panelRecords.style.display = 'block';
+                panelInfo.style.display = 'none';
+            }
         }
 
-        function closeDeleteModal() {
-            document.getElementById('deleteModal').classList.remove('show');
+        // 获取状态样式
+        function getStatusClass(status) {
+            const map = {
+                'completed': 'status-completed',
+                'progress': 'status-progress',
+                'pending': 'status-pending',
+                'failed': 'status-failed'
+            };
+            return map[status] || 'status-pending';
         }
 
-        function confirmDelete() {
-            closeDeleteModal();
-            showToast('删除成功');
-            setTimeout(() => {
-                window.location.href = 'list.html';
-            }, 1500);
+        // 获取评分样式
+        function getScoreClass(score) {
+            if (score >= 90) return 'high';
+            if (score >= 80) return 'medium';
+            if (score >= 70) return 'low';
+            return 'danger';
         }
+
+        // 渲染录音列表
+        function renderRecordings(data) {
+            const list = document.getElementById('recordingList');
+            document.getElementById('recordingTotalCount').textContent = data.length;
+
+            if (data.length === 0) {
+                list.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon"><i class="fa fa-microphone-slash"></i></div>
+                        <div class="empty-text">暂无关联录音</div>
+                    </div>
+                `;
+                return;
+            }
+
+            list.innerHTML = data.map(item => `
+                <div class="recording-card" onclick="viewRecording(${item.id})">
+                    <div class="recording-card-header">
+                        <div class="recording-name">${item.name}</div>
+                        <span class="recording-status ${getStatusClass(item.status)}">${item.statusText}</span>
+                    </div>
+                    <div class="recording-meta">
+                        <span><i class="fa fa-clock-o"></i> ${item.duration}</span>
+                        ${item.score ? `
+                            <span class="recording-score">
+                                评分：<span class="score-value ${getScoreClass(item.score)}">${item.score}分</span>
+                            </span>
+                        ` : ''}
+                    </div>
+                    <div class="recording-footer">
+                        <span><i class="fa fa-upload"></i> ${item.uploadTime}</span>
+                        <span class="recording-action">查看详情 ></span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 查看录音详情
+        function viewRecording(id) {
+            window.location.href = '../recording/result.html?id=' + id;
+        }
+
+        // 筛选
+        function applyFilters() {
+            const name = document.getElementById('filterName').value.toLowerCase().trim();
+            const status = document.getElementById('filterStatus').value;
+
+            let filtered = recordingsData;
+
+            if (name) {
+                filtered = filtered.filter(item => item.name.toLowerCase().includes(name));
+            }
+            if (status) {
+                filtered = filtered.filter(item => item.status === status);
+            }
+
+            renderRecordings(filtered);
+        }
+
+        // 重置筛选
+        function resetFilters() {
+            document.getElementById('filterName').value = '';
+            document.getElementById('filterStatus').value = '';
+            renderRecordings(recordingsData);
+        }
+
+        // 初始化
+        function init() {
+            // 填充客户数据
+            document.getElementById('customerName').textContent = customerData.name;
+            document.getElementById('customerPhone').textContent = customerData.phone;
+            document.getElementById('recordCount').textContent = customerData.recordCount;
+            document.getElementById('createTime').textContent = customerData.createTime;
+            document.getElementById('remarkContent').textContent = customerData.remark || '暂无备注';
+
+            // 渲染录音列表
+            renderRecordings(recordingsData);
+        }
+
+        init();
     </script>
 </body>
 </html>
