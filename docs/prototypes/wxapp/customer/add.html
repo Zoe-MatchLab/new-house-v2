@@ -18,6 +18,10 @@
             --color-sub: #86909C;
             --color-border: #E5E6EB;
             --color-bg: #F7F8FA;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --spacing-md: 16px;
+            --spacing-sm: 8px;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -27,6 +31,12 @@
             font-size: 14px;
             color: var(--color-text);
             background: var(--color-bg);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .page {
+            min-height: 100vh;
+            padding-bottom: calc(80px + env(safe-area-inset-bottom));
         }
 
         /* 顶部导航 */
@@ -40,17 +50,23 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 16px;
+            padding: 0 var(--spacing-md);
             z-index: 100;
             border-bottom: 1px solid var(--color-border);
         }
 
         .nav-back {
             color: var(--brand-primary);
-            font-size: 16px;
+            font-size: 15px;
             display: flex;
             align-items: center;
             gap: 4px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .nav-back:active {
+            opacity: 0.7;
         }
 
         .nav-title {
@@ -59,27 +75,50 @@
             color: var(--color-title);
         }
 
-        .nav-save {
-            color: var(--brand-primary);
-            font-size: 15px;
+        .nav-placeholder {
+            width: 60px;
         }
 
-        /* 表单 */
-        .form-list {
-            padding: 60px 16px 100px;
+        /* 说明文字 */
+        .page-tip {
+            padding: var(--spacing-md);
+            padding-top: 60px;
+            font-size: 13px;
+            color: var(--color-sub);
+            background: var(--color-bg);
+            display: flex;
+            align-items: flex-start;
+            gap: 6px;
+        }
+
+        .page-tip i {
+            margin-top: 2px;
+        }
+
+        /* 卡片表单 */
+        .form-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            margin: 0 var(--spacing-md);
         }
 
         .form-item {
-            background: white;
-            margin-bottom: 12px;
-            border-radius: 12px;
-            overflow: hidden;
+            display: flex;
+            align-items: flex-start;
+            padding: 14px var(--spacing-md);
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .form-item:last-child {
+            border-bottom: none;
         }
 
         .form-label {
-            padding: 12px 16px 8px;
-            font-size: 13px;
-            color: var(--color-sub);
+            width: 70px;
+            font-size: 15px;
+            color: var(--color-title);
+            padding-top: 2px;
+            flex-shrink: 0;
         }
 
         .form-label.required::after {
@@ -87,87 +126,49 @@
             color: var(--color-danger);
         }
 
+        .form-control {
+            flex: 1;
+            min-height: 24px;
+        }
+
         .form-input {
             width: 100%;
-            padding: 0 16px 12px;
             font-size: 15px;
             color: var(--color-title);
             border: none;
             outline: none;
             background: transparent;
+            line-height: 1.5;
         }
 
-        .form-select {
+        .form-input::placeholder {
+            color: #C9CDD4;
+        }
+
+        .form-textarea {
             width: 100%;
-            padding: 0 16px 12px;
             font-size: 15px;
             color: var(--color-title);
             border: none;
             outline: none;
             background: transparent;
-            -webkit-appearance: none;
+            line-height: 1.5;
+            resize: none;
+            min-height: 60px;
         }
 
-        .form-row {
-            display: flex;
-            border-top: 1px solid var(--color-border);
-            padding: 8px 16px;
-        }
-
-        .form-row-label {
-            width: 80px;
-            font-size: 13px;
-            color: var(--color-sub);
-            padding-top: 4px;
-        }
-
-        .form-row-content {
-            flex: 1;
-        }
-
-        .form-radio {
-            display: flex;
-            gap: 24px;
-        }
-
-        .form-radio-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 14px;
-            color: var(--color-text);
-        }
-
-        .radio-circle {
-            width: 18px;
-            height: 18px;
-            border: 2px solid var(--color-border);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .radio-circle.checked {
-            border-color: var(--brand-primary);
-            background: var(--brand-primary);
-        }
-
-        .radio-circle.checked::after {
-            content: '';
-            width: 8px;
-            height: 8px;
-            background: white;
-            border-radius: 50%;
+        .form-textarea::placeholder {
+            color: #C9CDD4;
         }
 
         /* 底部按钮 */
-        .bottom-btn {
+        .bottom-bar {
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
-            padding: 12px 16px;
+            padding: 12px var(--spacing-md);
+            padding-bottom: calc(12px + env(safe-area-inset-bottom));
             background: white;
             border-top: 1px solid var(--color-border);
             z-index: 100;
@@ -180,12 +181,20 @@
             color: white;
             border: none;
             border-radius: 22px;
-            font-size: 15px;
+            font-size: 16px;
             font-weight: 500;
+            cursor: pointer;
+            transition: opacity 0.2s ease, transform 0.15s ease;
+        }
+
+        .btn-primary:active {
+            transform: scale(0.98);
+            opacity: 0.9;
         }
 
         .btn-primary:disabled {
             background: #CCC;
+            cursor: not-allowed;
         }
 
         /* Toast */
@@ -215,105 +224,53 @@
     </style>
 </head>
 <body>
-    <div class="nav-bar">
-        <div class="nav-back" onclick="goBack()">
-            <i class="fa fa-chevron-left"></i>
-            <span>取消</span>
-        </div>
-        <span class="nav-title">新增客户</span>
-        <div class="nav-save" onclick="saveCustomer()">保存</div>
-    </div>
-
-    <div class="form-list">
-        <!-- 基本信息 -->
-        <div class="form-item">
-            <div class="form-label required">客户姓名</div>
-            <input type="text" class="form-input" id="name" placeholder="请输入客户姓名" value="">
+    <div class="page">
+        <!-- 顶部导航 -->
+        <div class="nav-bar">
+            <div class="nav-back" onclick="goBack()">
+                <i class="fa fa-chevron-left"></i>
+                <span>返回</span>
+            </div>
+            <span class="nav-title">新增客户</span>
+            <div class="nav-placeholder"></div>
         </div>
 
-        <div class="form-item">
-            <div class="form-label required">联系电话</div>
-            <input type="tel" class="form-input" id="phone" placeholder="请输入手机号" value="" maxlength="11">
+        <!-- 说明 -->
+        <div class="page-tip">
+            <i class="fa fa-info-circle"></i>
+            <span>填写客户信息，用于关联录音分析</span>
         </div>
 
-        <div class="form-item">
-            <div class="form-label">性别</div>
-            <div class="form-row">
-                <div class="form-row-content">
-                    <div class="form-radio">
-                        <div class="form-radio-item" onclick="selectRadio(this)">
-                            <div class="radio-circle checked"></div>
-                            <span>男</span>
-                        </div>
-                        <div class="form-radio-item" onclick="selectRadio(this)">
-                            <div class="radio-circle"></div>
-                            <span>女</span>
-                        </div>
-                    </div>
+        <!-- 表单卡片 -->
+        <div class="form-card">
+            <!-- 客户姓名 -->
+            <div class="form-item">
+                <div class="form-label required">姓名</div>
+                <div class="form-control">
+                    <input type="text" class="form-input" id="name" placeholder="请输入客户姓名" maxlength="20">
                 </div>
             </div>
-        </div>
 
-        <div class="form-item">
-            <div class="form-label required">意向等级</div>
-            <div class="form-row">
-                <div class="form-row-content">
-                    <div class="form-radio">
-                        <div class="form-radio-item" onclick="selectIntentLevel(this, 'high')">
-                            <div class="radio-circle checked"></div>
-                            <span>高意向</span>
-                        </div>
-                        <div class="form-radio-item" onclick="selectIntentLevel(this, 'medium')">
-                            <div class="radio-circle"></div>
-                            <span>中意向</span>
-                        </div>
-                        <div class="form-radio-item" onclick="selectIntentLevel(this, 'low')">
-                            <div class="radio-circle"></div>
-                            <span>低意向</span>
-                        </div>
-                    </div>
+            <!-- 手机号 -->
+            <div class="form-item">
+                <div class="form-label required">手机号</div>
+                <div class="form-control">
+                    <input type="tel" class="form-input" id="phone" placeholder="请输入手机号" maxlength="11">
                 </div>
             </div>
-        </div>
 
-        <div class="form-item">
-            <div class="form-label">意向楼盘</div>
-            <div class="form-row">
-                <div class="form-row-content">
-                    <select class="form-select" id="building">
-                        <option value="">请选择楼盘</option>
-                        <option value="1">中海汇德里</option>
-                        <option value="2">保利中央公园</option>
-                        <option value="3">万科城市之光</option>
-                        <option value="4">碧桂园天玺</option>
-                    </select>
+            <!-- 备注 -->
+            <div class="form-item" style="align-items: flex-start;">
+                <div class="form-label">备注</div>
+                <div class="form-control">
+                    <textarea class="form-textarea" id="remark" placeholder="选填，可记录客户偏好、需求等信息" rows="3"></textarea>
                 </div>
             </div>
-        </div>
-
-        <div class="form-item">
-            <div class="form-label">客户来源</div>
-            <div class="form-row">
-                <div class="form-row-content">
-                    <select class="form-select" id="source">
-                        <option value="">请选择来源</option>
-                        <option value="online">线上获客</option>
-                        <option value="referral">转介绍</option>
-                        <option value="visit">自然到访</option>
-                        <option value="other">其他</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-
-        <div class="form-item">
-            <div class="form-label">备注</div>
-            <textarea class="form-input" id="remark" placeholder="请输入备注信息" rows="3" style="resize: none; height: auto;"></textarea>
         </div>
     </div>
 
     <!-- 底部保存按钮 -->
-    <div class="bottom-btn">
+    <div class="bottom-bar">
         <button class="btn-primary" id="saveBtn" onclick="saveCustomer()">保存</button>
     </div>
 
@@ -321,40 +278,23 @@
     <div class="toast" id="toast"></div>
 
     <script>
-        let intentLevel = 'high';
-        let gender = 'male';
-
-        function showToast(message) {
+        // 显示Toast
+        function showToast(message, duration) {
+            duration = duration || 2000;
             const toast = document.getElementById('toast');
             toast.textContent = message;
             toast.classList.add('show');
             setTimeout(() => {
                 toast.classList.remove('show');
-            }, 2000);
+            }, duration);
         }
 
+        // 返回
         function goBack() {
-            if (confirm('确定取消编辑？未保存的内容将丢失')) {
-                window.history.back();
-            }
+            window.location.href = 'list.html';
         }
 
-        function selectRadio(el) {
-            document.querySelectorAll('.form-radio-item').forEach(item => {
-                item.querySelector('.radio-circle').classList.remove('checked');
-            });
-            el.querySelector('.radio-circle').classList.add('checked');
-            gender = el.querySelector('span').textContent === '男' ? 'male' : 'female';
-        }
-
-        function selectIntentLevel(el, level) {
-            el.parentElement.querySelectorAll('.radio-circle').forEach(circle => {
-                circle.classList.remove('checked');
-            });
-            el.querySelector('.radio-circle').classList.add('checked');
-            intentLevel = level;
-        }
-
+        // 校验表单
         function validateForm() {
             const name = document.getElementById('name').value.trim();
             const phone = document.getElementById('phone').value.trim();
@@ -365,11 +305,13 @@
             }
 
             if (!phone) {
-                showToast('请输入联系电话');
+                showToast('请输入手机号');
                 return false;
             }
 
-            if (!/^1[3-9]\d{9}$/.test(phone)) {
+            // 简单手机号校验
+            const phonePattern = /^1[3-9]\d{9}$|^1[3-9]\d\*+\d{4}$/;
+            if (!phonePattern.test(phone)) {
                 showToast('请输入正确的手机号');
                 return false;
             }
@@ -377,6 +319,7 @@
             return true;
         }
 
+        // 保存客户
         function saveCustomer() {
             if (!validateForm()) {
                 return;
@@ -384,24 +327,22 @@
 
             const name = document.getElementById('name').value.trim();
             const phone = document.getElementById('phone').value.trim();
-            const building = document.getElementById('building').value;
-            const source = document.getElementById('source').value;
             const remark = document.getElementById('remark').value.trim();
 
-            console.log('保存客户信息:', {
+            const customerData = {
+                id: 'CUST_' + Date.now(),
                 name,
                 phone,
-                gender,
-                intentLevel,
-                building,
-                source,
-                remark
-            });
+                remark,
+                createTime: new Date().toLocaleString()
+            };
+
+            console.log('保存客户信息:', customerData);
 
             showToast('保存成功');
 
             setTimeout(() => {
-                window.location.href = 'detail.html?id=CUST_NEW';
+                window.location.href = 'list.html';
             }, 1500);
         }
     </script>
