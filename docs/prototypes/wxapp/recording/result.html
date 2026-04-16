@@ -836,8 +836,8 @@ ${data.customerNeeds}
 
         // 选择客户
         function selectCustomer() {
-            showToast('跳转到客户选择页');
-            // 实际跳转 window.location.href = 'customer-select.html'
+            const recordId = new URLSearchParams(window.location.search).get('id') || 'RECORD_001';
+            window.location.href = 'customer-select.html?recordId=' + recordId;
         }
 
         // 确认更换客户
