@@ -101,53 +101,47 @@
             <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
                 <div class="grid grid-cols-5 gap-4">
                     <div>
-                        <label class="block text-xs text-gray-500 mb-1">所属区域</label>
-                        <select id="filterRegion" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                            <option value="">全部区域</option>
-                            <option value="hd">海淀区</option>
-                            <option value="cy">朝阳区</option>
-                            <option value="xc">西城区</option>
-                            <option value="dc">东城区</option>
-                            <option value="cp">昌平区</option>
+                        <label class="block text-xs text-gray-500 mb-1">城市</label>
+                        <select id="filterCity" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
+                            <option value="">全部城市</option>
+                            <option value="beijing" selected>北京</option>
+                            <option value="shanghai">上海</option>
+                            <option value="guangzhou">广州</option>
+                            <option value="shenzhen">深圳</option>
                         </select>
                     </div>
                     <div>
-                        <label class="block text-xs text-gray-500 mb-1">销售状态</label>
-                        <select id="filterSales" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                            <option value="">全部</option>
-                            <option value="pre">待开盘</option>
-                            <option value="onsale">在售</option>
-                            <option value="last">尾盘</option>
-                            <option value="soldout">售罄</option>
+                        <label class="block text-xs text-gray-500 mb-1">行政区</label>
+                        <select id="filterDistrict" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
+                            <option value="">全部行政区</option>
+                            <option value="chaoyang">朝阳区</option>
+                            <option value="haidian">海淀区</option>
+                            <option value="xicheng">西城区</option>
+                            <option value="dongcheng">东城区</option>
+                            <option value="fengtai">丰台区</option>
+                            <option value="tongzhou">通州区</option>
                         </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-500 mb-1">商圈</label>
+                        <input type="text" id="filterBusinessArea" placeholder="输入商圈名称" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
                     </div>
                     <div>
                         <label class="block text-xs text-gray-500 mb-1">状态</label>
                         <select id="filterStatus" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                            <option value="">全部</option>
+                            <option value="">全部状态</option>
                             <option value="draft">草稿</option>
                             <option value="pending">待审核</option>
                             <option value="approved">审核通过</option>
-                            <option value="config_pending">待配置</option>
                             <option value="rejected">已驳回</option>
                             <option value="online">已上线</option>
                             <option value="offline">已下线</option>
                         </select>
                     </div>
                     <div>
-                        <label class="block text-xs text-gray-500 mb-1">时间范围</label>
-                        <select class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                            <option value="month">本月</option>
-                            <option value="week">本周</option>
-                            <option value="quarter">本季度</option>
-                            <option value="year">本年</option>
-                            <option value="custom">自定义</option>
-                        </select>
-                    </div>
-                    <div>
                         <label class="block text-xs text-gray-500 mb-1">关键词搜索</label>
                         <div class="relative">
-                            <input type="text" id="searchKeyword" placeholder="搜索楼盘名称/开发商" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm pl-9">
+                            <input type="text" id="searchKeyword" placeholder="搜索楼盘名称" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm pl-9">
                             <i class="fa fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
                         </div>
                     </div>
@@ -181,13 +175,14 @@
                                     <input type="checkbox" class="rounded border-gray-300">
                                 </th>
                                 <th class="px-4 py-3">楼盘信息</th>
-                                <th class="px-4 py-3">区域位置</th>
-                                <th class="px-4 py-3">价格</th>
-                                <th class="px-4 py-3">户型</th>
-                                <th class="px-4 py-3">销售状态</th>
+                                <th class="px-4 py-3">城市</th>
+                                <th class="px-4 py-3">行政区</th>
+                                <th class="px-4 py-3">商圈</th>
+                                <th class="px-4 py-3">均价</th>
                                 <th class="px-4 py-3">状态</th>
-                                <th class="px-4 py-3">资料数量</th>
                                 <th class="px-4 py-3">更新时间</th>
+                                <th class="px-4 py-3">产权</th>
+                                <th class="px-4 py-3">容积率</th>
                                 <th class="px-4 py-3 text-right">操作</th>
                             </tr>
                         </thead>
@@ -348,18 +343,15 @@
                 name: '中海汇德里',
                 developer: '中海地产',
                 cover: 'https://picsum.photos/seed/house1/60/60',
-                region: '海淀区',
+                city: '北京',
+                district: '朝阳区',
+                businessArea: '望京',
                 address: '中关村大街1号',
                 price: 83000,
-                totalPrice: '680万起',
-                rooms: '77㎡两居/99㎡三居/140㎡四居',
-                salesStatus: 'onsale',
-                salesStatusText: '在售',
+                propertyRights: '70年',
+                plotRatio: '2.5',
                 status: 'online',
                 statusText: '已上线',
-                docs: 12,
-                audios: 8,
-                images: 68,
                 updateTime: '2026-03-20',
                 creator: '张三'
             },
@@ -368,18 +360,15 @@
                 name: '未来城',
                 developer: '万科地产',
                 cover: 'https://picsum.photos/seed/house2/60/60',
-                region: '昌平区',
-                address: '未来科学城',
+                city: '北京',
+                district: '昌平区',
+                businessArea: '未来科学城',
+                address: '未来科学城路',
                 price: 52000,
-                totalPrice: '420万起',
-                rooms: '85㎡三居/95㎡三居/118㎡四居',
-                salesStatus: 'pre',
-                salesStatusText: '待开盘',
+                propertyRights: '70年',
+                plotRatio: '2.8',
                 status: 'pending',
                 statusText: '待审核',
-                docs: 8,
-                audios: 5,
-                images: 42,
                 updateTime: '2026-03-15',
                 creator: '李四'
             },
@@ -388,18 +377,15 @@
                 name: '悦府二期',
                 developer: '华润置地',
                 cover: 'https://picsum.photos/seed/house3/60/60',
-                region: '西城区',
-                address: '金融街',
+                city: '北京',
+                district: '西城区',
+                businessArea: '金融街',
+                address: '金融街8号',
                 price: 125000,
-                totalPrice: '1200万起',
-                rooms: '105㎡三居/135㎡三居/165㎡四居',
-                salesStatus: 'last',
-                salesStatusText: '尾盘',
+                propertyRights: '70年',
+                plotRatio: '3.2',
                 status: 'approved',
                 statusText: '审核通过',
-                docs: 15,
-                audios: 12,
-                images: 86,
                 updateTime: '2026-03-10',
                 creator: '王五'
             },
@@ -408,18 +394,15 @@
                 name: '龙湖天街',
                 developer: '龙湖集团',
                 cover: 'https://picsum.photos/seed/house4/60/60',
-                region: '朝阳区',
+                city: '北京',
+                district: '朝阳区',
+                businessArea: '望京',
                 address: '望京SOHO旁',
                 price: 78000,
-                totalPrice: '750万起',
-                rooms: '89㎡两居/110㎡三居',
-                salesStatus: 'onsale',
-                salesStatusText: '在售',
+                propertyRights: '70年',
+                plotRatio: '3.0',
                 status: 'rejected',
                 statusText: '已驳回',
-                docs: 6,
-                audios: 3,
-                images: 35,
                 updateTime: '2026-03-08',
                 creator: '赵六'
             },
@@ -567,35 +550,18 @@
                             </div>
                         </div>
                     </td>
-                    <td class="px-4 py-4 text-sm text-gray-600">${item.region}<br><span class="text-xs text-gray-400">${item.address}</span></td>
+                    <td class="px-4 py-4 text-sm text-gray-600">${item.city || '北京'}</td>
+                    <td class="px-4 py-4 text-sm text-gray-600">${item.district || '朝阳区'}</td>
+                    <td class="px-4 py-4 text-sm text-gray-600">${item.businessArea || '望京'}</td>
                     <td class="px-4 py-4 text-sm">
-                        <span class="font-medium">${(item.price/10000).toFixed(1)}万/㎡</span>
-                        <p class="text-xs text-gray-500">总价${item.totalPrice}</p>
-                    </td>
-                    <td class="px-4 py-4 text-sm text-gray-600">${item.rooms.replace(/\//g, '<br>')}</td>
-                    <td class="px-4 py-4 text-sm">
-                        <span class="px-2 py-1 ${salesStatusStyles[item.salesStatus]} text-xs rounded">${item.salesStatusText}</span>
+                        <span class="font-medium text-primary">${(item.price/10000).toFixed(1)}万/㎡</span>
                     </td>
                     <td class="px-4 py-4 text-sm">
                         <span class="px-2 py-1 ${statusStyles[item.status]} text-xs rounded">${item.statusText}</span>
                     </td>
-                    <td class="px-4 py-4 text-sm">
-                        <div class="text-xs space-y-0.5 text-gray-600">
-                            <div class="flex items-center">
-                                <i class="fa fa-file-text-o text-gray-400 mr-1 w-3"></i>
-                                <span>文档：${item.docs}个</span>
-                            </div>
-                            <div class="flex items-center">
-                                <i class="fa fa-file-audio-o text-gray-400 mr-1 w-3"></i>
-                                <span>录音：${item.audios}个</span>
-                            </div>
-                            <div class="flex items-center">
-                                <i class="fa fa-file-image-o text-gray-400 mr-1 w-3"></i>
-                                <span>图片：${item.images}个</span>
-                            </div>
-                        </div>
-                    </td>
                     <td class="px-4 py-4 text-sm text-gray-600">${item.updateTime}</td>
+                    <td class="px-4 py-4 text-sm text-gray-600">${item.propertyRights || '70年'}</td>
+                    <td class="px-4 py-4 text-sm text-gray-600">${item.plotRatio || '2.5'}</td>
                     <td class="px-4 py-4 text-sm text-right whitespace-nowrap">
                         <button onclick="viewDetail(${item.id})" class="text-primary text-sm hover:underline">详情</button>
                         
@@ -654,7 +620,9 @@
         // 应用筛选
         function applyFilters() {
             const status = document.getElementById('filterStatus').value;
-            const region = document.getElementById('filterRegion').value;
+            const city = document.getElementById('filterCity').value;
+            const district = document.getElementById('filterDistrict').value;
+            const businessArea = document.getElementById('filterBusinessArea').value.toLowerCase();
             const keyword = document.getElementById('searchKeyword').value.toLowerCase();
 
             let filtered = materialsData;
@@ -662,13 +630,18 @@
             if (status) {
                 filtered = filtered.filter(item => item.status === status);
             }
-            if (region) {
-                filtered = filtered.filter(item => item.region === region);
+            if (city) {
+                filtered = filtered.filter(item => item.city === city);
+            }
+            if (district) {
+                filtered = filtered.filter(item => item.district === district);
+            }
+            if (businessArea) {
+                filtered = filtered.filter(item => (item.businessArea || '').toLowerCase().includes(businessArea));
             }
             if (keyword) {
                 filtered = filtered.filter(item => 
-                    item.name.toLowerCase().includes(keyword) || 
-                    item.developer.toLowerCase().includes(keyword)
+                    item.name.toLowerCase().includes(keyword)
                 );
             }
 
@@ -678,7 +651,9 @@
         // 重置筛选
         function resetFilters() {
             document.getElementById('filterStatus').value = '';
-            document.getElementById('filterRegion').value = '';
+            document.getElementById('filterCity').value = '';
+            document.getElementById('filterDistrict').value = '';
+            document.getElementById('filterBusinessArea').value = '';
             document.getElementById('searchKeyword').value = '';
             renderTable(materialsData);
         }
