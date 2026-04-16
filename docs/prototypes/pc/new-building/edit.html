@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>编辑楼盘 - 房产AI作业平台</title>
+    <title>新建楼盘 - 房产AI作业平台</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <script>
@@ -15,7 +15,6 @@
                         success: '#00B42A',
                         warning: '#FF7D00',
                         danger: '#F53F3F',
-                        purple: '#9B5DE5',
                         dark: '#1D2129',
                         'gray-light': '#F2F3F5',
                     }
@@ -24,11 +23,39 @@
         }
     </script>
     <style>
-        .section-card { border-left: 3px solid #165DFF; }
-        .required-field::after { content: ' *'; color: #F53F3F; }
+        .required-field::before { content: '*'; color: #F53F3F; margin-right: 4px; }
+        .section-card { background: #fff; border-radius: 12px; border: 1px solid #E8E9EB; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+        .section-title { font-size: 16px; font-weight: 600; color: #1D2129; padding: 16px 20px; border-bottom: 1px solid #F2F3F5; display: flex; align-items: center; gap: 8px; }
+        .form-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; padding: 20px; }
+        .form-item { }
+        .form-item.col-span-2 { grid-column: span 2; }
+        .form-item.col-span-3 { grid-column: span 3; }
+        .form-item.col-span-4 { grid-column: span 4; }
+        .form-label { display: block; font-size: 13px; color: #4E5969; margin-bottom: 6px; }
+        .form-input { width: 100%; border: 1px solid #E8E9EB; border-radius: 8px; padding: 8px 12px; font-size: 14px; transition: border-color 0.2s; }
+        .form-input:focus { outline: none; border-color: #165DFF; }
+        .form-input:disabled { background: #F7F8FA; color: #86909C; }
+        .form-select { width: 100%; border: 1px solid #E8E9EB; border-radius: 8px; padding: 8px 12px; font-size: 14px; background: #fff; }
+        .form-textarea { width: 100%; border: 1px solid #E8E9EB; border-radius: 8px; padding: 8px 12px; font-size: 14px; resize: vertical; min-height: 60px; }
+        .switch { position: relative; width: 44px; height: 24px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; inset: 0; background-color: #D1D5DB; transition: .3s; border-radius: 24px; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; }
+        input:checked + .slider { background-color: #165DFF; }
+        input:checked + .slider:before { transform: translateX(20px); }
+        .image-upload { border: 2px dashed #E8E9EB; border-radius: 8px; padding: 20px; text-align: center; cursor: pointer; transition: border-color 0.2s; }
+        .image-upload:hover { border-color: #165DFF; }
+        .image-upload.has-images { border-style: solid; }
+        .image-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 12px; }
+        .image-item { position: relative; aspect-ratio: 4/3; border-radius: 8px; overflow: hidden; }
+        .image-item img { width: 100%; height: 100%; object-fit: cover; }
+        .image-item .remove-btn { position: absolute; top: 4px; right: 4px; width: 20px; height: 20px; background: rgba(0,0,0,0.5); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; }
+        .tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 500; }
+        .tag-required { background: #FFECE8; color: #F53F3F; }
+        .tag-optional { background: #F2F3F5; color: #4E5969; }
     </style>
 </head>
-<body class="bg-gray-50">
+<body class="bg-gray-50 min-h-screen">
     <!-- 顶部导航 -->
     <nav class="bg-white shadow-sm fixed top-0 left-0 right-0 z-50">
         <div class="flex justify-between items-center px-6 py-3">
@@ -38,1357 +65,770 @@
                 <span class="text-sm text-gray-500 ml-2">管理后台</span>
             </div>
             <div class="flex items-center space-x-4">
-
-                <!-- 消息入口 -->
-                <div id="messageComponent"></div>
-
-                <button class="text-gray-600 hover:text-primary">
+                <button class="text-gray-600 hover:text-primary relative">
                     <i class="fa fa-bell-o text-lg"></i>
-                    <span class="absolute top-2 right-16 bg-danger text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">3</span>
+                    <span class="absolute top-0 right-0 bg-danger text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">5</span>
                 </button>
                 <div class="flex items-center space-x-2">
                     <div class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center">管</div>
-                    <span class="text-sm font-medium">区域经理</span>
+                    <span class="text-sm font-medium">区域经理A</span>
                     <i class="fa fa-angle-down text-gray-400"></i>
                 </div>
             </div>
         </div>
     </nav>
 
-    <div class="flex pt-14">
-                <aside class="w-64 bg-white h-[calc(100vh-56px)] fixed left-0 shadow-sm">
-    <nav class="py-4">
-        <div class="px-4 py-2 text-xs text-gray-400 uppercase font-medium">功能菜单</div>
-        <a href="list.html" class="flex items-center px-4 py-3 text-primary bg-blue-50 border-r-4 border-primary">
-            <i class="fa fa-building-o w-5 text-center"></i>
-            <span class="ml-3">新盘管理</span>
-        </a><a href="../task/list.html" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50">
-            <i class="fa fa-tasks w-5 text-center"></i>
-            <span class="ml-3">任务管理</span>
-        </a><a href="../recording/list.html" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50">
-            <i class="fa fa-microphone w-5 text-center"></i>
-            <span class="ml-3">录音分析</span>
-        </a><a href="../material/list.html" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50">
-            <i class="fa fa-cubes w-5 text-center"></i>
-            <span class="ml-3">物料管理</span>
-        </a><a href="../customer/list.html" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50">
-            <i class="fa fa-users w-5 text-center"></i>
-            <span class="ml-3">客户管理</span>
-        </a><a href="../dashboard/overview.html" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50">
-            <i class="fa fa-line-chart w-5 text-center"></i>
-            <span class="ml-3">数据看板</span>
-        </a>
-    </nav>
-</aside>
+    <!-- 侧边栏 -->
+    <aside class="fixed left-0 top-[60px] bottom-0 w-56 bg-white shadow-sm z-40 overflow-y-auto">
+        <div class="p-4">
+            <div class="text-xs text-gray-500 uppercase tracking-wider mb-3">楼盘管理</div>
+            <nav class="space-y-1">
+                <a href="list.html" class="flex items-center px-3 py-2 text-sm text-gray-600 rounded-lg hover:bg-gray-50">
+                    <i class="fa fa-building-o mr-3 text-gray-400"></i>楼盘列表
+                </a>
+                <a href="edit.html" class="flex items-center px-3 py-2 text-sm bg-primary/10 text-primary rounded-lg">
+                    <i class="fa fa-plus-circle mr-3 text-primary"></i>新建楼盘
+                </a>
+            </nav>
+        </div>
+    </aside>
 
-
-        <main class="ml-64 flex-1 p-6">
-            <!-- 面包屑 -->
-            <div class="mb-4 text-sm">
-                <a href="list.html" class="text-primary hover:underline">新盘管理</a>
-                <span class="mx-2 text-gray-400">/</span>
-                <span class="text-gray-500">编辑楼盘</span>
+    <!-- 主内容区 -->
+    <main class="ml-56 pt-[60px] p-6">
+        <!-- 页面标题 -->
+        <div class="mb-6 flex items-center justify-between">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-800">新建楼盘</h1>
+                <p class="text-gray-500 text-sm mt-1">录入楼盘完整信息，包含81个文本字段 + 8类图片</p>
             </div>
-
-            <!-- 页面标题 -->
-            <div class="mb-6 flex justify-between items-center">
-                <div>
-                    <h1 id="pageTitle" class="text-2xl font-bold text-dark">新建楼盘</h1>
-                    <p id="pageSubtitle" class="text-gray-500 mt-1">完善楼盘信息，提交审核后即可上线</p>
-                    <!-- 状态标签（编辑模式显示） -->
-                    <div id="statusBadge" class="hidden mt-2">
-                        <span id="statusTag" class="px-2 py-1 rounded text-xs font-medium"></span>
-                        <span id="statusTip" class="text-xs text-gray-500 ml-2"></span>
-                    </div>
-                </div>
-                <div id="actionButtons" class="flex items-center gap-3">
-                    <button onclick="saveDraft()" class="px-4 py-2 border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50 flex items-center">
-                        <i class="fa fa-save mr-2"></i> 保存草稿
-                    </button>
-                    <button onclick="submitAudit()" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 flex items-center">
-                        <i class="fa fa-paper-plane mr-2"></i> 提交审核
-                    </button>
-                </div>
-            </div>
-
-            <!-- 表单区域 -->
-            <div class="space-y-6">
-                <!-- 基本信息 -->
-                <div class="bg-white rounded-lg shadow-sm p-6 section-card">
-                    <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
-                        <i class="fa fa-info-circle text-primary mr-2"></i>
-                        基本信息
-                    </h3>
-                    <div class="grid grid-cols-4 gap-4">
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1 required-field">楼盘名称</label>
-                            <input type="text" value="中海汇德里" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">楼盘别名</label>
-                            <input type="text" placeholder="选填" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">物业总称</label>
-                            <input type="text" placeholder="品牌系列名，选填" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">物业类别</label>
-                            <select class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                                <option value="">请选择</option>
-                                <option value="house">住宅</option>
-                                <option value="villa">别墅</option>
-                                <option value="apartment">平层</option>
-                                <option value="townhouse">联排</option>
-                                <option value="commercial">商业</option>
-                                <option value="office">办公</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1 required-field">开发商</label>
-                            <input type="text" value="中海地产" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">物业公司</label>
-                            <input type="text" placeholder="选填" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                        </div>
-                        <div class="col-span-2">
-                            <label class="block text-sm text-gray-600 mb-1">物业公司介绍</label>
-                            <input type="text" placeholder="物业服务介绍" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">物业费</label>
-                            <div class="flex">
-                                <input type="number" placeholder="5.8" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm rounded-r-none">
-                                <span class="px-3 py-2 border border-l-0 border-gray-200 rounded-r-lg bg-gray-50 text-sm text-gray-500">元/㎡/月</span>
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1 required-field">首次开盘时间</label>
-                            <input type="date" value="2025-12-15" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1 required-field">交房时间</label>
-                            <input type="date" value="2027-06-30" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">产权年限</label>
-                            <select class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                                <option value="70" selected>70年</option>
-                                <option value="50">50年</option>
-                                <option value="40">40年</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">总户数</label>
-                            <input type="number" placeholder="1200" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">楼栋总数</label>
-                            <input type="number" placeholder="15" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">房屋状态</label>
-                            <select class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                                <option value="">请选择</option>
-                                <option value="pre">期房</option>
-                                <option value="current">现房</option>
-                                <option value="almost">准现房</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">最大楼间距</label>
-                            <div class="flex">
-                                <input type="number" placeholder="80" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm rounded-r-none">
-                                <span class="px-3 py-2 border border-l-0 border-gray-200 rounded-r-lg bg-gray-50 text-sm text-gray-500">米</span>
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">预售证号</label>
-                            <input type="text" placeholder="京房售字XXXX号" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">车位数量</label>
-                            <input type="number" placeholder="1500" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">停车位配比</label>
-                            <input type="text" placeholder="1:1.2" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">人车分流</label>
-                            <select class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                                <option value="">请选择</option>
-                                <option value="1">是</option>
-                                <option value="0">否</option>
-                            </select>
-                        </div>
-                        <div class="col-span-2">
-                            <label class="block text-sm text-gray-600 mb-1">开发商品牌介绍</label>
-                            <textarea rows="2" placeholder="开发商背景介绍" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"></textarea>
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">装修情况</label>
-                            <select class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                                <option value="">请选择</option>
-                                <option value="毛坯">毛坯</option>
-                                <option value="精装" selected>精装</option>
-                                <option value="简装">简装</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">装修标准</label>
-                            <input type="text" placeholder="选填，如：一线品牌厨卫、中央空调" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 位置信息 -->
-                <div class="bg-white rounded-lg shadow-sm p-6 section-card">
-                    <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
-                        <i class="fa fa-map-marker text-success mr-2"></i>
-                        位置信息
-                    </h3>
-                    <div class="grid grid-cols-4 gap-4">
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1 required-field">行政区</label>
-                            <select class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                                <option value="hd" selected>海淀区</option>
-                                <option value="cy">朝阳区</option>
-                                <option value="xc">西城区</option>
-                                <option value="dc">东城区</option>
-                                <option value="cp">昌平区</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">商圈/板块</label>
-                            <input type="text" placeholder="中关村" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                        </div>
-                        <div class="col-span-2">
-                            <label class="block text-sm text-gray-600 mb-1 required-field">详细地址</label>
-                            <input type="text" value="北京市海淀区中关村大街1号院" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">纬度</label>
-                            <input type="text" placeholder="39.984" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">经度</label>
-                            <input type="text" placeholder="116.312" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                        </div>
-                        <div class="col-span-2">
-                            <label class="block text-sm text-gray-600 mb-1">交通配套描述</label>
-                            <input type="text" placeholder="选填，如：双轨交汇，15分钟直达国贸" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">最近地铁线路</label>
-                            <input type="text" placeholder="4号线" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">最近地铁站距离</label>
-                            <div class="flex">
-                                <input type="number" placeholder="300" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm rounded-r-none">
-                                <span class="px-3 py-2 border border-l-0 border-gray-200 rounded-r-lg bg-gray-50 text-sm text-gray-500">米</span>
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">最近地铁站</label>
-                            <input type="text" placeholder="中关村站" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 销售信息 -->
-                <div class="bg-white rounded-lg shadow-sm p-6 section-card">
-                    <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
-                        <i class="fa fa-yen text-warning mr-2"></i>
-                        销售信息
-                    </h3>
-                    <div class="grid grid-cols-4 gap-4">
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1 required-field">销售状态</label>
-                            <select class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                                <option value="pre">待开盘</option>
-                                <option value="onsale" selected>在售</option>
-                                <option value="last">尾盘</option>
-                                <option value="soldout">售罄</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1 required-field">参考均价</label>
-                            <div class="flex">
-                                <input type="number" placeholder="83000" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm rounded-r-none">
-                                <span class="px-3 py-2 border border-l-0 border-gray-200 rounded-r-lg bg-gray-50 text-sm text-gray-500">元/㎡</span>
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">总价区间</label>
-                            <input type="text" placeholder="680-1200万" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">定金金额</label>
-                            <div class="flex">
-                                <input type="number" placeholder="5" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm rounded-r-none">
-                                <span class="px-3 py-2 border border-l-0 border-gray-200 rounded-r-lg bg-gray-50 text-sm text-gray-500">万</span>
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">认购签约</label>
-                            <select class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                                <option value="online" selected>需线上签约</option>
-                                <option value="offline">线下签约</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">折扣方案</label>
-                            <input type="text" placeholder="限时98折" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">付款方式</label>
-                            <select class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                                <option value="all" selected>一次性/商贷/公积金</option>
-                                <option value="loan">仅商贷</option>
-                                <option value="fund">仅公积金</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">贷款银行</label>
-                            <input type="text" placeholder="中国银行、工商银行" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 建筑信息 -->
-                <div class="bg-white rounded-lg shadow-sm p-6 section-card">
-                    <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
-                        <i class="fa fa-building text-purple mr-2"></i>
-                        建筑信息
-                    </h3>
-                    <div class="grid grid-cols-4 gap-4">
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">建筑面积</label>
-                            <div class="flex">
-                                <input type="number" placeholder="150000" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm rounded-r-none">
-                                <span class="px-3 py-2 border border-l-0 border-gray-200 rounded-r-lg bg-gray-50 text-sm text-gray-500">㎡</span>
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">占地面积</label>
-                            <div class="flex">
-                                <input type="number" placeholder="60000" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm rounded-r-none">
-                                <span class="px-3 py-2 border border-l-0 border-gray-200 rounded-r-lg bg-gray-50 text-sm text-gray-500">㎡</span>
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">绿化率</label>
-                            <div class="flex">
-                                <input type="number" placeholder="35" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm rounded-r-none">
-                                <span class="px-3 py-2 border border-l-0 border-gray-200 rounded-r-lg bg-gray-50 text-sm text-gray-500">%</span>
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">容积率</label>
-                            <input type="number" step="0.1" placeholder="2.5" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">建筑类型</label>
-                            <input type="text" placeholder="高层、板楼" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">建筑结构</label>
-                            <input type="text" placeholder="钢筋混凝土" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">楼层高度</label>
-                            <input type="text" placeholder="地上28层/地下2层" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">梯户比</label>
-                            <input type="text" placeholder="2梯4户" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 户型信息 -->
-                <div class="bg-white rounded-lg shadow-sm p-6 section-card">
-                    <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
-                        <i class="fa fa-th-large text-cyan mr-2"></i>
-                        户型信息
-                    </h3>
-                    <div class="grid grid-cols-4 gap-4">
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">户型一</label>
-                            <input type="text" placeholder="77㎡ 两室一厅" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">户型二</label>
-                            <input type="text" placeholder="99㎡ 三室两厅" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">户型三</label>
-                            <input type="text" placeholder="120㎡ 三室两厅" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">户型四</label>
-                            <input type="text" placeholder="140㎡ 四室两厅" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">户型五</label>
-                            <input type="text" placeholder="180㎡ 四室三厅" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">得房率</label>
-                            <input type="text" placeholder="78-82%" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">朝向</label>
-                            <input type="text" placeholder="南北通透" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">室内层高</label>
-                            <div class="flex">
-                                <input type="number" placeholder="2.9" step="0.1" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm rounded-r-none">
-                                <span class="px-3 py-2 border border-l-0 border-gray-200 rounded-r-lg bg-gray-50 text-sm text-gray-500">米</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 周边配套 -->
-                <div class="bg-white rounded-lg shadow-sm p-6 section-card">
-                    <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
-                        <i class="fa fa-hospital-o text-orange mr-2"></i>
-                        周边配套
-                    </h3>
-                    
-                    <!-- 教育配套 -->
-                    <div class="mb-6">
-                        <h4 class="text-sm font-medium text-gray-700 mb-3 flex items-center">
-                            <i class="fa fa-graduation-cap text-primary mr-2"></i>教育配套
-                        </h4>
-                        <div class="grid grid-cols-4 gap-4">
-                            <div>
-                                <label class="block text-sm text-gray-600 mb-1">教育配套描述</label>
-                                <input type="text" placeholder="海淀区优质教育资源" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                            </div>
-                            <div>
-                                <label class="block text-sm text-gray-600 mb-1">最近幼儿园</label>
-                                <input type="text" placeholder="中关村幼儿园" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                            </div>
-                            <div>
-                                <label class="block text-sm text-gray-600 mb-1">幼儿园距离</label>
-                                <div class="flex">
-                                    <input type="number" placeholder="500" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm rounded-r-none">
-                                    <span class="px-3 py-2 border border-l-0 border-gray-200 rounded-r-lg bg-gray-50 text-sm text-gray-500">米</span>
-                                </div>
-                            </div>
-                            <div>
-                                <label class="block text-sm text-gray-600 mb-1">最近小学</label>
-                                <input type="text" placeholder="中关村小学" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                            </div>
-                            <div>
-                                <label class="block text-sm text-gray-600 mb-1">小学距离</label>
-                                <div class="flex">
-                                    <input type="number" placeholder="800" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm rounded-r-none">
-                                    <span class="px-3 py-2 border border-l-0 border-gray-200 rounded-r-lg bg-gray-50 text-sm text-gray-500">米</span>
-                                </div>
-                            </div>
-                            <div>
-                                <label class="block text-sm text-gray-600 mb-1">最近中学</label>
-                                <input type="text" placeholder="人大附中" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                            </div>
-                            <div>
-                                <label class="block text-sm text-gray-600 mb-1">中学距离</label>
-                                <div class="flex">
-                                    <input type="number" placeholder="1000" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm rounded-r-none">
-                                    <span class="px-3 py-2 border border-l-0 border-gray-200 rounded-r-lg bg-gray-50 text-sm text-gray-500">米</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- 医疗配套 -->
-                    <div class="mb-6">
-                        <h4 class="text-sm font-medium text-gray-700 mb-3 flex items-center">
-                            <i class="fa fa-plus-square text-danger mr-2"></i>医疗配套
-                        </h4>
-                        <div class="grid grid-cols-4 gap-4">
-                            <div>
-                                <label class="block text-sm text-gray-600 mb-1">医疗配套描述</label>
-                                <input type="text" placeholder="周边医疗资源丰富" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                            </div>
-                            <div>
-                                <label class="block text-sm text-gray-600 mb-1">最近医院</label>
-                                <input type="text" placeholder="海淀医院" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                            </div>
-                            <div>
-                                <label class="block text-sm text-gray-600 mb-1">最近医院距离</label>
-                                <div class="flex">
-                                    <input type="number" placeholder="1200" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm rounded-r-none">
-                                    <span class="px-3 py-2 border border-l-0 border-gray-200 rounded-r-lg bg-gray-50 text-sm text-gray-500">米</span>
-                                </div>
-                            </div>
-                            <div>
-                                <label class="block text-sm text-gray-600 mb-1">最近三甲医院</label>
-                                <input type="text" placeholder="北京大学第三医院" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- 商业配套 -->
-                    <div class="mb-6">
-                        <h4 class="text-sm font-medium text-gray-700 mb-3 flex items-center">
-                            <i class="fa fa-shopping-cart text-warning mr-2"></i>商业配套
-                        </h4>
-                        <div class="grid grid-cols-4 gap-4">
-                            <div class="col-span-2">
-                                <label class="block text-sm text-gray-600 mb-1">商业配套描述</label>
-                                <input type="text" placeholder="中关村商圈核心" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                            </div>
-                            <div>
-                                <label class="block text-sm text-gray-600 mb-1">最近大型商场</label>
-                                <input type="text" placeholder="中关村购物中心" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                            </div>
-                            <div>
-                                <label class="block text-sm text-gray-600 mb-1">最近商场距离</label>
-                                <div class="flex">
-                                    <input type="number" placeholder="300" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm rounded-r-none">
-                                    <span class="px-3 py-2 border border-l-0 border-gray-200 rounded-r-lg bg-gray-50 text-sm text-gray-500">米</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- 公园配套 -->
-                    <div class="mb-6">
-                        <h4 class="text-sm font-medium text-gray-700 mb-3 flex items-center">
-                            <i class="fa fa-tree text-success mr-2"></i>公园配套
-                        </h4>
-                        <div class="grid grid-cols-4 gap-4">
-                            <div class="col-span-2">
-                                <label class="block text-sm text-gray-600 mb-1">公园配套描述</label>
-                                <input type="text" placeholder="周边公园环绕" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                            </div>
-                            <div>
-                                <label class="block text-sm text-gray-600 mb-1">最近公园</label>
-                                <input type="text" placeholder="中关村公园" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                            </div>
-                            <div>
-                                <label class="block text-sm text-gray-600 mb-1">最近公园距离</label>
-                                <div class="flex">
-                                    <input type="number" placeholder="200" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm rounded-r-none">
-                                    <span class="px-3 py-2 border border-l-0 border-gray-200 rounded-r-lg bg-gray-50 text-sm text-gray-500">米</span>
-                                </div>
-                            </div>
-                            <div>
-                                <label class="block text-sm text-gray-600 mb-1">2公里最大公园名</label>
-                                <input type="text" placeholder="海淀公园" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                            </div>
-                            <div>
-                                <label class="block text-sm text-gray-600 mb-1">2公里最大公园距离</label>
-                                <div class="flex">
-                                    <input type="number" placeholder="1500" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm rounded-r-none">
-                                    <span class="px-3 py-2 border border-l-0 border-gray-200 rounded-r-lg bg-gray-50 text-sm text-gray-500">米</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 楼盘特色 -->
-                <div class="bg-white rounded-lg shadow-sm p-6 section-card">
-                    <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
-                        <i class="fa fa-diamond text-teal mr-2"></i>
-                        楼盘特色
-                    </h3>
-                    <div class="grid grid-cols-4 gap-4">
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">建筑风格</label>
-                            <input type="text" placeholder="现代简约" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">是否有水系</label>
-                            <select class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                                <option value="">请选择</option>
-                                <option value="1">是</option>
-                                <option value="0">否</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">园林设计团队</label>
-                            <input type="text" placeholder="山水比德" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                        </div>
-                        <div class="col-span-2">
-                            <label class="block text-sm text-gray-600 mb-1">园林特色</label>
-                            <input type="text" placeholder="选填，如：江南园林风格，一步一景" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">建筑设计团队</label>
-                            <input type="text" placeholder="梁志天设计" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">智能科技</label>
-                            <input type="text" placeholder="智能家居系统" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">环线位置</label>
-                            <select class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                                <option value="">请选择</option>
-                                <option value="inner">内环</option>
-                                <option value="middle">中环</option>
-                                <option value="outer">外环</option>
-                                <option value="s15">五环内</option>
-                                <option value="s56">六环内</option>
-                            </select>
-                        </div>
-                        <div class="col-span-2">
-                            <label class="block text-sm text-gray-600 mb-1">板块利好</label>
-                            <input type="text" placeholder="中关村科学城核心区" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 会所配套 -->
-                <div class="bg-white rounded-lg shadow-sm p-6 section-card">
-                    <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
-                        <i class="fa fa-glass text-purple mr-2"></i>
-                        会所配套
-                    </h3>
-                    <div class="grid grid-cols-4 gap-4">
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">是否含自建商街</label>
-                            <select class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                                <option value="">请选择</option>
-                                <option value="1">是</option>
-                                <option value="0">否</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">自建商业体量</label>
-                            <input type="text" placeholder="3000㎡" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">是否有业主会所</label>
-                            <select class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                                <option value="">请选择</option>
-                                <option value="1">是</option>
-                                <option value="0">否</option>
-                            </select>
-                        </div>
-                        <div class="col-span-2">
-                            <label class="block text-sm text-gray-600 mb-1">会所设施/特色</label>
-                            <input type="text" placeholder="健身房、游泳池、瑜伽室" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 价格动态 -->
-                <div class="bg-white rounded-lg shadow-sm p-6 section-card">
-                    <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
-                        <i class="fa fa-line-chart text-warning mr-2"></i>
-                        价格动态
-                    </h3>
-                    <div class="grid grid-cols-4 gap-4">
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">首付（动态）</label>
-                            <div class="flex">
-                                <input type="text" placeholder="180万起" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm rounded-r-none">
-                                <span class="px-3 py-2 border border-l-0 border-gray-200 rounded-r-lg bg-gray-50 text-sm text-gray-500">万起</span>
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">特价房（动态）</label>
-                            <input type="text" placeholder="限量特价房立减20万" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">工程进展（动态）</label>
-                            <select class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                                <option value="">请选择</option>
-                                <option value="foundation">地基施工</option>
-                                <option value="structure">主体结构</option>
-                                <option value="封顶">封顶</option>
-                                <option value="毛坯">毛坯交付</option>
-                                <option value="精装">精装交付</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">看房专车</label>
-                            <input type="text" placeholder="免费班车接送" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 竞品信息 -->
-                <div class="bg-white rounded-lg shadow-sm p-6 section-card">
-                    <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
-                        <i class="fa fa-balance-scale text-indigo mr-2"></i>
-                        竞品信息
-                    </h3>
-                    <div class="grid grid-cols-4 gap-4">
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">竞品二手房均价</label>
-                            <input type="text" placeholder="XX小区 8.5万/㎡" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">竞品新房均价</label>
-                            <input type="text" placeholder="XX公馆 9.2万/㎡" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 项目定位 -->
-                <div class="bg-white rounded-lg shadow-sm p-6 section-card">
-                    <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
-                        <i class="fa fa-map-marker text-cyan mr-2"></i>
-                        项目定位
-                    </h3>
-                    <div class="grid grid-cols-4 gap-4">
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">项目定位</label>
-                            <input type="text" placeholder="高端改善型住宅" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">客群类型</label>
-                            <select class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                                <option value="">请选择</option>
-                                <option value="刚性">刚需</option>
-                                <option value="改善">改善</option>
-                                <option value="投资">投资</option>
-                                <option value="终极">终极改善</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">客群标签</label>
-                            <input type="text" placeholder="海淀码农、教育优先" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                        </div>
-                        <div class="col-span-2">
-                            <label class="block text-sm text-gray-600 mb-1">客群描述</label>
-                            <textarea rows="2" placeholder="高学历、高收入、注重子女教育" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"></textarea>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 销售道具 -->
-                <div class="bg-white rounded-lg shadow-sm p-6 section-card">
-                    <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
-                        <i class="fa fa-file-text-o text-pink mr-2"></i>
-                        销售道具
-                    </h3>
-                    <div class="grid grid-cols-4 gap-4">
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">沙盘模型</label>
-                            <div class="flex items-center mt-2">
-                                <label class="flex items-center mr-4">
-                                    <input type="radio" name="model" value="1" checked class="mr-1"> 有
-                                </label>
-                                <label class="flex items-center">
-                                    <input type="radio" name="model" value="0" class="mr-1"> 无
-                                </label>
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">样板间</label>
-                            <div class="flex items-center mt-2">
-                                <label class="flex items-center mr-4">
-                                    <input type="radio" name="showroom" value="1" checked class="mr-1"> 有
-                                </label>
-                                <label class="flex items-center">
-                                    <input type="radio" name="showroom" value="0" class="mr-1"> 无
-                                </label>
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">户型图</label>
-                            <div class="flex items-center mt-2">
-                                <label class="flex items-center mr-4">
-                                    <input type="radio" name="floorplan" value="1" checked class="mr-1"> 有
-                                </label>
-                                <label class="flex items-center">
-                                    <input type="radio" name="floorplan" value="0" class="mr-1"> 无
-                                </label>
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">电子楼书</label>
-                            <div class="flex items-center mt-2">
-                                <label class="flex items-center mr-4">
-                                    <input type="radio" name="ebook" value="1" checked class="mr-1"> 有
-                                </label>
-                                <label class="flex items-center">
-                                    <input type="radio" name="ebook" value="0" class="mr-1"> 无
-                                </label>
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">不利因素</label>
-                            <input type="text" placeholder="请输入不利因素" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">红线内外</label>
-                            <input type="text" placeholder="请输入红线内外情况" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">竞品对比</label>
-                            <div class="flex items-center mt-2">
-                                <label class="flex items-center mr-4">
-                                    <input type="radio" name="compare" value="1" checked class="mr-1"> 已提供
-                                </label>
-                                <label class="flex items-center">
-                                    <input type="radio" name="compare" value="0" class="mr-1"> 未提供
-                                </label>
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">价格走势</label>
-                            <div class="flex items-center mt-2">
-                                <label class="flex items-center mr-4">
-                                    <input type="radio" name="pricechart" value="1" checked class="mr-1"> 已提供
-                                </label>
-                                <label class="flex items-center">
-                                    <input type="radio" name="pricechart" value="0" class="mr-1"> 未提供
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 项目亮点 -->
-                <div class="bg-white rounded-lg shadow-sm p-6 section-card">
-                    <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
-                        <i class="fa fa-star text-teal mr-2"></i>
-                        项目亮点
-                    </h3>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">亮点</label>
-                            <textarea rows="2" placeholder="请输入核心卖点（多个用逗号分隔）" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">中关村核心区、地铁上盖、精装交付、品牌开发商</textarea>
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">产品优势</label>
-                            <textarea rows="2" placeholder="请输入产品优势（多个用逗号分隔）" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">户型方正、南北通透、高得房率</textarea>
-                        </div>
-                        <div class="col-span-2">
-                            <label class="block text-sm text-gray-600 mb-1">详细介绍</label>
-                            <textarea rows="3" placeholder="请输入楼盘详细介绍" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">中海汇德里位于中关村核心区域，是由中海地产开发的精装住宅项目。项目紧邻地铁4号线中关村站，交通便利周边配套齐全。项目采用现代简约风格设计，户型从77㎡两居到180㎡四居，满足不同家庭需求。</textarea>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 政策信息 -->
-                <div class="bg-white rounded-lg shadow-sm p-6 section-card">
-                    <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
-                        <i class="fa fa-file-text text-indigo mr-2"></i>
-                        政策信息
-                    </h3>
-                    <div class="grid grid-cols-4 gap-4">
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">限购政策</label>
-                            <input type="text" value="北京市限购政策" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">公积金贷款</label>
-                            <select class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                                <option value="1" selected>支持公积金贷款</option>
-                                <option value="0">不支持公积金贷款</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">组合贷款</label>
-                            <select class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                                <option value="1" selected>支持组合贷款</option>
-                                <option value="0">不支持组合贷款</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">贷款利率</label>
-                            <input type="text" placeholder="LPR+55基点" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 佣金信息 -->
-                <div class="bg-white rounded-lg shadow-sm p-6 section-card">
-                    <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
-                        <i class="fa fa-money text-yellow mr-2"></i>
-                        佣金信息
-                    </h3>
-                    <div class="grid grid-cols-4 gap-4">
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">佣金点位</label>
-                            <div class="flex">
-                                <input type="number" step="0.1" placeholder="3" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm rounded-r-none">
-                                <span class="px-3 py-2 border border-l-0 border-gray-200 rounded-r-lg bg-gray-50 text-sm text-gray-500">%</span>
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">佣金金额</label>
-                            <input type="text" placeholder="20-36万/套" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">结佣周期</label>
-                            <input type="text" placeholder="签约后30天" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">佣金类型</label>
-                            <select class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                                <option value="pure" selected>纯佣金</option>
-                                <option value="mixed">佣金+奖金</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 经纪人信息 -->
-                <div class="bg-white rounded-lg shadow-sm p-6 section-card">
-                    <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
-                        <i class="fa fa-user text-red mr-2"></i>
-                        经纪人信息
-                    </h3>
-                    <div class="grid grid-cols-4 gap-4">
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">驻场销售</label>
-                            <input type="text" placeholder="姓名 电话" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">外联人员</label>
-                            <input type="text" placeholder="姓名 电话" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">渠道对接</label>
-                            <input type="text" placeholder="姓名 电话" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">客服电话</label>
-                            <input type="text" placeholder="010-82345678" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 图片库 -->
-                <div class="bg-white rounded-lg shadow-sm p-6 section-card">
-                    <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
-                        <i class="fa fa-images text-primary mr-2"></i>
-                        图片库
-                    </h3>
-                    
-                    <!-- 图片分类Tab -->
-                    <div class="flex flex-wrap gap-2 mb-4 border-b pb-3">
-                        <button onclick="switchImageCategory('location')" class="image-tab px-3 py-1.5 text-sm rounded-lg bg-primary text-white" data-category="location">
-                            区位图
-                        </button>
-                        <button onclick="switchImageCategory('sandtable')" class="image-tab px-3 py-1.5 text-sm rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200" data-category="sandtable">
-                            沙盘图
-                        </button>
-                        <button onclick="switchImageCategory('floorplan')" class="image-tab px-3 py-1.5 text-sm rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200" data-category="floorplan">
-                            户型图
-                        </button>
-                        <button onclick="switchImageCategory('sample')" class="image-tab px-3 py-1.5 text-sm rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200" data-category="sample">
-                            样板间图
-                        </button>
-                        <button onclick="switchImageCategory('garden')" class="image-tab px-3 py-1.5 text-sm rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200" data-category="garden">
-                            园林效果图/实景图
-                        </button>
-                        <button onclick="switchImageCategory('facade')" class="image-tab px-3 py-1.5 text-sm rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200" data-category="facade">
-                            建筑立面效果图/实景图
-                        </button>
-                        <button onclick="switchImageCategory('surrounding')" class="image-tab px-3 py-1.5 text-sm rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200" data-category="surrounding">
-                            周边配套图
-                        </button>
-                        <button onclick="switchImageCategory('team')" class="image-tab px-3 py-1.5 text-sm rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200" data-category="team">
-                            物业团队图片
-                        </button>
-                    </div>
-                    
-                    <!-- 当前分类图片 -->
-                    <div id="imageCategoryContent">
-                        <!-- 区位图 -->
-                        <div id="category-location" class="image-category-content">
-                            <div class="flex justify-between items-center mb-3">
-                                <p class="text-sm text-gray-500">支持 JPG、PNG，每张不超过 5MB</p>
-                                <span class="text-xs text-gray-400">已上传 <span id="count-location">0</span> 张</span>
-                            </div>
-                            <div class="grid grid-cols-4 gap-4" id="imageGrid-location">
-                                <!-- 示例图片占位 -->
-                            </div>
-                            <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-primary transition-colors cursor-pointer mt-4" onclick="openImageUpload('location')">
-                                <i class="fa fa-cloud-upload text-3xl text-gray-400 mb-2"></i>
-                                <p class="text-sm text-gray-500">点击或拖拽上传区位图</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <style>
-                    .image-tab.active {
-                        background-color: #165DFF !important;
-                        color: white !important;
-                    }
-                </style>
-
-                <script>
-                    // 图片库数据
-                    const imageLibrary = {
-                        location: [],
-                        sandtable: [],
-                        floorplan: [],
-                        sample: [],
-                        garden: [],
-                        facade: [],
-                        surrounding: [],
-                        team: []
-                    };
-
-                    let currentImageCategory = 'location';
-
-                    // 切换图片分类
-                    function switchImageCategory(category) {
-                        currentImageCategory = category;
-                        
-                        // 更新Tab样式
-                        document.querySelectorAll('.image-tab').forEach(tab => {
-                            tab.classList.remove('active');
-                            tab.classList.remove('bg-primary');
-                            tab.classList.remove('text-white');
-                            tab.classList.add('bg-gray-100');
-                            tab.classList.add('text-gray-600');
-                        });
-                        const activeTab = document.querySelector(`[data-category="${category}"]`);
-                        if (activeTab) {
-                            activeTab.classList.add('active');
-                        }
-                        
-                        // 隐藏所有分类内容
-                        document.querySelectorAll('.image-category-content').forEach(content => {
-                            content.style.display = 'none';
-                        });
-                        
-                        // 显示当前分类内容
-                        const categoryContent = document.getElementById(`category-${category}`);
-                        if (categoryContent) {
-                            categoryContent.style.display = 'block';
-                        }
-                        
-                        // 更新计数
-                        const count = imageLibrary[category] ? imageLibrary[category].length : 0;
-                        const countEl = document.getElementById(`count-${category}`);
-                        if (countEl) {
-                            countEl.textContent = count;
-                        }
-                        
-                        // 渲染图片网格
-                        renderImageGrid(category);
-                    }
-
-                    // 渲染图片网格
-                    function renderImageGrid(category) {
-                        const grid = document.getElementById(`imageGrid-${category}`);
-                        if (!grid) return;
-                        
-                        const images = imageLibrary[category] || [];
-                        if (images.length === 0) {
-                            grid.innerHTML = '<div class="col-span-4 text-center text-gray-400 py-8">暂无图片，请上传</div>';
-                            return;
-                        }
-                        
-                        grid.innerHTML = images.map((img, index) => `
-                            <div class="relative group">
-                                <div class="aspect-[4/3] bg-gray-100 rounded-lg overflow-hidden border border-gray-200">
-                                    <img src="${img.url || img}" alt="" class="w-full h-full object-cover">
-                                </div>
-                                <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 rounded-lg">
-                                    <button onclick="previewImage('${category}', ${index})" class="w-8 h-8 bg-white rounded-full flex items-center justify-center hover:bg-gray-100">
-                                        <i class="fa fa-eye text-gray-600"></i>
-                                    </button>
-                                    <button onclick="deleteImage('${category}', ${index})" class="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center hover:bg-red-600">
-                                        <i class="fa fa-trash text-white"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        `).join('');
-                    }
-
-                    // 打开图片上传
-                    function openImageUpload(category) {
-                        const input = document.createElement('input');
-                        input.type = 'file';
-                        input.accept = 'image/*';
-                        input.multiple = true;
-                        input.onchange = (e) => {
-                            const files = e.target.files;
-                            for (let file of files) {
-                                if (file.size > 5 * 1024 * 1024) {
-                                    alert('图片大小不能超过 5MB');
-                                    continue;
-                                }
-                                const reader = new FileReader();
-                                reader.onload = (e) => {
-                                    imageLibrary[category].push(e.target.result);
-                                    renderImageGrid(category);
-                                    updateImageCount(category);
-                                };
-                                reader.readAsDataURL(file);
-                            }
-                        };
-                        input.click();
-                    }
-
-                    // 删除图片
-                    function deleteImage(category, index) {
-                        if (confirm('确定要删除这张图片吗？')) {
-                            imageLibrary[category].splice(index, 1);
-                            renderImageGrid(category);
-                            updateImageCount(category);
-                        }
-                    }
-
-                    // 预览图片
-                    function previewImage(category, index) {
-                        const img = imageLibrary[category][index];
-                        window.open(img.url || img, '_blank');
-                    }
-
-                    // 更新图片计数
-                    function updateImageCount(category) {
-                        const count = imageLibrary[category] ? imageLibrary[category].length : 0;
-                        const countEl = document.getElementById(`count-${category}`);
-                        if (countEl) {
-                            countEl.textContent = count;
-                        }
-                    }
-
-                    // 初始化
-                    document.addEventListener('DOMContentLoaded', function() {
-                        switchImageCategory('location');
-                    });
-                </script>
-
-                <!-- 底部操作 -->
-                <div id="bottomActions" class="bg-white rounded-lg shadow-sm p-6 flex justify-end gap-3">
-                    <button onclick="window.location.href='list.html'" class="px-6 py-2 border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50">
-                        取消
-                    </button>
-                    <button id="bottomSaveDraft" onclick="saveDraft()" class="px-6 py-2 border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50">
-                        保存草稿
-                    </button>
-                    <button id="bottomSubmitAudit" onclick="submitAudit()" class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary/90">
-                        提交审核
-                    </button>
-                </div>
-            </div>
-        </main>
-    </div>
-
-    <!-- 提交审核确认弹窗 -->
-    <div id="submitModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
-        <div class="bg-white rounded-lg w-[450px] p-6">
-            <div class="text-center">
-                <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i class="fa fa-paper-plane text-blue-500 text-xl"></i>
-                </div>
-                <h3 class="text-lg font-bold mb-2">确认提交审核</h3>
-                <p class="text-gray-500 mb-6">提交后将由审核人员进行检查，通过后即可上线</p>
-                <div class="mb-4">
-                    <label class="block text-sm text-gray-600 mb-2 text-left">提交备注（选填）</label>
-                    <textarea rows="3" placeholder="请输入提交备注" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"></textarea>
-                </div>
-                <div class="flex justify-center gap-3">
-                    <button onclick="closeSubmitModal()" class="px-4 py-2 border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-50">取消</button>
-                    <button onclick="confirmSubmit()" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90">确认提交</button>
-                </div>
+            <div class="flex items-center gap-3">
+                <button onclick="saveDraft()" class="px-4 py-2 border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50 flex items-center">
+                    <i class="fa fa-save mr-2"></i> 保存草稿
+                </button>
+                <button onclick="submitAudit()" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 flex items-center">
+                    <i class="fa fa-paper-plane mr-2"></i> 提交审核
+                </button>
             </div>
         </div>
-    </div>
+
+        <!-- 表单区域 -->
+        <form id="buildingForm">
+            <!-- 7.1 文本字段（81个）-->
+            
+            <!-- 1. 基本信息（12个）-->
+            <div class="section-card mb-6">
+                <div class="section-title">
+                    <i class="fa fa-info-circle text-primary"></i>
+                    基本信息
+                    <span class="tag tag-required ml-2">12个字段</span>
+                </div>
+                <div class="form-grid">
+                    <div class="form-item">
+                        <label class="form-label required-field">楼盘名称</label>
+                        <input type="text" name="name" class="form-input" placeholder="请输入楼盘名称" required>
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">物业总称</label>
+                        <input type="text" name="property_series" class="form-input" placeholder="品牌系列名，选填">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label required-field">行政区</label>
+                        <select name="district" class="form-select" required>
+                            <option value="">请选择</option>
+                            <option value="chaoyang">朝阳</option>
+                            <option value="haidian">海淀</option>
+                            <option value="xicheng">西城</option>
+                            <option value="dongcheng">东城</option>
+                            <option value="shijingshan">石景山</option>
+                            <option value="fengtai">丰台</option>
+                            <option value="tongzhou">通州</option>
+                            <option value="daxing">大兴</option>
+                            <option value="changping">昌平</option>
+                            <option value="shunyi">顺义</option>
+                            <option value="fangshan">房山</option>
+                            <option value="mentougou">门头沟</option>
+                            <option value="pinggu">平谷</option>
+                            <option value="huairou">怀柔</option>
+                            <option value="yanqing">密云</option>
+                            <option value="yanshi">延庆</option>
+                        </select>
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label required-field">商圈/板块名称</label>
+                        <input type="text" name="business_area" class="form-input" placeholder="如：中关村" required>
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label required-field">物业类别</label>
+                        <select name="property_type" class="form-select" required>
+                            <option value="">请选择</option>
+                            <option value="flat">平层</option>
+                            <option value="stack">叠拼</option>
+                            <option value="townhouse">联排</option>
+                            <option value="villa">别墅</option>
+                        </select>
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label required-field">占地面积（㎡）</label>
+                        <input type="number" name="land_area" class="form-input" placeholder="如：50000" required>
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label required-field">建筑面积（㎡）</label>
+                        <input type="number" name="building_area" class="form-input" placeholder="如：120000" required>
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">得房率（%）</label>
+                        <input type="number" name="unit_rate" class="form-input" placeholder="最高得房率，如：85">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">室内层高（米）</label>
+                        <input type="number" name="floor_height" step="0.1" class="form-input" placeholder="如：3.0">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">梯户比</label>
+                        <input type="text" name="elevator_ratio" class="form-input" placeholder="如：2梯4户">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label required-field">装修情况</label>
+                        <select name="decoration_status" class="form-select" required>
+                            <option value="">请选择</option>
+                            <option value="rough">毛坯</option>
+                            <option value="fine">精装</option>
+                        </select>
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">装修标准（元/㎡）</label>
+                        <input type="number" name="decoration_standard" class="form-input" placeholder="如：3000">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. 项目规格（15个）-->
+            <div class="section-card mb-6">
+                <div class="section-title">
+                    <i class="fa fa-th text-primary"></i>
+                    项目规格
+                    <span class="tag tag-required ml-2">15个字段</span>
+                </div>
+                <div class="form-grid">
+                    <div class="form-item">
+                        <label class="form-label required-field">容积率</label>
+                        <input type="number" step="0.01" name="plot_ratio" class="form-input" placeholder="如：2.5" required>
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label required-field">绿化率（%）</label>
+                        <input type="number" name="greening_rate" class="form-input" placeholder="如：35" required>
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label required-field">楼栋总数</label>
+                        <input type="number" name="building_count" class="form-input" placeholder="楼栋数量" required>
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label required-field">总户数</label>
+                        <input type="number" name="total_units" class="form-input" placeholder="总户数" required>
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">最大楼间距（米）</label>
+                        <input type="number" name="max_building_spacing" class="form-input" placeholder="如：80">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label required-field">均价（元/㎡）</label>
+                        <input type="number" name="avg_price" class="form-input" placeholder="如：83000" required>
+                    </div>
+                    <div class="form-item col-span-2">
+                        <label class="form-label required-field">总价区间（万）</label>
+                        <div class="flex items-center gap-2">
+                            <input type="number" name="min_total_price" class="form-input" placeholder="最低总价" required>
+                            <span class="text-gray-400">-</span>
+                            <input type="number" name="max_total_price" class="form-input" placeholder="最高总价" required>
+                            <span class="text-gray-500">万</span>
+                        </div>
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label required-field">首次开盘时间</label>
+                        <input type="date" name="first_open_date" class="form-input" required>
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label required-field">交房时间</label>
+                        <input type="date" name="delivery_date" class="form-input" required>
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label required-field">房屋状态</label>
+                        <select name="house_status" class="form-select" required>
+                            <option value="">请选择</option>
+                            <option value="presale">期房</option>
+                            <option value="complete">现房</option>
+                            <option value="almost_complete">准现房</option>
+                        </select>
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">预售证号</label>
+                        <input type="text" name="presale_license" class="form-input" placeholder="京房售字XXXX号">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">产权年限</label>
+                        <select name="property_rights" class="form-select">
+                            <option value="70">70年</option>
+                            <option value="50">50年</option>
+                            <option value="40">40年</option>
+                        </select>
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">参考总价（万）</label>
+                        <input type="number" name="reference_price" class="form-input" placeholder="起售价">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. 开发商/物业（11个）-->
+            <div class="section-card mb-6">
+                <div class="section-title">
+                    <i class="fa fa-building text-primary"></i>
+                    开发商/物业
+                    <span class="tag tag-required ml-2">11个字段</span>
+                </div>
+                <div class="form-grid">
+                    <div class="form-item col-span-2">
+                        <label class="form-label required-field">物业公司</label>
+                        <input type="text" name="property_company" class="form-input" placeholder="物业公司名称" required>
+                    </div>
+                    <div class="form-item col-span-2">
+                        <label class="form-label">物业公司介绍</label>
+                        <textarea name="property_company_intro" class="form-textarea" placeholder="物业服务介绍"></textarea>
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label required-field">物业费（元/㎡/月）</label>
+                        <input type="number" step="0.1" name="property_fee" class="form-input" placeholder="如：5.8" required>
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">停车位数量</label>
+                        <input type="number" name="parking_count" class="form-input" placeholder="如：1500">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">停车位配比</label>
+                        <input type="text" name="parking_ratio" class="form-input" placeholder="如：1:1.2">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">是否人车分流</label>
+                        <label class="switch">
+                            <input type="checkbox" name="separate_pedestrian_vehicle">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="form-item col-span-2">
+                        <label class="form-label required-field">开发商名称</label>
+                        <input type="text" name="developer_name" class="form-input" placeholder="开发商公司名" required>
+                    </div>
+                    <div class="form-item col-span-2">
+                        <label class="form-label">开发商品牌介绍</label>
+                        <textarea name="developer_intro" class="form-textarea" placeholder="开发商背景介绍"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. 楼盘特色（9个）-->
+            <div class="section-card mb-6">
+                <div class="section-title">
+                    <i class="fa fa-star text-primary"></i>
+                    楼盘特色
+                    <span class="tag tag-optional ml-2">9个字段</span>
+                </div>
+                <div class="form-grid">
+                    <div class="form-item col-span-2">
+                        <label class="form-label">园林特色</label>
+                        <input type="text" name="garden_feature" class="form-input" placeholder="园林设计特色">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">是否有水系</label>
+                        <label class="switch">
+                            <input type="checkbox" name="has_water_system">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">园林设计团队</label>
+                        <input type="text" name="garden_design_team" class="form-input" placeholder="园林设计团队介绍">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">建筑风格</label>
+                        <input type="text" name="architectural_style" class="form-input" placeholder="建筑风格描述">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">建筑设计团队</label>
+                        <input type="text" name="architectural_design_team" class="form-input" placeholder="建筑设计团队介绍">
+                    </div>
+                    <div class="form-item col-span-2">
+                        <label class="form-label">智能科技</label>
+                        <input type="text" name="smart_technology" class="form-input" placeholder="科技系统说明">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label required-field">环线位置</label>
+                        <select name="ring_position" class="form-select" required>
+                            <option value="">请选择</option>
+                            <option value="inner_one">内一环</option>
+                            <option value="inner_two">内二环</option>
+                            <option value="inner_three">内三环</option>
+                            <option value="inner_four">内四环</option>
+                            <option value="inner_five">内五环</option>
+                            <option value="outer_five">外五环</option>
+                            <option value="sixth_ring">六环外</option>
+                        </select>
+                    </div>
+                    <div class="form-item col-span-2">
+                        <label class="form-label">板块利好</label>
+                        <input type="text" name="area_benefit" class="form-input" placeholder="板块价值说明">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. 交通配套（4个）-->
+            <div class="section-card mb-6">
+                <div class="section-title">
+                    <i class="fa fa-subway text-primary"></i>
+                    交通配套
+                    <span class="tag tag-optional ml-2">4个字段</span>
+                </div>
+                <div class="form-grid">
+                    <div class="form-item col-span-4">
+                        <label class="form-label">交通配套描述</label>
+                        <input type="text" name="traffic_description" class="form-input" placeholder="交通情况说明">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label required-field">最近地铁线路</label>
+                        <input type="text" name="nearest_subway_line" class="form-input" placeholder="如：4号线" required>
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label required-field">最近地铁站名</label>
+                        <input type="text" name="nearest_subway_station" class="form-input" placeholder="如：中关村站" required>
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label required-field">最近地铁站距离（米）</label>
+                        <input type="number" name="nearest_subway_distance" class="form-input" placeholder="如：300" required>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6. 商业配套（3个）-->
+            <div class="section-card mb-6">
+                <div class="section-title">
+                    <i class="fa fa-shopping-bag text-primary"></i>
+                    商业配套
+                    <span class="tag tag-optional ml-2">3个字段</span>
+                </div>
+                <div class="form-grid">
+                    <div class="form-item col-span-4">
+                        <label class="form-label">商业配套描述</label>
+                        <input type="text" name="commercial_description" class="form-input" placeholder="周边商业说明">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">最近大型商场名</label>
+                        <input type="text" name="nearest_mall" class="form-input" placeholder="最近商场名">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">最近商场距离（米）</label>
+                        <input type="number" name="nearest_mall_distance" class="form-input" placeholder="如：500">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 7. 教育配套（7个）-->
+            <div class="section-card mb-6">
+                <div class="section-title">
+                    <i class="fa fa-graduation-cap text-primary"></i>
+                    教育配套
+                    <span class="tag tag-optional ml-2">7个字段</span>
+                </div>
+                <div class="form-grid">
+                    <div class="form-item col-span-4">
+                        <label class="form-label">教育配套描述</label>
+                        <input type="text" name="education_description" class="form-input" placeholder="周边学校说明">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">最近幼儿园名</label>
+                        <input type="text" name="nearest_kindergarten" class="form-input" placeholder="最近幼儿园">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">最近幼儿园距离（米）</label>
+                        <input type="number" name="nearest_kindergarten_distance" class="form-input" placeholder="如：300">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">最近小学名</label>
+                        <input type="text" name="nearest_primary_school" class="form-input" placeholder="最近小学">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">最近小学距离（米）</label>
+                        <input type="number" name="nearest_primary_school_distance" class="form-input" placeholder="如：500">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">最近中学名</label>
+                        <input type="text" name="nearest_middle_school" class="form-input" placeholder="最近中学">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">最近中学距离（米）</label>
+                        <input type="number" name="nearest_middle_school_distance" class="form-input" placeholder="如：800">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 8. 公园配套（5个）-->
+            <div class="section-card mb-6">
+                <div class="section-title">
+                    <i class="fa fa-tree text-primary"></i>
+                    公园配套
+                    <span class="tag tag-optional ml-2">5个字段</span>
+                </div>
+                <div class="form-grid">
+                    <div class="form-item col-span-4">
+                        <label class="form-label">公园配套描述</label>
+                        <input type="text" name="park_description" class="form-input" placeholder="周边公园说明">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">最近公园名</label>
+                        <input type="text" name="nearest_park" class="form-input" placeholder="最近公园名">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">最近公园距离（米）</label>
+                        <input type="number" name="nearest_park_distance" class="form-input" placeholder="如：200">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">2公里最大公园名</label>
+                        <input type="text" name="max_park_2km" class="form-input" placeholder="2公里内最大公园">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">2公里最大公园距离（米）</label>
+                        <input type="number" name="max_park_2km_distance" class="form-input" placeholder="如：1500">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 9. 医疗配套（4个）-->
+            <div class="section-card mb-6">
+                <div class="section-title">
+                    <i class="fa fa-hospital-o text-primary"></i>
+                    医疗配套
+                    <span class="tag tag-optional ml-2">4个字段</span>
+                </div>
+                <div class="form-grid">
+                    <div class="form-item col-span-4">
+                        <label class="form-label">医疗配套描述</label>
+                        <input type="text" name="medical_description" class="form-input" placeholder="周边医疗说明">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">最近医院名</label>
+                        <input type="text" name="nearest_hospital" class="form-input" placeholder="最近医院">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">最近医院距离（米）</label>
+                        <input type="number" name="nearest_hospital_distance" class="form-input" placeholder="如：1000">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">最近三甲医院名</label>
+                        <input type="text" name="nearest_top_hospital" class="form-input" placeholder="最近三甲医院">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 10. 会所配套（4个）-->
+            <div class="section-card mb-6">
+                <div class="section-title">
+                    <i class="fa fa-glass text-primary"></i>
+                    会所配套
+                    <span class="tag tag-optional ml-2">4个字段</span>
+                </div>
+                <div class="form-grid">
+                    <div class="form-item">
+                        <label class="form-label">是否含自建商街</label>
+                        <label class="switch">
+                            <input type="checkbox" name="has_self_build_street">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">自建商业体量</label>
+                        <input type="text" name="self_build_commercial_size" class="form-input" placeholder="体量说明">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">是否有业主会所</label>
+                        <label class="switch">
+                            <input type="checkbox" name="has_club">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">会所设施/特色</label>
+                        <input type="text" name="club_facilities" class="form-input" placeholder="会所功能说明">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 11. 价格动态（4个）-->
+            <div class="section-card mb-6">
+                <div class="section-title">
+                    <i class="fa fa-rmb text-primary"></i>
+                    价格动态
+                    <span class="tag tag-optional ml-2">4个字段</span>
+                </div>
+                <div class="form-grid">
+                    <div class="form-item">
+                        <label class="form-label">首付（万）</label>
+                        <input type="number" name="down_payment" class="form-input" placeholder="首付金额/起">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">特价房</label>
+                        <input type="text" name="special_price" class="form-input" placeholder="特价房信息">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">工程进展</label>
+                        <input type="text" name="project_progress" class="form-input" placeholder="工程进度说明">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">看房专车</label>
+                        <input type="text" name="shuttle_bus" class="form-input" placeholder="是否提供/预约方式">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 12. 竞品信息（2个）-->
+            <div class="section-card mb-6">
+                <div class="section-title">
+                    <i class="fa fa-balance-scale text-primary"></i>
+                    竞品信息
+                    <span class="tag tag-optional ml-2">2个字段</span>
+                </div>
+                <div class="form-grid">
+                    <div class="form-item col-span-2">
+                        <label class="form-label">竞品二手房及均价</label>
+                        <input type="text" name="competitor_second_hand" class="form-input" placeholder="竞品二手房价">
+                    </div>
+                    <div class="form-item col-span-2">
+                        <label class="form-label">竞品新房及均价</label>
+                        <input type="text" name="competitor_new_house" class="form-input" placeholder="竞品新房价">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 13. 项目定位（5个）-->
+            <div class="section-card mb-6">
+                <div class="section-title">
+                    <i class="fa fa-bullseye text-primary"></i>
+                    项目定位
+                    <span class="tag tag-optional ml-2">5个字段</span>
+                </div>
+                <div class="form-grid">
+                    <div class="form-item">
+                        <label class="form-label">项目定位</label>
+                        <input type="text" name="project_positioning" class="form-input" placeholder="项目整体定位">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">亮点简述</label>
+                        <input type="text" name="highlights" class="form-input" placeholder="项目亮点总结">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">客群画像关键词</label>
+                        <input type="text" name="customer_keywords" class="form-input" placeholder="客群标签">
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">客群类型</label>
+                        <select name="customer_type" class="form-select">
+                            <option value="">请选择</option>
+                            <option value="rigid">刚需</option>
+                            <option value="improvement">改善</option>
+                            <option value="investment">投资</option>
+                        </select>
+                    </div>
+                    <div class="form-item col-span-2">
+                        <label class="form-label">客群描述</label>
+                        <textarea name="customer_description" class="form-textarea" placeholder="详细客群描述"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 7.2 图片字段（8种类型）-->
+            <div class="section-card mb-6">
+                <div class="section-title">
+                    <i class="fa fa-photo text-primary"></i>
+                    图片上传
+                    <span class="tag tag-required ml-2">8种类型</span>
+                </div>
+                <div class="p-5 space-y-6">
+                    <!-- 区位图 -->
+                    <div class="image-section">
+                        <div class="flex items-center justify-between mb-3">
+                            <div>
+                                <span class="font-medium">区位图</span>
+                                <span class="tag tag-required ml-2 text-xs">必填</span>
+                            </div>
+                            <button type="button" class="text-primary text-sm hover:underline" onclick="addImage('location')">+ 添加图片</button>
+                        </div>
+                        <div class="image-grid" id="location-images"></div>
+                    </div>
+
+                    <!-- 沙盘图 -->
+                    <div class="image-section">
+                        <div class="flex items-center justify-between mb-3">
+                            <div>
+                                <span class="font-medium">沙盘图</span>
+                                <span class="tag tag-required ml-2 text-xs">必填</span>
+                            </div>
+                            <button type="button" class="text-primary text-sm hover:underline" onclick="addImage('sandtable')">+ 添加图片</button>
+                        </div>
+                        <div class="image-grid" id="sandtable-images"></div>
+                    </div>
+
+                    <!-- 户型图 -->
+                    <div class="image-section">
+                        <div class="flex items-center justify-between mb-3">
+                            <div>
+                                <span class="font-medium">户型图</span>
+                                <span class="tag tag-required ml-2 text-xs">必填</span>
+                            </div>
+                            <button type="button" class="text-primary text-sm hover:underline" onclick="addImage('floorplan')">+ 添加图片</button>
+                        </div>
+                        <div class="image-grid" id="floorplan-images"></div>
+                    </div>
+
+                    <!-- 样板间图 -->
+                    <div class="image-section">
+                        <div class="flex items-center justify-between mb-3">
+                            <div>
+                                <span class="font-medium">样板间图</span>
+                                <span class="tag tag-optional ml-2 text-xs">选填</span>
+                            </div>
+                            <button type="button" class="text-primary text-sm hover:underline" onclick="addImage('showroom')">+ 添加图片</button>
+                        </div>
+                        <div class="image-grid" id="showroom-images"></div>
+                    </div>
+
+                    <!-- 园林效果图/实景图 -->
+                    <div class="image-section">
+                        <div class="flex items-center justify-between mb-3">
+                            <div>
+                                <span class="font-medium">园林效果图/实景图</span>
+                                <span class="tag tag-required ml-2 text-xs">必填</span>
+                            </div>
+                            <button type="button" class="text-primary text-sm hover:underline" onclick="addImage('garden')">+ 添加图片</button>
+                        </div>
+                        <div class="image-grid" id="garden-images"></div>
+                    </div>
+
+                    <!-- 建筑立面效果图/实景图 -->
+                    <div class="image-section">
+                        <div class="flex items-center justify-between mb-3">
+                            <div>
+                                <span class="font-medium">建筑立面效果图/实景图</span>
+                                <span class="tag tag-required ml-2 text-xs">必填</span>
+                            </div>
+                            <button type="button" class="text-primary text-sm hover:underline" onclick="addImage('facade')">+ 添加图片</button>
+                        </div>
+                        <div class="image-grid" id="facade-images"></div>
+                    </div>
+
+                    <!-- 周边配套图 -->
+                    <div class="image-section">
+                        <div class="flex items-center justify-between mb-3">
+                            <div>
+                                <span class="font-medium">周边配套图</span>
+                                <span class="tag tag-optional ml-2 text-xs">选填</span>
+                                <span class="text-gray-400 text-xs ml-1">交通/商业/学校/医疗/公园配套图</span>
+                            </div>
+                            <button type="button" class="text-primary text-sm hover:underline" onclick="addImage('surrounding')">+ 添加图片</button>
+                        </div>
+                        <div class="image-grid" id="surrounding-images"></div>
+                    </div>
+
+                    <!-- 物业团队图片 -->
+                    <div class="image-section">
+                        <div class="flex items-center justify-between mb-3">
+                            <div>
+                                <span class="font-medium">物业团队图片</span>
+                                <span class="tag tag-optional ml-2 text-xs">选填</span>
+                            </div>
+                            <button type="button" class="text-primary text-sm hover:underline" onclick="addImage('property_team')">+ 添加图片</button>
+                        </div>
+                        <div class="image-grid" id="property_team-images"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 7.3 探盘模板字段 -->
+            <div class="section-card mb-6">
+                <div class="section-title">
+                    <i class="fa fa-map text-primary"></i>
+                    探盘模板配置
+                    <span class="tag tag-optional ml-2">7个字段</span>
+                </div>
+                <div class="form-grid">
+                    <div class="form-item col-span-4">
+                        <label class="form-label required-field">路书内容</label>
+                        <textarea name="roadbook_content" class="form-textarea" rows="4" placeholder="探盘路线、重点介绍" required></textarea>
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label required-field">任务结束时间</label>
+                        <input type="datetime-local" name="task_end_time" class="form-input" required>
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label required-field">告警配置-轻度（小时）</label>
+                        <input type="number" name="alert_light" value="24" class="form-input" required>
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label required-field">告警配置-中度（小时）</label>
+                        <input type="number" name="alert_medium" value="12" class="form-input" required>
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label required-field">告警配置-严重（小时）</label>
+                        <input type="number" name="alert_severe" value="2" class="form-input" required>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 底部操作按钮 -->
+            <div class="sticky bottom-0 bg-white border-t border-gray-200 p-4 flex items-center justify-end gap-3">
+                <button type="button" onclick="saveDraft()" class="px-6 py-2.5 border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50">
+                    保存草稿
+                </button>
+                <button type="button" onclick="submitAudit()" class="px-6 py-2.5 bg-primary text-white rounded-lg hover:bg-primary/90">
+                    提交审核
+                </button>
+            </div>
+        </form>
+    </main>
 
     <script>
-        // ========== 页面模式与状态控制 ==========
-        
-        // 页面模式：'new' 或 'edit'
-        const pageMode = new URLSearchParams(window.location.search).get('id') ? 'edit' : 'new';
-        
-        // 当前楼盘状态（Mock数据）
-        const currentStatus = 'draft'; // draft/pending/approved/config_pending/rejected/online/offline
-        
-        // 当前用户角色
-        const currentUserRole = 'admin'; // admin = 普通录入人员, superadmin = 超级管理员
-        
-        // 状态配置
-        const statusConfig = {
-            'draft': { label: '草稿', bgClass: 'bg-gray-100', textClass: 'text-gray-500', tip: '可编辑' },
-            'pending': { label: '待审核', bgClass: 'bg-blue-100', textClass: 'text-blue-600', tip: '不可编辑，请等待审核' },
-            'approved': { label: '审核通过', bgClass: 'bg-green-100', textClass: 'text-green-600', tip: '' },
-            'config_pending': { label: '待配置', bgClass: 'bg-yellow-100', textClass: 'text-yellow-600', tip: '' },
-            'rejected': { label: '已驳回', bgClass: 'bg-red-100', textClass: 'text-red-600', tip: '可编辑后重新提交' },
-            'online': { label: '已上线', bgClass: 'bg-purple-100', textClass: 'text-purple-600', tip: '' },
-            'offline': { label: '已下线', bgClass: 'bg-gray-100', textClass: 'text-gray-500', tip: '可编辑后重新上线' }
-        };
-        
-        // 可编辑状态
-        const editableStatuses = ['draft', 'rejected', 'offline'];
-        
-        // ========== 页面初始化 ==========
-        function initPage() {
-            if (pageMode === 'new') {
-                document.getElementById('pageTitle').textContent = '新建楼盘';
-                document.getElementById('pageSubtitle').textContent = '完善楼盘信息，提交审核后即可上线';
-                document.getElementById('statusBadge').classList.add('hidden');
-            } else {
-                document.getElementById('pageTitle').textContent = '编辑楼盘 - ' + statusConfig[currentStatus].label;
-                document.getElementById('pageSubtitle').textContent = '修改楼盘信息后保存';
-                
-                const config = statusConfig[currentStatus];
-                const statusTag = document.getElementById('statusTag');
-                statusTag.textContent = config.label;
-                statusTag.className = 'px-2 py-1 rounded text-xs font-medium ' + config.bgClass + ' ' + config.textClass;
-                
-                const statusTip = document.getElementById('statusTip');
-                if (config.tip) {
-                    statusTip.textContent = '（' + config.tip + '）';
-                }
-                document.getElementById('statusBadge').classList.remove('hidden');
-                updateUIByStatus();
-            }
-            updateFormEditable();
+        // 添加图片（模拟）
+        function addImage(type) {
+            const container = document.getElementById(type + '-images');
+            const placeholder = document.createElement('div');
+            placeholder.className = 'aspect-[4/3] bg-gray-100 rounded-lg flex items-center justify-center cursor-pointer hover:bg-gray-200';
+            placeholder.innerHTML = '<i class="fa fa-plus text-gray-400 text-2xl"></i>';
+            placeholder.onclick = function() {
+                // 模拟上传
+                const img = document.createElement('div');
+                img.className = 'image-item';
+                img.innerHTML = '<img src="https://via.placeholder.com/300x225/165DFF/fff?text=' + type + '" alt=""><button type="button" class="remove-btn" onclick="removeImage(this)"><i class="fa fa-times"></i></button>';
+                container.appendChild(img);
+                container.parentElement.classList.add('has-images');
+            };
+            container.appendChild(placeholder);
         }
-        
-        // ========== 根据状态更新UI ==========
-        function updateUIByStatus() {
-            const status = currentStatus;
-            const isSuperAdmin = currentUserRole === 'superadmin';
-            
-            if (editableStatuses.includes(status)) {
-                showButtons('save,submit');
-            } else if (status === 'pending') {
-                showButtons('withdraw');
-                setFormEditable(false);
-            } else if ((status === 'approved' || status === 'online') && isSuperAdmin) {
-                showButtons('save');
-            } else if (status === 'config_pending') {
-                showButtons('config');
-                setFormEditable(false);
-            } else {
-                showButtons('');
-                setFormEditable(false);
-            }
+
+        // 移除图片
+        function removeImage(btn) {
+            btn.parentElement.remove();
         }
-        
-        // ========== 显示/隐藏按钮 ==========
-        function showButtons(types) {
-            const topActions = document.getElementById('actionButtons');
-            const bottomActions = document.getElementById('bottomActions');
-            
-            let topHTML = '';
-            let bottomHTML = '';
-            
-            if (types.includes('save')) {
-                topHTML += '<button onclick="saveDraft()" class="px-4 py-2 border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50 flex items-center"><i class="fa fa-save mr-2"></i>保存</button>';
-                bottomHTML += '<button onclick="saveDraft()" class="px-6 py-2 border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50"><i class="fa fa-save mr-2"></i>保存</button>';
-            }
-            if (types.includes('submit')) {
-                topHTML += '<button onclick="submitAudit()" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 flex items-center"><i class="fa fa-paper-plane mr-2"></i>提交审核</button>';
-                bottomHTML += '<button onclick="submitAudit()" class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary/90"><i class="fa fa-paper-plane mr-2"></i>提交审核</button>';
-            }
-            if (types.includes('withdraw')) {
-                topHTML += '<button onclick="withdrawAudit()" class="px-4 py-2 border border-warning text-warning rounded-lg hover:bg-yellow-50 flex items-center"><i class="fa fa-undo mr-2"></i>撤回</button>';
-                bottomHTML += '<button onclick="withdrawAudit()" class="px-6 py-2 border border-warning text-warning rounded-lg hover:bg-yellow-50"><i class="fa fa-undo mr-2"></i>撤回</button>';
-                setFormEditable(false); // 撤回状态表单不可编辑
-            }
-            if (types.includes('config')) {
-                topHTML += '<button onclick="goToConfig()" class="px-4 py-2 bg-success text-white rounded-lg hover:bg-success/90 flex items-center"><i class="fa fa-gear mr-2"></i>去配置</button>';
-                bottomHTML += '<button onclick="goToConfig()" class="px-6 py-2 bg-success text-white rounded-lg hover:bg-success/90"><i class="fa fa-gear mr-2"></i>去配置</button>';
-                setFormEditable(false); // 待配置状态表单不可编辑
-            }
-            
-            topHTML += '<button onclick="window.location.href=\'list.html\'" class="px-4 py-2 border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50">取消</button>';
-            bottomHTML += '<button onclick="window.location.href=\'list.html\'" class="px-6 py-2 border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50">取消</button>';
-            
-            topActions.innerHTML = topHTML;
-            bottomActions.innerHTML = bottomHTML;
-        }
-        
-        // ========== 控制表单编辑状态 ==========
-        function setFormEditable(editable) {
-            const inputs = document.querySelectorAll('input, select, textarea');
-            inputs.forEach(input => {
-                if (input.type === 'button' || input.type === 'submit' || input.type === 'reset') return;
-                input.disabled = !editable;
-            });
-        }
-        
-        function updateFormEditable() {
-            const status = currentStatus;
-            const isSuperAdmin = currentUserRole === 'superadmin';
-            
-            if (editableStatuses.includes(status)) {
-                setFormEditable(true);
-            } else if ((status === 'approved' || status === 'online') && isSuperAdmin) {
-                setFormEditable(true);
-            } else {
-                setFormEditable(false);
-            }
-        }
-        
-        // ========== 保存草稿 ==========
+
+        // 保存草稿
         function saveDraft() {
-            alert('保存成功');
+            alert('保存草稿成功');
         }
-        
-        // ========== 提交审核 ==========
+
+        // 提交审核
         function submitAudit() {
-            if (!validateRequiredFields()) return;
-            document.getElementById('submitModal').classList.remove('hidden');
-            document.getElementById('submitModal').classList.add('flex');
-        }
-        
-        // ========== 必填字段校验 ==========
-        function validateRequiredFields() {
-            const requiredFields = document.querySelectorAll('[class*="required-field"]');
-            let isValid = true;
-            let firstInvalid = null;
-            
-            requiredFields.forEach(label => {
-                const input = label.nextElementSibling;
-                if (input && !input.value.trim()) {
-                    isValid = false;
-                    input.style.borderColor = '#F53F3F';
-                    if (!firstInvalid) firstInvalid = input;
-                }
-            });
-            
-            if (!isValid) {
-                alert('请填写完整必填信息');
-                if (firstInvalid) {
-                    firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    firstInvalid.focus();
-                }
+            const form = document.getElementById('buildingForm');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
             }
-            return isValid;
+            alert('提交审核成功');
         }
-        
-        // ========== 撤回审核 ==========
-        function withdrawAudit() {
-            if (confirm('确定要撤回审核吗？撤回后可重新编辑信息。')) {
-                alert('已撤回');
-                window.location.href = 'list.html';
-            }
-        }
-        
-        // ========== 跳转配置页 ==========
-        function goToConfig() {
-            window.location.href = 'publish.html';
-        }
-        
-        function closeSubmitModal() {
-            document.getElementById('submitModal').classList.add('hidden');
-            document.getElementById('submitModal').classList.remove('flex');
-        }
-        
-        function confirmSubmit() {
-            alert('提交成功');
-            window.location.href = 'list.html';
-        }
-        
-        initPage();
     </script>
-<script src="components/message-nav.js"></script>
 </body>
 </html>
