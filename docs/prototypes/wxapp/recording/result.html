@@ -631,7 +631,8 @@
                     <div class="relation-icon"><i class="fa fa-user-circle-o"></i></div>
                     <span class="relation-title">关联客户</span>
                 </div>
-                <span class="relation-change" onclick="changeCustomer()">更换客户</span>
+                <!-- 有客户时显示更换客户，无客户时隐藏 -->
+                <span class="relation-change" id="changeCustomerBtn" onclick="changeCustomer()">更换客户</span>
             </div>
             <div id="relationContent">
                 <!-- 有客户时显示 -->
@@ -648,7 +649,8 @@
                     <div>暂未关联客户</div>
                 </div>
             </div>
-            <button class="relation-select-btn" onclick="selectCustomer()">
+            <!-- 无客户时显示选择关联客户按钮 -->
+            <button class="relation-select-btn" id="selectCustomerBtn" onclick="selectCustomer()" style="display: none;">
                 <i class="fa fa-plus"></i> 选择关联客户
             </button>
         </div>
@@ -842,9 +844,11 @@ ${data.customerNeeds}
         function confirmChangeCustomer() {
             closeConfirmModal();
             showToast('已解除原客户关联');
-            // 清除关联
+            // 清除关联 - 切换到无客户状态
             document.getElementById('relationInfo').style.display = 'none';
             document.getElementById('relationEmpty').style.display = 'block';
+            document.getElementById('changeCustomerBtn').style.display = 'none';
+            document.getElementById('selectCustomerBtn').style.display = 'block';
             analysisData.customer = null;
             analysisData.phone = null;
         }
@@ -869,8 +873,24 @@ ${data.customerNeeds}
 
         // 初始化
         window.onload = function() {
+            // 渲染Markdown
             const markdownContent = generateMarkdown(analysisData);
             document.getElementById('markdownContent').innerHTML = marked.parse(markdownContent);
+            
+            // 根据客户状态显示/隐藏相关元素
+            if (analysisData.customer) {
+                // 有客户时
+                document.getElementById('relationInfo').style.display = 'flex';
+                document.getElementById('relationEmpty').style.display = 'none';
+                document.getElementById('changeCustomerBtn').style.display = 'block';
+                document.getElementById('selectCustomerBtn').style.display = 'none';
+            } else {
+                // 无客户时
+                document.getElementById('relationInfo').style.display = 'none';
+                document.getElementById('relationEmpty').style.display = 'block';
+                document.getElementById('changeCustomerBtn').style.display = 'none';
+                document.getElementById('selectCustomerBtn').style.display = 'block';
+            }
         };
     </script>
 </body>
