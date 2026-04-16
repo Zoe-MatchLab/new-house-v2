@@ -104,16 +104,7 @@
                         <label class="block text-xs text-gray-500 mb-1">手机号</label>
                         <input type="text" id="filterPhone" placeholder="搜索手机号" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
                     </div>
-                    <div>
-                        <label class="block text-xs text-gray-500 mb-1">客户状态</label>
-                        <select id="filterStatus" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                            <option value="">全部</option>
-                            <option value="potential">潜在</option>
-                            <option value="following">跟进中</option>
-                            <option value="dealed">成交</option>
-                            <option value="lost">流失</option>
-                        </select>
-                    </div>
+
                     <div>
                         <label class="block text-xs text-gray-500 mb-1">经纪人</label>
                         <select id="filterAgent" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
@@ -123,10 +114,7 @@
                             <option value="wangwu">王五</option>
                         </select>
                     </div>
-                    <div>
-                        <label class="block text-xs text-gray-500 mb-1">意向楼盘</label>
-                        <input type="text" id="filterBuilding" placeholder="搜索楼盘" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                    </div>
+
                 </div>
                 <div class="flex justify-end mt-3 space-x-3">
                     <button onclick="resetFilters()" class="px-3 py-1.5 border border-gray-200 rounded-lg text-gray-600 text-sm hover:bg-gray-50">
@@ -146,11 +134,9 @@
                             <tr class="text-left text-gray-500 text-sm bg-gray-50">
                                 <th class="px-4 py-3 text-xs font-medium">客户姓名</th>
                                 <th class="px-4 py-3 text-xs font-medium">手机号</th>
-                                <th class="px-4 py-3 text-xs font-medium">意向楼盘</th>
                                 <th class="px-4 py-3 text-xs font-medium">经纪人</th>
-                                <th class="px-4 py-3 text-xs font-medium">客户状态</th>
-                                <th class="px-4 py-3 text-xs font-medium">跟进录音数</th>
-                                <th class="px-4 py-3 text-xs font-medium">最近跟进</th>
+                                <th class="px-4 py-3 text-xs font-medium">关联录音数</th>
+                                <th class="px-4 py-3 text-xs font-medium">创建时间</th>
                                 <th class="px-4 py-3 text-xs font-medium text-right">操作</th>
                             </tr>
                         </thead>
@@ -182,56 +168,41 @@
                 id: 1,
                 name: '王女士',
                 phone: '138****1234',
-                buildingName: '万科城市花园',
                 agentName: '张三',
-                status: 'following',
-                statusText: '跟进中',
                 recordCount: 8,
-                lastFollowTime: '2026-04-16 14:30'
+                createTime: '2026-04-01 10:00'
             },
             {
                 id: 2,
                 name: '李先生',
                 phone: '139****5678',
-                buildingName: '中海汇德里',
                 agentName: '张三',
-                status: 'dealed',
-                statusText: '成交',
                 recordCount: 12,
-                lastFollowTime: '2026-04-15 10:20'
+                createTime: '2026-04-05 14:30'
             },
             {
                 id: 3,
                 name: '张女士',
                 phone: '137****9012',
-                buildingName: '金隅学府',
                 agentName: '李四',
-                status: 'potential',
-                statusText: '潜在',
                 recordCount: 2,
-                lastFollowTime: '2026-04-14 16:45'
+                createTime: '2026-04-10 09:15'
             },
             {
                 id: 4,
                 name: '刘先生',
                 phone: '136****3456',
-                buildingName: '远洋LAVIE',
                 agentName: '李四',
-                status: 'lost',
-                statusText: '流失',
                 recordCount: 5,
-                lastFollowTime: '2026-04-10 09:30'
+                createTime: '2026-04-12 16:20'
             },
             {
                 id: 5,
                 name: '陈女士',
                 phone: '135****7890',
-                buildingName: '招商公园1872',
                 agentName: '王五',
-                status: 'following',
-                statusText: '跟进中',
                 recordCount: 6,
-                lastFollowTime: '2026-04-16 11:15'
+                createTime: '2026-04-14 11:45'
             }
         ];
 
@@ -246,15 +217,11 @@
                         <div class="font-medium text-gray-800">${item.name}</div>
                     </td>
                     <td class="px-4 py-4 text-sm text-gray-600">${item.phone}</td>
-                    <td class="px-4 py-4 text-sm text-primary hover:underline cursor-pointer">${item.buildingName}</td>
                     <td class="px-4 py-4 text-sm text-gray-600">${item.agentName}</td>
-                    <td class="px-4 py-4">
-                        <span class="tag tag-${item.status}">${item.statusText}</span>
-                    </td>
                     <td class="px-4 py-4 text-sm text-gray-600">
                         <span class="text-primary font-medium">${item.recordCount}</span> 条
                     </td>
-                    <td class="px-4 py-4 text-sm text-gray-500">${item.lastFollowTime}</td>
+                    <td class="px-4 py-4 text-sm text-gray-500">${item.createTime}</td>
                     <td class="px-4 py-4 text-sm text-right whitespace-nowrap">
                         <button onclick="viewDetail(${item.id})" class="text-primary hover:underline">详情</button>
                     </td>
@@ -271,9 +238,7 @@
         function resetFilters() {
             document.getElementById('filterName').value = '';
             document.getElementById('filterPhone').value = '';
-            document.getElementById('filterStatus').value = '';
             document.getElementById('filterAgent').value = '';
-            document.getElementById('filterBuilding').value = '';
             renderTable(customersData);
         }
 
@@ -281,9 +246,7 @@
         function applyFilters() {
             const name = document.getElementById('filterName').value.toLowerCase();
             const phone = document.getElementById('filterPhone').value.toLowerCase();
-            const status = document.getElementById('filterStatus').value;
             const agent = document.getElementById('filterAgent').value;
-            const building = document.getElementById('filterBuilding').value.toLowerCase();
 
             let filtered = customersData;
 
@@ -293,14 +256,8 @@
             if (phone) {
                 filtered = filtered.filter(item => item.phone.includes(phone));
             }
-            if (status) {
-                filtered = filtered.filter(item => item.status === status);
-            }
             if (agent) {
                 filtered = filtered.filter(item => item.agentName === agent);
-            }
-            if (building) {
-                filtered = filtered.filter(item => item.buildingName.toLowerCase().includes(building));
             }
 
             renderTable(filtered);
