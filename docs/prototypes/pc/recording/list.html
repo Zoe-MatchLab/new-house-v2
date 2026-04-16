@@ -142,13 +142,12 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block text-xs text-gray-500 mb-1">时间范围</label>
-                        <select class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                            <option value="today">今天</option>
-                            <option value="week">本周</option>
-                            <option value="month">本月</option>
-                            <option value="quarter">本季度</option>
-                        </select>
+                        <label class="block text-xs text-gray-500 mb-1">上传时间</label>
+                        <div class="flex items-center gap-2">
+                            <input type="date" id="filterStartDate" class="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-primary">
+                            <span class="text-gray-400">至</span>
+                            <input type="date" id="filterEndDate" class="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-primary">
+                        </div>
                     </div>
                 </div>
                 <div class="flex justify-end mt-3 space-x-3">
@@ -368,6 +367,8 @@
             document.getElementById('filterTask').value = '';
             document.getElementById('filterStatus').value = '';
             document.getElementById('filterSource').value = '';
+            document.getElementById('filterStartDate').value = '';
+            document.getElementById('filterEndDate').value = '';
             renderTable(recordingsData);
         }
 
@@ -377,6 +378,8 @@
             const taskName = document.getElementById('filterTask').value.toLowerCase();
             const status = document.getElementById('filterStatus').value;
             const source = document.getElementById('filterSource').value;
+            const startDate = document.getElementById('filterStartDate').value;
+            const endDate = document.getElementById('filterEndDate').value;
 
             let filtered = recordingsData;
 
@@ -391,6 +394,19 @@
             }
             if (source) {
                 filtered = filtered.filter(item => item.source === source);
+            }
+            if (startDate || endDate) {
+                filtered = filtered.filter(item => {
+                    const uploadDate = item.uploadTime.split(' ')[0];
+                    if (startDate && endDate) {
+                        return uploadDate >= startDate && uploadDate <= endDate;
+                    } else if (startDate) {
+                        return uploadDate >= startDate;
+                    } else if (endDate) {
+                        return uploadDate <= endDate;
+                    }
+                    return true;
+                });
             }
 
             renderTable(filtered);
