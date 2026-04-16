@@ -114,9 +114,6 @@
                     <button onclick="downloadReport()" class="px-4 py-2 border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50 flex items-center">
                         <i class="fa fa-download mr-2"></i>导出报告
                     </button>
-                    <button onclick="toggleTranscript()" id="transcriptBtn" class="px-4 py-2 border border-primary text-primary rounded-lg hover:bg-primary/10 flex items-center">
-                        <i class="fa fa-file-text-o mr-2"></i>查看转文本
-                    </button>
                 </div>
             </div>
 
@@ -188,13 +185,14 @@
             </div>
 
             <!-- 录音转文本 -->
-            <div id="transcriptSection" class="section-card mb-6 hidden">
-                <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+            <div id="transcriptSection" class="section-card mb-6">
+                <div onclick="toggleTranscript()" class="px-6 py-4 border-b border-gray-100 flex items-center justify-between cursor-pointer hover:bg-gray-50">
                     <h3 class="font-semibold text-gray-800">录音转文本</h3>
-                    <button onclick="toggleTranscript()" class="text-gray-400 hover:text-gray-600">
-                        <i class="fa fa-chevron-up"></i>
+                    <button id="transcriptToggle" class="text-gray-400 hover:text-gray-600">
+                        <i class="fa fa-chevron-down"></i>
                     </button>
                 </div>
+                <div id="transcriptContent" class="p-6 hidden">
                 <div class="p-6">
                     <div class="bg-gray-50 rounded-lg p-4 text-sm text-gray-600 leading-relaxed max-h-96 overflow-y-auto">
                         <div class="mb-3 flex items-start gap-3">
@@ -411,19 +409,15 @@
         let transcriptVisible = false;
         function toggleTranscript() {
             transcriptVisible = !transcriptVisible;
-            const section = document.getElementById('transcriptSection');
-            const btn = document.getElementById('transcriptBtn');
+            const content = document.getElementById('transcriptContent');
+            const toggle = document.getElementById('transcriptToggle');
             
             if (transcriptVisible) {
-                section.classList.remove('hidden');
-                btn.classList.add('bg-primary', 'text-white');
-                btn.classList.remove('border', 'border-primary', 'text-primary');
-                btn.innerHTML = '<i class="fa fa-file-text-o mr-2"></i>收起转文本';
+                content.classList.remove('hidden');
+                toggle.innerHTML = '<i class="fa fa-chevron-up"></i>';
             } else {
-                section.classList.add('hidden');
-                btn.classList.remove('bg-primary', 'text-white');
-                btn.classList.add('border', 'border-primary', 'text-primary');
-                btn.innerHTML = '<i class="fa fa-file-text-o mr-2"></i>查看转文本';
+                content.classList.add('hidden');
+                toggle.innerHTML = '<i class="fa fa-chevron-down"></i>';
             }
         }
     </script>
