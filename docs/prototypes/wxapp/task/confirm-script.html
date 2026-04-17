@@ -113,7 +113,7 @@
 
         /* 生成中状态 */
         .generating-banner {
-            margin: var(--spacing-md);
+            margin: 0 var(--spacing-md) var(--spacing-md);
             padding: var(--spacing-md);
             background: linear-gradient(135deg, var(--color-purple) 0%, #8B5CF6 100%);
             border-radius: var(--radius-xl);
@@ -730,20 +730,18 @@
             </div>
         </div>
 
-        <!-- 生成中状态 -->
-        <div class="generating-banner" id="generatingBanner">
-            <div class="generating-header">
-                <div class="generating-title">
-                    <div class="generating-spinner"></div>
-                    <span>AI生成中</span>
-                </div>
-                <span class="generating-progress" id="generatingProgress">0%</span>
+        <!-- 生成中状态 - 替换配置区域 -->
+        <div class="generating-card" id="generatingBanner" style="margin: 0 var(--spacing-md) var(--spacing-md);padding: var(--spacing-lg);background: linear-gradient(135deg, var(--color-purple) 0%, #8B5CF6 100%);border-radius: var(--radius-xl);color: white;text-align:center;display:none;">
+            <div style="margin-bottom:var(--spacing-md);">
+                <div class="generating-spinner" style="margin:0 auto;"></div>
             </div>
-            <div class="generating-bar">
-                <div class="generating-fill" id="generatingFill" style="width: 0%"></div>
+            <div style="font-size:16px;font-weight:600;margin-bottom:var(--spacing-sm);">AI生成中...</div>
+            <div style="font-size:12px;opacity:0.8;margin-bottom:var(--spacing-md);" id="generatingProgress">正在生成 0%</div>
+            <div class="generating-bar" style="height:6px;background:rgba(255,255,255,0.3);border-radius:3px;overflow:hidden;">
+                <div class="generating-fill" id="generatingFill" style="height:100%;background:white;border-radius:3px;transition:width 0.3s ease;width:0%;"></div>
             </div>
-            <div class="generating-items" id="generatingItems">
-                <!-- 动态生成 -->
+            <div style="display:flex;flex-direction:column;gap:4px;margin-top:var(--spacing-md);font-size:12px;opacity:0.9;" id="generatingItems">
+                <!-- 动态生成项 -->
             </div>
         </div>
 
@@ -1193,21 +1191,22 @@ VIP认筹通道已开启，欢迎私信咨询！`,
                 return;
             }
 
-            // 显示生成中状态
-            document.getElementById('generatingBanner').classList.add('show');
+            // 隐藏配置区域，显示生成中状态
+            document.getElementById('configSection').classList.add('hidden');
             document.getElementById('generateSection').classList.add('hidden');
+            document.getElementById('generatingBanner').classList.add('show');
             document.getElementById('contentSection').classList.add('show');
+            document.getElementById('materialHint').style.display = 'none';
 
             // 构建生成项
             const channels = Array.from(selectedChannels);
-            const genItems = channels.map((c, i) => `<div id="genItem${i}"><i class="fa fa-circle-o"></i> ${CHANNEL_NAMES[c]}生成中...</div>`).join('');
+            const genItems = channels.map((c, i) => `<div id="genItem${i}" style="display:flex;align-items:center;gap:8px;"><i class="fa fa-circle-o" style="font-size:10px;"></i> ${CHANNEL_NAMES[c]}</div>`).join('');
             document.getElementById('generatingItems').innerHTML = genItems;
 
             // 模拟生成进度
             let progress = 0;
-            let currentIndex = 0;
             const interval = setInterval(() => {
-                progress += Math.random() * 20;
+                progress += Math.random() * 15;
                 if (progress >= 100) {
                     progress = 100;
                     clearInterval(interval);
@@ -1218,7 +1217,7 @@ VIP认筹通道已开启，欢迎私信咨询！`,
                 }
                 
                 document.getElementById('generatingFill').style.width = progress + '%';
-                document.getElementById('generatingProgress').textContent = Math.round(progress) + '%';
+                document.getElementById('generatingProgress').textContent = '正在生成 ' + Math.round(progress) + '%';
                 
                 // 更新生成项状态
                 const itemIndex = Math.floor(progress / 100 * channels.length);
@@ -1226,9 +1225,9 @@ VIP认筹通道已开启，欢迎私信咨询！`,
                     const el = document.getElementById('genItem' + i);
                     if (el) {
                         if (i < itemIndex) {
-                            el.innerHTML = '<i class="fa fa-check-circle"></i> ' + el.textContent.replace('生成中...', '已完成');
+                            el.innerHTML = '<i class="fa fa-check-circle" style="color:#00B42A;"></i> ' + CHANNEL_NAMES[channels[i]];
                         } else if (i === itemIndex && progress < 100) {
-                            el.innerHTML = '<i class="fa fa-spinner fa-spin"></i> ' + el.textContent;
+                            el.innerHTML = '<i class="fa fa-spinner fa-spin"></i> ' + CHANNEL_NAMES[channels[i]];
                         }
                     }
                 }
@@ -1343,6 +1342,7 @@ VIP认筹通道已开启，欢迎私信咨询！`,
             document.getElementById('configSection').classList.remove('hidden');
             document.getElementById('generateSection').classList.remove('hidden');
             document.getElementById('contentSection').classList.remove('show');
+            document.getElementById('materialHint').style.display = 'flex';
         }
 
         // 切换卡片展开
