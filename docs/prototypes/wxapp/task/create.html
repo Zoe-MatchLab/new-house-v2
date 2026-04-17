@@ -699,14 +699,14 @@
 
                         <!-- 点位采集配置 -->
                         <div class="collapse-section" style="margin-bottom:8px;">
-                            <div class="collapse-header" onclick="toggleCollapse(this)">
+                            <div class="collapse-header open" onclick="toggleCollapse(this)">
                                 <div class="collapse-title" style="font-size:14px;">
                                     <i class="fa fa-map-markers"></i>
                                     采集点位配置
                                 </div>
-                                <i class="fa fa-angle-down collapse-arrow" style="font-size:12px;"></i>
+                                <i class="fa fa-angle-up collapse-arrow" style="font-size:12px;"></i>
                             </div>
-                            <div class="collapse-body">
+                            <div class="collapse-body open">
                                 <!-- AI自动审核 -->
                                 <div class="config-switch-item">
                                     <div class="info">
@@ -1293,8 +1293,9 @@
             }
             
             pointCount++;
-            const container = document.querySelector('.point-items').parentElement;
-            const addBtn = container.querySelector('.add-btn');
+            // 找到添加按钮的位置，在其之前插入新点位
+            const addBtn = document.querySelector('.point-items ~ .add-btn, .collapse-body > .add-btn');
+            const container = addBtn.parentElement;
             
             const newPoint = document.createElement('div');
             newPoint.className = 'point-card-bg';
