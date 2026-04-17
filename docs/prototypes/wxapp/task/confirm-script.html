@@ -1191,10 +1191,9 @@ VIP认筹通道已开启，欢迎私信咨询！`,
                 return;
             }
 
-            // 隐藏配置区域，显示生成中状态
-            document.getElementById('configSection').classList.add('hidden');
-            document.getElementById('generateSection').classList.add('hidden');
+            // 显示生成中状态（不隐藏配置区域）
             document.getElementById('generatingBanner').classList.add('show');
+            document.getElementById('generateSection').classList.add('hidden');
             document.getElementById('contentSection').classList.add('show');
             document.getElementById('materialHint').style.display = 'none';
 
