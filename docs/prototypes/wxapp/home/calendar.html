@@ -1049,6 +1049,23 @@
 
         .notify-tab:active { transform: scale(0.95); }
 
+        .notify-tab .count {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 18px;
+            height: 18px;
+            background: rgba(0,0,0,0.1);
+            border-radius: 9px;
+            font-size: 11px;
+            margin-left: 4px;
+            padding: 0 4px;
+        }
+
+        .notify-tab.active .count {
+            background: rgba(255,255,255,0.3);
+        }
+
         .notify-list {
             flex: 1;
             overflow-y: auto;
@@ -1086,6 +1103,30 @@
 
         .notify-dot.unread { background: var(--color-danger); }
         .notify-dot.read { background: var(--color-border); }
+
+        .notify-meta {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .notify-tag {
+            font-size: 11px;
+            padding: 2px 6px;
+            border-radius: var(--radius-sm);
+            background: var(--color-bg);
+            color: var(--color-sub);
+        }
+
+        .notify-tag.urgent {
+            background: #FFF1E6;
+            color: #FA8C16;
+        }
+
+        .notify-tag.normal {
+            background: #F6FFED;
+            color: #00B42A;
+        }
 
         .notify-content { flex: 1; min-width: 0; }
 
@@ -1659,61 +1700,14 @@
             </div>
         </div>
         <div class="notify-tabs">
-            <button class="notify-tab active" onclick="switchNotifyTab(this, 'all')">全部</button>
-            <button class="notify-tab" onclick="switchNotifyTab(this, 'house')">探盘</button>
-            <button class="notify-tab" onclick="switchNotifyTab(this, 'train')">训练</button>
-            <button class="notify-tab" onclick="switchNotifyTab(this, 'text')">文案</button>
-            <button class="notify-tab" onclick="switchNotifyTab(this, 'video')">视频</button>
-            <button class="notify-tab" onclick="switchNotifyTab(this, 'custom')">自定义</button>
-            <button class="notify-tab" onclick="switchNotifyTab(this, 'pending')">待下发</button>
+            <button class="notify-tab active" onclick="switchNotifyTab(this, 'unread')">
+                未读<span class="count">3</span>
+            </button>
+            <button class="notify-tab" onclick="switchNotifyTab(this, 'read')">
+                已读<span class="count">5</span>
+            </button>
         </div>
-        <div class="notify-list" id="notifyList">
-            <div class="notify-item unread" data-type="house" onclick="handleNotifyClick('house')">
-                <div class="notify-dot unread"></div>
-                <div class="notify-content">
-                    <div class="notify-name">中海汇德里探盘任务</div>
-                    <div class="notify-message">探盘任务待执行</div>
-                    <div class="notify-time">刚刚</div>
-                </div>
-                <div class="notify-arrow"><i class="fa fa-chevron-right"></i></div>
-            </div>
-            <div class="notify-item" data-type="train" onclick="handleNotifyClick('train')">
-                <div class="notify-dot read"></div>
-                <div class="notify-content">
-                    <div class="notify-name">议价谈判话术练习</div>
-                    <div class="notify-message">训练任务待执行</div>
-                    <div class="notify-time">10分钟前</div>
-                </div>
-                <div class="notify-arrow"><i class="fa fa-chevron-right"></i></div>
-            </div>
-            <div class="notify-item" data-type="text" onclick="handleNotifyClick('text')">
-                <div class="notify-dot read"></div>
-                <div class="notify-content">
-                    <div class="notify-name">朋友圈文案生成</div>
-                    <div class="notify-message">文案任务待执行</div>
-                    <div class="notify-time">昨天</div>
-                </div>
-                <div class="notify-arrow"><i class="fa fa-chevron-right"></i></div>
-            </div>
-            <div class="notify-item" data-type="video" onclick="handleNotifyClick('video')">
-                <div class="notify-dot read"></div>
-                <div class="notify-content">
-                    <div class="notify-name">楼盘介绍视频制作</div>
-                    <div class="notify-message">视频任务待执行</div>
-                    <div class="notify-time">昨天</div>
-                </div>
-                <div class="notify-arrow"><i class="fa fa-chevron-right"></i></div>
-            </div>
-            <div class="notify-item" data-type="pending" onclick="handleNotifyClick('pending')">
-                <div class="notify-dot read"></div>
-                <div class="notify-content">
-                    <div class="notify-name">万科翡翠公园探盘任务</div>
-                    <div class="notify-message">待下发任务已到达</div>
-                    <div class="notify-time">1小时前</div>
-                </div>
-                <div class="notify-arrow"><i class="fa fa-chevron-right"></i></div>
-            </div>
-        </div>
+        <div class="notify-list" id="notifyList"></div>
     </div>
 
     <!-- TabBar -->
@@ -1927,7 +1921,19 @@
         }
 
         // ========== 通知面板 ==========
-        let currentNotifyTab = 'all';
+        let currentNotifyTab = 'unread';
+
+        // 模拟通知数据
+        const notifications = [
+            { id: 1, name: '任务催办-重度', message: '任务「中海汇德里探盘」即将到期（2小时后），请尽快完成！', time: '刚刚', type: 'urgent', tag: '紧急', read: false },
+            { id: 2, name: '任务超时提醒', message: '任务「万科翡翠公园探盘」已超时，请尽快处理！', time: '10分钟前', type: 'urgent', tag: '紧急', read: false },
+            { id: 3, name: '手动催办', message: '区域经理王总提醒您：有新的探盘任务待执行', time: '30分钟前', type: 'urgent', tag: '紧急', read: false },
+            { id: 4, name: '任务催办-轻度', message: '任务「议价谈判话术练习」将于24小时后到期', time: '1小时前', type: 'normal', tag: '重要', read: true },
+            { id: 5, name: '内容生成完成', message: 'AI已为您生成「中海汇德里」探盘文案，点击查看', time: '2小时前', type: 'normal', tag: '普通', read: true },
+            { id: 6, name: '新盘上线通知', message: '「华润置地橡树湾」已上线，欢迎查看', time: '昨天', type: 'normal', tag: '普通', read: true },
+            { id: 7, name: '录音分析完成', message: '您的通话录音已分析完成，发现3个改进点', time: '昨天', type: 'normal', tag: '普通', read: true },
+            { id: 8, name: '任务完成通知', message: '您下发的「万科翡翠公园探盘任务」已完成', time: '2天前', type: 'normal', tag: '普通', read: true },
+        ];
 
         function toggleNotifyPanel() {
             const overlay = document.getElementById('notifyOverlay');
@@ -1941,69 +1947,93 @@
                 overlay.classList.add('show');
                 panel.classList.add('show');
                 document.body.style.overflow = 'hidden';
+                renderNotifyList();
             }
         }
 
-        // 跳转至AI话术训练（功能即将上线提示）
-        function goToSpeechTrain() {
-            showToast('跳转至AI话术训练');
-        }
-
-        function switchNotifyTab(el, type) {
-            document.querySelectorAll('.notify-tab').forEach(tab => tab.classList.remove('active'));
+        function switchNotifyTab(el, tab) {
+            document.querySelectorAll('.notify-tab').forEach(t => t.classList.remove('active'));
             el.classList.add('active');
-            currentNotifyTab = type;
-            
-            const items = document.querySelectorAll('.notify-item');
-            items.forEach(item => {
-                if (type === 'all') {
-                    item.style.display = 'flex';
-                } else {
-                    const itemType = item.getAttribute('data-type');
-                    item.style.display = itemType === type ? 'flex' : 'none';
-                }
-            });
+            currentNotifyTab = tab;
+            renderNotifyList();
         }
 
-        function handleNotifyClick(type) {
+        function renderNotifyList() {
+            const list = document.getElementById('notifyList');
+            let filtered = notifications;
+            
+            if (currentNotifyTab === 'unread') {
+                filtered = notifications.filter(n => !n.read);
+            } else if (currentNotifyTab === 'read') {
+                filtered = notifications.filter(n => n.read);
+            }
+
+            const unreadCount = notifications.filter(n => !n.read).length;
+            const readCount = notifications.filter(n => n.read).length;
+
+            // 更新Tab角标
+            document.querySelectorAll('.notify-tab .count').forEach((countEl, i) => {
+                countEl.textContent = i === 0 ? unreadCount : readCount;
+            });
+
+            if (filtered.length === 0) {
+                const emptyText = currentNotifyTab === 'unread' ? '暂无未读通知' : '暂无已读通知';
+                list.innerHTML = `
+                    <div class="notify-empty">
+                        <div class="notify-empty-icon"><i class="fa fa-bell-slash"></i></div>
+                        <div class="notify-empty-text">${emptyText}</div>
+                    </div>
+                `;
+                return;
+            }
+
+            list.innerHTML = filtered.map(n => `
+                <div class="notify-item ${n.read ? '' : 'unread'}" onclick="handleNotifyClick(${n.id})">
+                    <div class="notify-dot ${n.read ? 'read' : 'unread'}"></div>
+                    <div class="notify-content">
+                        <div class="notify-name">${n.name}</div>
+                        <div class="notify-message">${n.message}</div>
+                        <div class="notify-meta">
+                            <span class="notify-tag ${n.type === 'urgent' ? 'urgent' : 'normal'}">${n.tag}</span>
+                            <span class="notify-time">${n.time}</span>
+                        </div>
+                    </div>
+                    <div class="notify-arrow"><i class="fa fa-chevron-right"></i></div>
+                </div>
+            `).join('');
+        }
+
+        function handleNotifyClick(id) {
             // 标记为已读
-            event.currentTarget.classList.remove('unread');
-            event.currentTarget.querySelector('.notify-dot').classList.remove('unread');
-            event.currentTarget.querySelector('.notify-dot').classList.add('read');
-            
-            // 关闭面板
-            toggleNotifyPanel();
-            
-            // 跳转到对应页面
-            if (type === 'house') {
-                location.href = '../task/detail.html';
-            } else if (type === 'train') {
-                goToSpeechTrain();
-            } else if (type === 'text') {
-                location.href = '#';
-            } else if (type === 'video') {
-                location.href = '#';
-            } else if (type === 'custom') {
-                location.href = '../task/checkin-config.html';
-            } else if (type === 'pending') {
-                location.href = '../task/checkin-config.html';
-            } else {
-                showToast('功能即将上线');
+            const notify = notifications.find(n => n.id === id);
+            if (notify && !notify.read) {
+                notify.read = true;
+                updateNotifyBadge();
+                renderNotifyList();
+            }
+            showToast('跳转到通知详情');
+        }
+
+        function updateNotifyBadge() {
+            const badge = document.querySelector('.notify-badge');
+            const unreadCount = notifications.filter(n => !n.read).length;
+            if (badge) {
+                badge.textContent = unreadCount;
+                badge.style.display = unreadCount > 0 ? 'flex' : 'none';
             }
         }
 
         function clearAllNotifications() {
-            const list = document.getElementById('notifyList');
-            list.innerHTML = `
-                <div class="notify-empty">
-                    <div class="notify-empty-icon"><i class="fa fa-bell-slash"></i></div>
-                    <div class="notify-empty-text">暂无通知</div>
-                </div>
-            `;
-            // 更新badge
-            const badge = document.querySelector('.notify-badge');
-            if (badge) badge.style.display = 'none';
+            notifications.forEach(n => n.read = true);
+            updateNotifyBadge();
+            renderNotifyList();
+            showToast('已清空全部通知');
         }
+
+        // 初始化badge
+        updateNotifyBadge();
+        // 初始化列表
+        renderNotifyList();
 
         // 初始化
         generateDateList();
