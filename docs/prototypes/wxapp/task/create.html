@@ -9,13 +9,23 @@
         :root {
             --brand-primary: #FA8C16;
             --brand-primary-dark: #E67A0E;
+            --brand-primary-light: #FFF7E6;
+            --color-success: #00B42A;
+            --color-success-light: #E8FFEA;
             --color-text: #4E5969;
             --color-sub: #86909C;
+            --color-title: #1D2129;
             --color-border: #E5E6EB;
             --color-bg: #F7F8FA;
             --color-card: #FFFFFF;
+            --spacing-xs: 8px;
+            --spacing-sm: 12px;
             --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --radius-sm: 4px;
+            --radius-md: 8px;
             --radius-lg: 12px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html, body {
@@ -40,12 +50,22 @@
             padding: 12px var(--spacing-md);
             background: var(--color-card);
             border-bottom: 1px solid var(--color-border);
+            flex-shrink: 0;
         }
         .header-title {
             font-size: 17px;
             font-weight: 600;
-            color: #1D2129;
+            color: var(--color-title);
         }
+        .header-btn {
+            font-size: 15px;
+            color: var(--brand-primary);
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px 8px;
+        }
+        .header-btn:active { opacity: 0.7; }
         .back-btn {
             width: 36px;
             height: 36px;
@@ -54,60 +74,464 @@
             justify-content: center;
             color: var(--color-sub);
         }
-        .back-btn i { font-size: 18px; }
+        .back-btn i { font-size: 20px; }
         /* 主内容 */
         .main {
             flex: 1;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        /* 表单样式 */
+        .form-section {
+            background: var(--color-card);
+            margin-bottom: 12px;
+        }
+        .form-section-title {
+            padding: var(--spacing-md);
+            padding-bottom: var(--spacing-sm);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--color-title);
+        }
+        .form-item {
+            display: flex;
+            align-items: center;
+            padding: var(--spacing-md);
+            border-bottom: 1px solid var(--color-border);
+        }
+        .form-item:last-child { border-bottom: none; }
+        .form-label {
+            width: 80px;
+            flex-shrink: 0;
+            font-size: 15px;
+            color: var(--color-title);
+        }
+        .form-label.required::after {
+            content: ' *';
+            color: var(--brand-primary);
+        }
+        .form-control {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 15px;
+            color: var(--color-title);
+            background: transparent;
+        }
+        .form-control::placeholder { color: var(--color-sub); }
+        .form-arrow {
+            color: var(--color-sub);
+            font-size: 14px;
+            margin-left: 8px;
+        }
+        /* 任务类型选择 */
+        .type-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            padding: var(--spacing-md);
+        }
+        .type-item {
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            padding: var(--spacing-md);
-        }
-        .empty-state {
-            text-align: center;
-            color: var(--color-sub);
-        }
-        .empty-icon {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 16px;
+            padding: 16px 12px;
             background: var(--color-bg);
+            border: 2px solid transparent;
+            border-radius: var(--radius-lg);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .type-item:active { transform: scale(0.98); }
+        .type-item.selected {
+            background: var(--brand-primary-light);
+            border-color: var(--brand-primary);
+        }
+        .type-item-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--color-card);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
+            margin-bottom: 8px;
         }
-        .empty-icon i {
-            font-size: 32px;
-            color: var(--color-sub);
+        .type-item.selected .type-item-icon {
+            background: var(--brand-primary);
         }
-        .empty-text {
+        .type-item-icon i {
+            font-size: 18px;
+            color: var(--brand-primary);
+        }
+        .type-item.selected .type-item-icon i { color: white; }
+        .type-item-name {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--color-title);
+            text-align: center;
+        }
+        /* 楼盘选择 */
+        .building-selector {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .building-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .building-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--color-bg);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .building-icon i { color: var(--brand-primary); font-size: 16px; }
+        .building-name {
             font-size: 15px;
-            color: var(--color-sub);
+            color: var(--color-title);
         }
+        .building-name.empty {
+            color: var(--color-sub);
+            font-size: 14px;
+        }
+        /* 执行人 */
+        .executor-list {
+            flex: 1;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .executor-tag {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            background: var(--color-bg);
+            border-radius: 16px;
+            font-size: 13px;
+            color: var(--color-text);
+        }
+        .executor-tag .remove {
+            width: 14px;
+            height: 14px;
+            background: var(--color-sub);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            cursor: pointer;
+        }
+        .add-executor {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            background: transparent;
+            border: 1px dashed var(--color-border);
+            border-radius: 16px;
+            font-size: 13px;
+            color: var(--color-sub);
+            cursor: pointer;
+        }
+        .add-executor:active { background: var(--color-bg); }
+        /* 日期选择 */
+        .date-input {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .date-value {
+            font-size: 15px;
+            color: var(--color-title);
+        }
+        .date-value.empty {
+            color: var(--color-sub);
+            font-size: 14px;
+        }
+        /* 时间选择 */
+        .time-input {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .time-value {
+            font-size: 15px;
+            color: var(--color-title);
+            background: var(--color-bg);
+            padding: 6px 12px;
+            border-radius: var(--radius-md);
+        }
+        /* 提醒设置 */
+        .reminder-options {
+            flex: 1;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .reminder-tag {
+            padding: 6px 12px;
+            background: var(--color-bg);
+            border-radius: 16px;
+            font-size: 13px;
+            color: var(--color-text);
+            cursor: pointer;
+            border: none;
+        }
+        .reminder-tag.selected {
+            background: var(--brand-primary-light);
+            color: var(--brand-primary);
+        }
+        /* 底部按钮 */
+        .footer {
+            padding: var(--spacing-md);
+            background: var(--color-card);
+            border-top: 1px solid var(--color-border);
+            flex-shrink: 0;
+        }
+        .btn-create {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--brand-primary), #FF9500);
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: var(--radius-lg);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-create:active { transform: scale(0.98); opacity: 0.9; }
+        .btn-create:disabled {
+            background: var(--color-border);
+            color: var(--color-sub);
+            cursor: not-allowed;
+            transform: none;
+        }
+        /* Toast */
+        .toast {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            z-index: 9999;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .toast.show { opacity: 1; }
     </style>
 </head>
 <body>
     <div class="page">
         <!-- 标题栏 -->
         <div class="header">
-            <a href="../home/calendar.html" class="back-btn">
+            <a href="list.html" class="back-btn">
                 <i class="fa fa-angle-left"></i>
             </a>
             <span class="header-title">创建任务</span>
-            <div style="width: 36px;"></div>
+            <button class="header-btn" onclick="saveDraft()">存草稿</button>
         </div>
 
         <!-- 主内容 -->
         <div class="main">
-            <div class="empty-state">
-                <div class="empty-icon">
-                    <i class="fa fa-plus"></i>
+            <!-- 任务类型 -->
+            <div class="form-section">
+                <div class="form-section-title">任务类型</div>
+                <div class="type-grid">
+                    <div class="type-item selected" data-type="house" onclick="selectType(this)">
+                        <div class="type-item-icon"><i class="fa fa-map-marker"></i></div>
+                        <div class="type-item-name">探盘任务</div>
+                    </div>
+                    <div class="type-item" data-type="training" onclick="selectType(this)">
+                        <div class="type-item-icon"><i class="fa fa-comments"></i></div>
+                        <div class="type-item-name">话术训练</div>
+                    </div>
+                    <div class="type-item" data-type="recording" onclick="selectType(this)">
+                        <div class="type-item-icon"><i class="fa fa-microphone"></i></div>
+                        <div class="type-item-name">录音分析</div>
+                    </div>
+                    <div class="type-item" data-type="content" onclick="selectType(this)">
+                        <div class="type-item-icon"><i class="fa fa-file-text"></i></div>
+                        <div class="type-item-name">文案生成</div>
+                    </div>
                 </div>
-                <div class="empty-text">创建任务页面<br>功能开发中...</div>
+            </div>
+
+            <!-- 基本信息 -->
+            <div class="form-section">
+                <div class="form-section-title">基本信息</div>
+                <div class="form-item">
+                    <div class="form-label required">任务名称</div>
+                    <input type="text" class="form-control" id="taskName" placeholder="请输入任务名称" maxlength="30">
+                </div>
+                <div class="form-item" onclick="selectBuilding()">
+                    <div class="form-label required">关联楼盘</div>
+                    <div class="building-selector">
+                        <div class="building-info">
+                            <div class="building-icon"><i class="fa fa-building-o"></i></div>
+                            <span class="building-name empty" id="buildingName">请选择楼盘</span>
+                        </div>
+                        <i class="fa fa-angle-right form-arrow"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 执行人员 -->
+            <div class="form-section">
+                <div class="form-section-title">执行人员</div>
+                <div class="form-item">
+                    <div class="form-label required">执行人</div>
+                    <div class="executor-list" id="executorList">
+                        <button class="add-executor" onclick="addExecutor()">
+                            <i class="fa fa-plus"></i> 添加
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 时间设置 -->
+            <div class="form-section">
+                <div class="form-section-title">时间设置</div>
+                <div class="form-item" onclick="selectEndTime()">
+                    <div class="form-label required">截止时间</div>
+                    <div class="date-input">
+                        <span class="date-value empty" id="endTime">请选择截止时间</span>
+                        <i class="fa fa-angle-right form-arrow"></i>
+                    </div>
+                </div>
+                <div class="form-item">
+                    <div class="form-label">提醒</div>
+                    <div class="reminder-options" id="reminderOptions">
+                        <button class="reminder-tag selected" data-minutes="1440" onclick="toggleReminder(this)">24小时前</button>
+                        <button class="reminder-tag" data-minutes="720" onclick="toggleReminder(this)">12小时前</button>
+                        <button class="reminder-tag" data-minutes="120" onclick="toggleReminder(this)">2小时前</button>
+                    </div>
+                </div>
             </div>
         </div>
+
+        <!-- 底部按钮 -->
+        <div class="footer">
+            <button class="btn-create" id="createBtn" onclick="createTask()">创建任务</button>
+        </div>
+
+        <!-- Toast -->
+        <div class="toast" id="toast"></div>
     </div>
+
+    <script>
+        // 状态
+        let selectedType = 'house';
+        let selectedBuilding = null;
+        let executors = [];
+        let endTime = null;
+        let reminders = [1440]; // 默认24小时前
+
+        // 选择任务类型
+        function selectType(el) {
+            document.querySelectorAll('.type-item').forEach(item => item.classList.remove('selected'));
+            el.classList.add('selected');
+            selectedType = el.dataset.type;
+            updateCreateBtn();
+        }
+
+        // 选择楼盘
+        function selectBuilding() {
+            showToast('跳转到楼盘选择页');
+        }
+
+        // 添加执行人
+        function addExecutor() {
+            showToast('跳转到人员选择页');
+        }
+
+        // 选择截止时间
+        function selectEndTime() {
+            const now = new Date();
+            now.setDate(now.getDate() + 7); // 默认7天后
+            const dateStr = now.toISOString().split('T')[0];
+            endTime = dateStr;
+            document.getElementById('endTime').textContent = dateStr;
+            document.getElementById('endTime').classList.remove('empty');
+            updateCreateBtn();
+        }
+
+        // 切换提醒
+        function toggleReminder(el) {
+            el.classList.toggle('selected');
+            updateReminders();
+        }
+
+        function updateReminders() {
+            reminders = [];
+            document.querySelectorAll('.reminder-tag.selected').forEach(tag => {
+                reminders.push(parseInt(tag.dataset.minutes));
+            });
+        }
+
+        // 更新创建按钮状态
+        function updateCreateBtn() {
+            const btn = document.getElementById('createBtn');
+            const name = document.getElementById('taskName').value.trim();
+            const canCreate = name && selectedBuilding && executors.length > 0 && endTime;
+            btn.disabled = !canCreate;
+        }
+
+        // 创建任务
+        function createTask() {
+            const name = document.getElementById('taskName').value.trim();
+            if (!name) {
+                showToast('请输入任务名称');
+                return;
+            }
+            if (!selectedBuilding) {
+                showToast('请选择关联楼盘');
+                return;
+            }
+            if (executors.length === 0) {
+                showToast('请添加执行人员');
+                return;
+            }
+            if (!endTime) {
+                showToast('请选择截止时间');
+                return;
+            }
+            showToast('创建成功');
+            setTimeout(() => {
+                location.href = 'list.html';
+            }, 1000);
+        }
+
+        // 存草稿
+        function saveDraft() {
+            showToast('草稿已保存');
+        }
+
+        // 显示Toast
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        }
+
+        // 监听输入
+        document.getElementById('taskName').addEventListener('input', updateCreateBtn);
+    </script>
 </body>
 </html>
