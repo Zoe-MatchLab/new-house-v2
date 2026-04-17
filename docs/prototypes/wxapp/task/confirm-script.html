@@ -999,10 +999,6 @@
                                 <button class="action-btn" onclick="openEditModal('video')"><i class="fa fa-edit"></i>编辑</button>
                             </div>
                         </div>
-                        
-                        <div class="video-actions" id="videoActions">
-                            <button class="action-btn" onclick="changeVideoMethod()"><i class="fa fa-exchange"></i>换一种方式</button>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -1324,16 +1320,6 @@ VIP认筹通道已开启，欢迎私信咨询！`,
                 // 模拟跳转模板页后返回
                 // location.href = 'video-template.html?from=confirm-script';
             }, 500);
-        }
-
-        // 更换视频生成方式（生成后）
-        function changeVideoMethod() {
-            // 简单的切换循环
-            const methods = ['lightning', 'normal', 'master'];
-            const currentIndex = methods.indexOf(selectedVideoMethod);
-            selectedVideoMethod = methods[(currentIndex + 1) % methods.length];
-            updateVideoCardContent();
-            showToast('已切换为' + (selectedVideoMethod === 'lightning' ? '闪电生成' : selectedVideoMethod === 'normal' ? '普通生成' : '大师生成'));
         }
 
         // 显示配置区域
