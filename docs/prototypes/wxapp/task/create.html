@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>创建任务 - 房产AI助手</title>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --brand-primary: #FA8C16;
+            --brand-primary-dark: #E67A0E;
+            --color-text: #4E5969;
+            --color-sub: #86909C;
+            --color-border: #E5E6EB;
+            --color-bg: #F7F8FA;
+            --color-card: #FFFFFF;
+            --spacing-md: 16px;
+            --radius-lg: 12px;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body {
+            height: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif;
+            font-size: 14px;
+            line-height: 1.5;
+            color: var(--color-text);
+            background: var(--color-bg);
+        }
+        .page {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            height: 100dvh;
+        }
+        /* 标题栏 */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px var(--spacing-md);
+            background: var(--color-card);
+            border-bottom: 1px solid var(--color-border);
+        }
+        .header-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1D2129;
+        }
+        .back-btn {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-sub);
+        }
+        .back-btn i { font-size: 18px; }
+        /* 主内容 */
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: var(--spacing-md);
+        }
+        .empty-state {
+            text-align: center;
+            color: var(--color-sub);
+        }
+        .empty-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 16px;
+            background: var(--color-bg);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .empty-icon i {
+            font-size: 32px;
+            color: var(--color-sub);
+        }
+        .empty-text {
+            font-size: 15px;
+            color: var(--color-sub);
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <!-- 标题栏 -->
+        <div class="header">
+            <a href="../home/calendar.html" class="back-btn">
+                <i class="fa fa-angle-left"></i>
+            </a>
+            <span class="header-title">创建任务</span>
+            <div style="width: 36px;"></div>
+        </div>
+
+        <!-- 主内容 -->
+        <div class="main">
+            <div class="empty-state">
+                <div class="empty-icon">
+                    <i class="fa fa-plus"></i>
+                </div>
+                <div class="empty-text">创建任务页面<br>功能开发中...</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
