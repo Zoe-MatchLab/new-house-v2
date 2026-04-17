@@ -402,6 +402,21 @@
         .point-action.disabled { cursor: not-allowed; opacity: 0.5; }
         .point-action.active { color: var(--color-danger); cursor: pointer; }
         .point-tag-item.required { background: var(--brand-primary-light); border-color: var(--brand-primary); color: var(--brand-primary); }
+        /* 点位卡片样式 */
+        .point-card-bg { background: #F5F5F5; border-radius: var(--radius-md); padding: 12px; margin-bottom: 10px; }
+        .point-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .point-title-row { display: flex; align-items: center; gap: 8px; }
+        .point-badge { width: 20px; height: 20px; background: var(--brand-primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; }
+        .point-name { font-size: 14px; font-weight: 500; color: var(--color-title); }
+        .point-tag-orange { font-size: 10px; padding: 2px 6px; border-radius: 4px; background: rgba(250,140,22,0.15); color: var(--brand-primary); }
+        .point-tag-gray { font-size: 10px; padding: 2px 6px; border-radius: 4px; background: #E8E8E8; color: var(--color-sub); }
+        .point-tag-disabled { font-size: 11px; color: var(--color-sub); display: flex; align-items: center; gap: 4px; }
+        .point-action-btn { font-size: 12px; color: var(--color-danger); display: flex; align-items: center; gap: 4px; cursor: pointer; }
+        /* 点位操作项 */
+        .point-items { display: flex; flex-wrap: wrap; gap: 8px; }
+        .point-item { display: flex; align-items: center; gap: 4px; padding: 6px 10px; border-radius: 6px; font-size: 12px; background: white; }
+        .point-item.required { border: 1px solid var(--brand-primary); color: var(--brand-primary); }
+        .point-item.normal { border: 1px solid var(--color-border); color: var(--color-text); }
         /* 楼盘标题栏 */
         .house-title-bar { display: flex; align-items: center; gap: 12px; }
         .house-icon-box { width: 40px; height: 40px; background: var(--brand-primary-light); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; }
@@ -679,47 +694,55 @@
                                     <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
                                 </div>
 
-                                <div class="point-card">
-                                    <div class="point-header">
-                                        <div class="point-title">
-                                            <span class="point-num">1</span>
+                                <!-- 点位1 - 接待处 -->
+                                <div class="point-card-bg">
+                                    <div class="point-header-row">
+                                        <div class="point-title-row">
+                                            <span class="point-badge">1</span>
                                             <span class="point-name">接待处</span>
-                                            <span class="point-tag">必打卡</span>
+                                            <span class="point-tag-orange">必打卡</span>
                                         </div>
+                                        <span class="point-tag-disabled"><i class="fa fa-ban"></i> 不可删除</span>
                                     </div>
-                                    <div class="point-tags">
-                                        <span class="point-tag-item required"><i class="fa fa-camera"></i> 拍照</span>
-                                        <span class="point-tag-item required"><i class="fa fa-pencil"></i> 填写内容</span>
+                                    <div class="point-items">
+                                        <span class="point-item required"><i class="fa fa-camera"></i> 拍照</span>
+                                        <span class="point-item required"><i class="fa fa-pencil"></i> 填写内容</span>
                                     </div>
                                 </div>
-                                <div class="point-card">
-                                    <div class="point-header">
-                                        <div class="point-title">
-                                            <span class="point-num">2</span>
+
+                                <!-- 点位2 - 沙盘区 -->
+                                <div class="point-card-bg">
+                                    <div class="point-header-row">
+                                        <div class="point-title-row">
+                                            <span class="point-badge">2</span>
                                             <span class="point-name">沙盘区</span>
-                                            <span class="point-tag">必打卡</span>
+                                            <span class="point-tag-orange">必打卡</span>
                                         </div>
+                                        <span class="point-tag-disabled"><i class="fa fa-ban"></i> 不可删除</span>
                                     </div>
-                                    <div class="point-tags">
-                                        <span class="point-tag-item required"><i class="fa fa-camera"></i> 拍照</span>
-                                        <span class="point-tag-item required"><i class="fa fa-video-camera"></i> 录制视频</span>
+                                    <div class="point-items">
+                                        <span class="point-item required"><i class="fa fa-camera"></i> 拍照</span>
+                                        <span class="point-item required"><i class="fa fa-video-camera"></i> 录制视频</span>
                                     </div>
                                 </div>
-                                <div class="point-card">
-                                    <div class="point-header">
-                                        <div class="point-title">
-                                            <span class="point-num">3</span>
+
+                                <!-- 点位3 - 样板间（可删除）-->
+                                <div class="point-card-bg">
+                                    <div class="point-header-row">
+                                        <div class="point-title-row">
+                                            <span class="point-badge">3</span>
                                             <span class="point-name">样板间</span>
-                                            <span class="point-tag" style="background:var(--color-bg);color:var(--color-sub);">选打卡</span>
+                                            <span class="point-tag-gray">选打卡</span>
                                         </div>
-                                        <span class="point-action active" onclick="deletePoint(this)"><i class="fa fa-trash-o"></i> 删除</span>
+                                        <span class="point-action-btn" onclick="deletePoint(this)"><i class="fa fa-trash-o"></i> 删除</span>
                                     </div>
-                                    <div class="point-tags">
-                                        <span class="point-tag-item"><i class="fa fa-camera"></i> 拍照</span>
-                                        <span class="point-tag-item"><i class="fa fa-video-camera"></i> 录制视频</span>
-                                        <span class="point-tag-item"><i class="fa fa-pencil"></i> 填写内容</span>
+                                    <div class="point-items">
+                                        <span class="point-item normal"><i class="fa fa-camera"></i> 拍照</span>
+                                        <span class="point-item normal"><i class="fa fa-video-camera"></i> 录制视频</span>
+                                        <span class="point-item normal"><i class="fa fa-pencil"></i> 填写内容</span>
                                     </div>
                                 </div>
+
                                 <button class="add-btn"><i class="fa fa-plus"></i> 添加点位</button>
                             </div>
                         </div>
