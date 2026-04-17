@@ -194,45 +194,45 @@
         }
 
         .config-title {
-            font-size: 15px;
+            font-size: 13px;
             font-weight: 600;
-            color: var(--color-title);
-            margin-bottom: var(--spacing-md);
+            color: var(--color-sub);
+            margin-bottom: var(--spacing-sm);
             display: flex;
             align-items: center;
             gap: var(--spacing-sm);
         }
-        .config-title i { color: var(--brand-primary); }
+        .config-title i { color: var(--brand-primary); font-size: 12px; }
 
-        /* 渠道选择 */
+        /* 渠道选择 - 紧凑网格布局 */
         .channel-options {
-            display: flex;
-            flex-direction: column;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
             gap: var(--spacing-sm);
         }
 
         .channel-option {
             display: flex;
             align-items: center;
-            gap: var(--spacing-md);
-            padding: var(--spacing-md);
+            gap: var(--spacing-sm);
+            padding: 10px 12px;
             background: var(--color-bg);
             border-radius: var(--radius-lg);
             border: 2px solid transparent;
             cursor: pointer;
             transition: all var(--transition-fast);
         }
-        .channel-option:active { transform: scale(0.99); }
+        .channel-option:active { transform: scale(0.98); }
         .channel-option.selected {
             border-color: var(--brand-primary);
             background: var(--brand-primary-light);
         }
 
         .channel-checkbox {
-            width: 22px;
-            height: 22px;
+            width: 18px;
+            height: 18px;
             border: 2px solid var(--color-border);
-            border-radius: var(--radius-sm);
+            border-radius: 50%;
             flex-shrink: 0;
             display: flex;
             align-items: center;
@@ -245,35 +245,30 @@
         }
         .channel-option.selected .channel-checkbox::after {
             content: '';
-            width: 10px;
-            height: 6px;
-            border-left: 2px solid white;
-            border-bottom: 2px solid white;
-            transform: rotate(-45deg) translateY(-1px);
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
         }
 
-        .channel-info { flex: 1; }
+        .channel-info { flex: 1; min-width: 0; }
         .channel-name {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
             color: var(--color-title);
-            margin-bottom: 2px;
-        }
-        .channel-desc {
-            font-size: 12px;
-            color: var(--color-sub);
         }
         .channel-tag {
-            font-size: 11px;
-            padding: 2px 8px;
+            font-size: 10px;
+            padding: 1px 5px;
             border-radius: var(--radius-sm);
+            margin-left: 4px;
         }
         .channel-tag.xiaohongshu { background: #FFE7D6; color: var(--brand-primary); }
         .channel-tag.moments { background: #FFE5F0; color: #FF6B9D; }
         .channel-tag.wechat { background: #E8FFEA; color: var(--color-success); }
         .channel-tag.video { background: #E8F3FF; color: var(--color-info); }
 
-        /* 视频生成方式 */
+        /* 视频生成方式 - 紧凑卡片 */
         .method-options {
             display: flex;
             flex-direction: column;
@@ -282,24 +277,24 @@
 
         .method-option {
             display: flex;
-            align-items: flex-start;
-            gap: var(--spacing-md);
-            padding: var(--spacing-md);
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: 10px 12px;
             background: var(--color-bg);
-            border-radius: var(--radius-lg);
+            border-radius: var(--radius-md);
             border: 2px solid transparent;
             cursor: pointer;
             transition: all var(--transition-fast);
         }
-        .method-option:active { transform: scale(0.99); }
+        .method-option:active { transform: scale(0.98); }
         .method-option.selected {
             border-color: var(--brand-primary);
             background: var(--brand-primary-light);
         }
 
         .method-radio {
-            width: 22px;
-            height: 22px;
+            width: 18px;
+            height: 18px;
             border: 2px solid var(--color-border);
             border-radius: 50%;
             flex-shrink: 0;
@@ -314,25 +309,24 @@
         }
         .method-option.selected .method-radio::after {
             content: '';
-            width: 10px;
-            height: 10px;
+            width: 8px;
+            height: 8px;
             background: white;
             border-radius: 50%;
         }
 
-        .method-info { flex: 1; }
+        .method-info { flex: 1; display: flex; align-items: center; gap: var(--spacing-sm); }
         .method-name {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
             color: var(--color-title);
-            margin-bottom: 4px;
             display: flex;
             align-items: center;
-            gap: var(--spacing-sm);
+            gap: 6px;
         }
         .method-badge {
             font-size: 10px;
-            padding: 2px 6px;
+            padding: 1px 5px;
             border-radius: var(--radius-sm);
             font-weight: normal;
         }
@@ -340,24 +334,9 @@
         .method-badge.normal { background: var(--color-info-light); color: var(--color-info); }
         .method-badge.master { background: var(--color-purple-light); color: var(--color-purple); }
         .method-desc {
-            font-size: 12px;
-            color: var(--color-sub);
-        }
-        .method-features {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-top: var(--spacing-sm);
-        }
-        .method-feature {
             font-size: 11px;
-            padding: 2px 8px;
-            background: var(--color-card);
-            border-radius: var(--radius-sm);
-            color: var(--color-text);
-        }
-        .method-option.selected .method-feature {
-            background: white;
+            color: var(--color-sub);
+            margin-left: auto;
         }
 
         /* 生成按钮 */
@@ -368,27 +347,27 @@
 
         .generate-btn {
             width: 100%;
-            padding: var(--spacing-lg);
+            padding: 14px;
             background: var(--color-border);
             border: none;
-            border-radius: var(--radius-xl);
+            border-radius: var(--radius-lg);
             color: white;
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 600;
             cursor: not-allowed;
             transition: all var(--transition-normal);
             display: flex;
-            flex-direction: column;
             align-items: center;
+            justify-content: center;
             gap: var(--spacing-sm);
         }
         .generate-btn.ready {
             background: linear-gradient(135deg, var(--color-purple) 0%, #8B5CF6 100%);
             cursor: pointer;
-            box-shadow: 0 4px 16px rgba(114, 46, 209, 0.3);
+            box-shadow: 0 4px 12px rgba(114, 46, 209, 0.3);
         }
         .generate-btn.ready:active { transform: scale(0.98); }
-        .generate-btn i { font-size: 32px; }
+        .generate-btn i { font-size: 18px; }
         .generate-btn-hint { font-size: 12px; opacity: 0.8; font-weight: normal; }
 
         /* 已生成内容区域 */
@@ -783,14 +762,12 @@
                 <div class="config-title">
                     <i class="fa fa-check-square"></i>
                     <span>选择生成渠道</span>
-                    <span style="font-size:12px;color:var(--color-sub);font-weight:normal;">（可多选）</span>
                 </div>
                 <div class="channel-options">
                     <div class="channel-option selected" onclick="toggleChannel('xiaohongshu')" id="channel_xiaohongshu">
                         <div class="channel-checkbox"></div>
                         <div class="channel-info">
                             <div class="channel-name">小红书</div>
-                            <div class="channel-desc">种草探盘笔记，吸引年轻客户</div>
                         </div>
                         <span class="channel-tag xiaohongshu">~200字</span>
                     </div>
@@ -798,7 +775,6 @@
                         <div class="channel-checkbox"></div>
                         <div class="channel-info">
                             <div class="channel-name">朋友圈</div>
-                            <div class="channel-desc">简短推广文案，裂变传播</div>
                         </div>
                         <span class="channel-tag moments">~100字</span>
                     </div>
@@ -806,7 +782,6 @@
                         <div class="channel-checkbox"></div>
                         <div class="channel-info">
                             <div class="channel-name">公众号</div>
-                            <div class="channel-desc">详细项目介绍，树立专业形象</div>
                         </div>
                         <span class="channel-tag wechat">~500字</span>
                     </div>
@@ -814,7 +789,6 @@
                         <div class="channel-checkbox"></div>
                         <div class="channel-info">
                             <div class="channel-name">短视频</div>
-                            <div class="channel-desc">楼盘介绍视频脚本</div>
                         </div>
                         <span class="channel-tag video">~60秒</span>
                     </div>
@@ -836,11 +810,7 @@
                                 闪电生成
                                 <span class="method-badge fast">快速</span>
                             </div>
-                            <div class="method-desc">直接使用已生成好的视频，无需等待</div>
-                            <div class="method-features">
-                                <span class="method-feature">即时可用</span>
-                                <span class="method-feature">无需等待</span>
-                            </div>
+                            <div class="method-desc">直接使用 · 无需等待</div>
                         </div>
                     </div>
                     
@@ -852,12 +822,7 @@
                                 普通生成
                                 <span class="method-badge normal">推荐</span>
                             </div>
-                            <div class="method-desc">系统智能生成视频，支持声音替换</div>
-                            <div class="method-features">
-                                <span class="method-feature">AI混剪</span>
-                                <span class="method-feature">声音替换</span>
-                                <span class="method-feature">上传音频</span>
-                            </div>
+                            <div class="method-desc">AI混剪 · 支持音频</div>
                         </div>
                     </div>
                     
@@ -869,12 +834,7 @@
                                 大师生成
                                 <span class="method-badge master">自定义</span>
                             </div>
-                            <div class="method-desc">基于上传的素材自定义生成，支持声音替换</div>
-                            <div class="method-features">
-                                <span class="method-feature">自定义素材</span>
-                                <span class="method-feature">声音替换</span>
-                                <span class="method-feature">上传音频</span>
-                            </div>
+                            <div class="method-desc">自定义脚本 · 人像替换</div>
                         </div>
                     </div>
                 </div>
@@ -886,7 +846,7 @@
             <button class="generate-btn ready" id="generateBtn" onclick="startGenerate()">
                 <i class="fa fa-magic"></i>
                 <span id="generateBtnText">生成选中的文案</span>
-                <span class="generate-btn-hint" id="generateBtnHint">将为您生成小红书、朋友圈、公众号、短视频</span>
+                <span class="generate-btn-hint" id="generateBtnHint">小红书、朋友圈、公众号、短视频</span>
             </button>
         </div>
 
