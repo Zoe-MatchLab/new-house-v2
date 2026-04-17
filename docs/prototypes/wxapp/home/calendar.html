@@ -206,35 +206,6 @@
             color: white;
         }
 
-        /* 视角Tab - 胶囊样式 */
-        .view-tabs {
-            display: flex;
-            padding: 10px var(--spacing-md);
-            gap: 12px;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            background: var(--color-card);
-            align-items: center;
-        }
-        .view-tabs::-webkit-scrollbar { display: none; }
-        .view-tab {
-            flex: 0 0 auto;
-            padding: 6px 14px;
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--color-sub);
-            border-radius: 16px;
-            cursor: pointer;
-            transition: all var(--transition-fast);
-            white-space: nowrap;
-            border: none;
-            background: transparent;
-        }
-        .view-tab:active { transform: scale(0.95); }
-        .view-tab.active {
-            background: var(--brand-primary);
-            color: white;
-        }
 
         .type-tab[data-type="house"].active { background: var(--brand-primary); }
         .type-tab[data-type="pending"].active { background: var(--color-sub); }
@@ -1161,21 +1132,7 @@
         <!-- Tab + 筛选合并区域 -->
         <div class="nav-section">
             <!-- Tab 切换（任务类型） -->
-            <!-- 视角Tab -->
-            <div class="view-tabs">
-                <button class="view-tab active" data-view="received" onclick="switchView('received')">我收到的</button>
-                <button class="view-tab" data-view="created" onclick="switchView('created')">我下发的</button>
-                <button class="view-tab" data-view="all" onclick="switchView('all')">全部</button>
-            </div>
-            
-            <!-- 类型Tab -->
-            <div class="type-tabs">
-                <button class="type-tab active" data-type="all" onclick="switchTaskType('all')">全部</button>
-                <button class="type-tab" data-type="house" onclick="switchTaskType('house')">探盘任务</button>
-                <button class="type-tab" data-type="training" onclick="switchTaskType('training')">话术训练</button>
-                <button class="type-tab" data-type="recording" onclick="switchTaskType('recording')">录音分析</button>
-                <button class="type-tab" data-type="content" onclick="switchTaskType('content')">文案生成</button>
-            </div>
+
         </div>
 
         <!-- 筛选弹窗 -->
@@ -1187,10 +1144,89 @@
                         <i class="fa fa-times"></i>
                     </div>
                 </div>
-                <div class="filter-modal-body">
+                        <div class="filter-modal-body">
+                    <!-- 视角筛选 -->
+                    <div class="filter-section">
+                        <div class="filter-section-title">视角</div>
+                        <div class="filter-options">
+                            <div class="filter-option selected" data-value="received" onclick="toggleFilterOption(this, 'view')">
+                                <i class="fa fa-check check-icon"></i> 我收到的
+                            </div>
+                            <div class="filter-option" data-value="created" onclick="toggleFilterOption(this, 'view')">
+                                <i class="fa fa-check check-icon"></i> 我下发的
+                            </div>
+                            <div class="filter-option" data-value="all" onclick="toggleFilterOption(this, 'view')">
+                                <i class="fa fa-check check-icon"></i> 全部
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- 状态筛选 -->
                     <div class="filter-section">
-                        <div class="filter-section-title">任务状态</div>
+                        <div class="filter-section-title">状态</div>
+                        <div class="filter-options">
+                            <div class="filter-option selected" data-value="all" onclick="toggleFilterOption(this, 'status')">
+                                <i class="fa fa-check check-icon"></i> 全部
+                            </div>
+                            <div class="filter-option" data-value="pending" onclick="toggleFilterOption(this, 'status')">
+                                <i class="fa fa-check check-icon"></i> 待执行
+                            </div>
+                            <div class="filter-option" data-value="in_progress" onclick="toggleFilterOption(this, 'status')">
+                                <i class="fa fa-check check-icon"></i> 进行中
+                            </div>
+                            <div class="filter-option" data-value="completed" onclick="toggleFilterOption(this, 'status')">
+                                <i class="fa fa-check check-icon"></i> 已完成
+                            </div>
+                            <div class="filter-option" data-value="overdue" onclick="toggleFilterOption(this, 'status')">
+                                <i class="fa fa-check check-icon"></i> 已超时
+                            </div>
+                            <div class="filter-option" data-value="stopped" onclick="toggleFilterOption(this, 'status')">
+                                <i class="fa fa-check check-icon"></i> 已停止
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 类型筛选 -->
+                    <div class="filter-section">
+                        <div class="filter-section-title">类型</div>
+                        <div class="filter-options">
+                            <div class="filter-option selected" data-value="all" onclick="toggleFilterOption(this, 'type')">
+                                <i class="fa fa-check check-icon"></i> 全部
+                            </div>
+                            <div class="filter-option" data-value="house" onclick="toggleFilterOption(this, 'type')">
+                                <i class="fa fa-check check-icon"></i> 探盘任务
+                            </div>
+                            <div class="filter-option" data-value="training" onclick="toggleFilterOption(this, 'type')">
+                                <i class="fa fa-check check-icon"></i> 话术训练
+                            </div>
+                            <div class="filter-option" data-value="recording" onclick="toggleFilterOption(this, 'type')">
+                                <i class="fa fa-check check-icon"></i> 录音分析
+                            </div>
+                            <div class="filter-option" data-value="content" onclick="toggleFilterOption(this, 'type')">
+                                <i class="fa fa-check check-icon"></i> 文案生成
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 楼盘筛选 -->
+                    <div class="filter-section">
+                        <div class="filter-section-title">楼盘</div>
+                        <div class="filter-options">
+                            <div class="filter-option selected" data-value="all" onclick="toggleFilterOption(this, 'building')">
+                                <i class="fa fa-check check-icon"></i> 全部
+                            </div>
+                            <div class="filter-option" data-value="1" onclick="toggleFilterOption(this, 'building')">
+                                <i class="fa fa-check check-icon"></i> 中海汇德里
+                            </div>
+                            <div class="filter-option" data-value="2" onclick="toggleFilterOption(this, 'building')">
+                                <i class="fa fa-check check-icon"></i> 万科城市花园
+                            </div>
+                            <div class="filter-option" data-value="3" onclick="toggleFilterOption(this, 'building')">
+                                <i class="fa fa-check check-icon"></i> 保利中央公园
+                            </div>
+                        </div>
+                    </div>
+                </div>
                         <div class="filter-options" id="statusOptions">
                             <div class="filter-option selected" data-value="all" onclick="toggleFilterOption(this, 'status')">
                                 <i class="fa fa-check check-icon"></i> 全部 <span class="count">(12)</span>
