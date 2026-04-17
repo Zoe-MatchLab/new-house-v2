@@ -394,6 +394,14 @@
         .person-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
         .person-tag { display: flex; align-items: center; gap: 4px; padding: 6px 10px; background: var(--brand-primary-light); color: var(--brand-primary); border-radius: 16px; font-size: 13px; }
         .person-tag .remove { width: 16px; height: 16px; background: var(--brand-primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; cursor: pointer; }
+        /* 子配置 */
+        .sub-config { display: none; }
+        .sub-config.show { display: block; }
+        /* 点位操作 */
+        .point-action { font-size: 12px; color: var(--color-sub); display: flex; align-items: center; gap: 4px; }
+        .point-action.disabled { cursor: not-allowed; opacity: 0.5; }
+        .point-action.active { color: var(--color-danger); cursor: pointer; }
+        .point-tag-item.required { background: var(--brand-primary-light); border-color: var(--brand-primary); color: var(--brand-primary); }
         /* 时间区间 */
         .time-range {
             display: flex;
@@ -616,6 +624,15 @@
                                 <i class="fa fa-angle-down collapse-arrow" style="font-size:12px;"></i>
                             </div>
                             <div class="collapse-body">
+                                <!-- AI自动审核 -->
+                                <div class="config-switch-item">
+                                    <div class="info">
+                                        <div class="label">AI自动审核</div>
+                                        <div class="desc">开启后，上传物料会自动AI质量检测</div>
+                                    </div>
+                                    <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+                                </div>
+
                                 <div class="point-card">
                                     <div class="point-header">
                                         <div class="point-title">
@@ -625,8 +642,8 @@
                                         </div>
                                     </div>
                                     <div class="point-tags">
-                                        <span class="point-tag-item"><i class="fa fa-camera"></i> 拍照</span>
-                                        <span class="point-tag-item"><i class="fa fa-pencil"></i> 填写内容</span>
+                                        <span class="point-tag-item required"><i class="fa fa-camera"></i> 拍照</span>
+                                        <span class="point-tag-item required"><i class="fa fa-pencil"></i> 填写内容</span>
                                     </div>
                                 </div>
                                 <div class="point-card">
@@ -638,8 +655,23 @@
                                         </div>
                                     </div>
                                     <div class="point-tags">
+                                        <span class="point-tag-item required"><i class="fa fa-camera"></i> 拍照</span>
+                                        <span class="point-tag-item required"><i class="fa fa-video-camera"></i> 录制视频</span>
+                                    </div>
+                                </div>
+                                <div class="point-card">
+                                    <div class="point-header">
+                                        <div class="point-title">
+                                            <span class="point-num">3</span>
+                                            <span class="point-name">样板间</span>
+                                            <span class="point-tag" style="background:var(--color-bg);color:var(--color-sub);">选打卡</span>
+                                        </div>
+                                        <span class="point-action active" onclick="deletePoint(this)"><i class="fa fa-trash-o"></i> 删除</span>
+                                    </div>
+                                    <div class="point-tags">
                                         <span class="point-tag-item"><i class="fa fa-camera"></i> 拍照</span>
                                         <span class="point-tag-item"><i class="fa fa-video-camera"></i> 录制视频</span>
+                                        <span class="point-tag-item"><i class="fa fa-pencil"></i> 填写内容</span>
                                     </div>
                                 </div>
                                 <button class="add-btn"><i class="fa fa-plus"></i> 添加点位</button>
@@ -688,7 +720,27 @@
                                         <div class="label">启用话术训练</div>
                                         <div class="desc">任务包含话术训练模块</div>
                                     </div>
-                                    <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+                                    <label class="switch"><input type="checkbox" id="trainingSwitch" onchange="toggleTraining()"><span class="slider"></span></label>
+                                </div>
+                                <!-- 训练项目子配置 -->
+                                <div class="sub-config" id="training-config">
+                                    <div style="padding-top:12px;border-top:1px solid var(--color-border);margin-top:12px;">
+                                        <div class="form-label" style="margin-bottom:10px;">训练项目</div>
+                                        <div class="checkbox-group" style="display:flex;flex-wrap:wrap;gap:12px;">
+                                            <label class="checkbox-item" style="display:flex;align-items:center;gap:6px;font-size:14px;cursor:pointer;">
+                                                <input type="checkbox" checked style="width:18px;height:18px;accent-color:var(--brand-primary);"> 产品知识
+                                            </label>
+                                            <label class="checkbox-item" style="display:flex;align-items:center;gap:6px;font-size:14px;cursor:pointer;">
+                                                <input type="checkbox" style="width:18px;height:18px;accent-color:var(--brand-primary);"> 竞品对比
+                                            </label>
+                                            <label class="checkbox-item" style="display:flex;align-items:center;gap:6px;font-size:14px;cursor:pointer;">
+                                                <input type="checkbox" style="width:18px;height:18px;accent-color:var(--brand-primary);"> 话术技巧
+                                            </label>
+                                            <label class="checkbox-item" style="display:flex;align-items:center;gap:6px;font-size:14px;cursor:pointer;">
+                                                <input type="checkbox" style="width:18px;height:18px;accent-color:var(--brand-primary);"> 户型解读
+                                            </label>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -708,7 +760,27 @@
                                         <div class="label">启用录音分析</div>
                                         <div class="desc">任务包含邀约录音分析模块</div>
                                     </div>
-                                    <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+                                    <label class="switch"><input type="checkbox" id="recordingSwitch" onchange="toggleRecording()"><span class="slider"></span></label>
+                                </div>
+                                <!-- 分析维度子配置 -->
+                                <div class="sub-config" id="recording-config">
+                                    <div style="padding-top:12px;border-top:1px solid var(--color-border);margin-top:12px;">
+                                        <div class="form-label" style="margin-bottom:10px;">分析维度</div>
+                                        <div class="checkbox-group" style="display:flex;flex-wrap:wrap;gap:12px;">
+                                            <label class="checkbox-item" style="display:flex;align-items:center;gap:6px;font-size:14px;cursor:pointer;">
+                                                <input type="checkbox" checked style="width:18px;height:18px;accent-color:var(--brand-primary);"> 话术规范
+                                            </label>
+                                            <label class="checkbox-item" style="display:flex;align-items:center;gap:6px;font-size:14px;cursor:pointer;">
+                                                <input type="checkbox" checked style="width:18px;height:18px;accent-color:var(--brand-primary);"> 情绪识别
+                                            </label>
+                                            <label class="checkbox-item" style="display:flex;align-items:center;gap:6px;font-size:14px;cursor:pointer;">
+                                                <input type="checkbox" checked style="width:18px;height:18px;accent-color:var(--brand-primary);"> 关键词覆盖
+                                            </label>
+                                            <label class="checkbox-item" style="display:flex;align-items:center;gap:6px;font-size:14px;cursor:pointer;">
+                                                <input type="checkbox" checked style="width:18px;height:18px;accent-color:var(--brand-primary);"> 邀约意向
+                                            </label>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -943,6 +1015,25 @@
         // 切换提醒
         function toggleReminder(el) {
             el.classList.toggle('selected');
+        }
+
+        // 话术训练开关
+        function toggleTraining() {
+            const config = document.getElementById('training-config');
+            const checkbox = document.getElementById('trainingSwitch');
+            config.classList.toggle('show', checkbox.checked);
+        }
+
+        // 录音分析开关
+        function toggleRecording() {
+            const config = document.getElementById('recording-config');
+            const checkbox = document.getElementById('recordingSwitch');
+            config.classList.toggle('show', checkbox.checked);
+        }
+
+        // 删除点位
+        function deletePoint(el) {
+            el.closest('.point-card').remove();
         }
 
         // 更新创建按钮状态
