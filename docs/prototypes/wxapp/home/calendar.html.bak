@@ -206,38 +206,6 @@
             color: white;
         }
 
-        /* 视角Tab */
-        .view-tabs {
-            display: flex;
-            padding: var(--spacing-sm) var(--spacing-md);
-            gap: var(--spacing-xs);
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            border-bottom: 1px solid var(--color-border);
-        }
-        .view-tabs::-webkit-scrollbar { display: none; }
-        .view-tab {
-            flex: 0 0 auto;
-            padding: 8px 16px;
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--color-sub);
-            border-radius: var(--radius-full);
-            cursor: pointer;
-            transition: all var(--transition-fast);
-            white-space: nowrap;
-            border: none;
-            background: transparent;
-        }
-        .view-tab:active { transform: scale(0.95); }
-        .view-tab.active {
-            background: var(--brand-primary);
-            color: white;
-        }
-        .view-tab[data-view="received"].active { background: var(--brand-primary); }
-        .view-tab[data-view="created"].active { background: var(--color-info); }
-        .view-tab[data-view="all"].active { background: var(--color-sub); }
-
         .type-tab[data-type="house"].active { background: var(--brand-primary); }
         .type-tab[data-type="pending"].active { background: var(--color-sub); }
 
@@ -1163,20 +1131,10 @@
         <!-- Tab + 筛选合并区域 -->
         <div class="nav-section">
             <!-- Tab 切换（任务类型） -->
-            <!-- 视角Tab -->
-            <div class="view-tabs">
-                <button class="view-tab active" data-view="received" onclick="switchView('received')">我收到的</button>
-                <button class="view-tab" data-view="created" onclick="switchView('created')">我下发的</button>
-                <button class="view-tab" data-view="all" onclick="switchView('all')">全部</button>
-            </div>
-            
-            <!-- 类型Tab -->
             <div class="type-tabs">
-                <button class="type-tab active" data-type="all" onclick="switchTaskType('all')">全部</button>
-                <button class="type-tab" data-type="house" onclick="switchTaskType('house')">探盘任务</button>
-                <button class="type-tab" data-type="training" onclick="switchTaskType('training')">话术训练</button>
-                <button class="type-tab" data-type="recording" onclick="switchTaskType('recording')">录音分析</button>
-                <button class="type-tab" data-type="content" onclick="switchTaskType('content')">文案生成</button>
+                <button class="type-tab active" onclick="switchTab(this, 'all')">全部</button>
+                <button class="type-tab" data-type="house" onclick="switchTab(this, 'house')">探盘任务</button>
+                <button class="type-tab" data-type="pending" onclick="switchTab(this, 'pending')">下发任务</button>
             </div>
         </div>
 
@@ -1717,31 +1675,8 @@
             status: 'all',
             time: 'all'
         };
-        // ========== 视角切换 ==========
-        let currentView = 'received'; // received | created | all
-        
-        function switchView(view) {
-            document.querySelectorAll('.view-tab').forEach(t => t.classList.remove('active'));
-            document.querySelector(`.view-tab[data-view="${view}"]`).classList.add('active');
-            currentView = view;
-            showToast('切换到：' + getViewName(view));
-        }
-        
-        function getViewName(view) {
-            const names = { received: '我收到的', created: '我下发的', all: '全部' };
-            return names[view] || view;
-        }
 
-        // ========== 任务类型切换 ==========
-        let currentTaskType = 'all';
-        
-        function switchTaskType(type) {
-            document.querySelectorAll('.type-tab').forEach(t => t.classList.remove('active'));
-            document.querySelector(`.type-tab[data-type="${type}"]`).classList.add('active');
-            currentTaskType = type;
-        }
-
-        // Tab 切换（保留兼容）
+        // Tab 切换
         function switchTab(el, type) {
             document.querySelectorAll('.type-tab').forEach(tab => tab.classList.remove('active'));
             el.classList.add('active');
