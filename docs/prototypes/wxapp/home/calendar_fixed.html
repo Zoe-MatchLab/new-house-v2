@@ -208,27 +208,6 @@
 
         .type-tab[data-type="house"].active { background: var(--brand-primary); }
         .type-tab[data-type="pending"].active { background: var(--color-sub); }
-        .view-tabs {
-            display: flex;
-            padding: 12px 16px;
-            gap: 8px;
-            background: var(--color-card);
-            border-bottom: 1px solid var(--color-border);
-            overflow-x: auto;
-        }
-        .view-tabs::-webkit-scrollbar { display: none; }
-        .view-tab {
-            flex: 0 0 auto;
-            padding: 8px 16px;
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--color-sub);
-            border-radius: 16px;
-            cursor: pointer;
-            border: none;
-            background: transparent;
-        }
-        .view-tab.active { background: var(--brand-primary); color: white; }
 
         /* 筛选弹窗 */
         .filter-modal-overlay {
@@ -1136,7 +1115,7 @@
     <div class="page">
         <!-- 标题栏 -->
         <div class="header">
-            <span class="header-title">任务中心</span>
+            <span class="header-title">内容日历</span>
             <div class="header-actions">
                 <button class="filter-btn-header" id="filterBtn" onclick="openFilterModal()">
                     <i class="fa fa-filter"></i>
@@ -1698,13 +1677,7 @@
         };
 
         // Tab 切换
-        
-        let currentView = "all";
-        function switchView(view) {
-            document.querySelectorAll(".view-tab").forEach(t => t.classList.remove("active"));
-            document.querySelector(`.view-tab[data-view="${view}"]`).classList.add("active");
-            currentView = view;
-        }function switchTab(el, type) {
+        function switchTab(el, type) {
             document.querySelectorAll('.type-tab').forEach(tab => tab.classList.remove('active'));
             el.classList.add('active');
             currentTab = type;
