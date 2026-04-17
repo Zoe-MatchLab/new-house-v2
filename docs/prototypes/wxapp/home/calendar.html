@@ -1130,6 +1130,47 @@
 
         .notify-content { flex: 1; min-width: 0; }
 
+        /* 新盘上线通知 */
+        .building-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin: 8px 0;
+        }
+
+        .building-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            background: var(--brand-primary-light);
+            border: 1px solid var(--brand-primary);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .building-chip:active {
+            transform: scale(0.95);
+            background: var(--brand-primary);
+        }
+
+        .building-chip .building-name {
+            font-size: 12px;
+            color: var(--brand-primary);
+            font-weight: 500;
+        }
+
+        .building-chip .building-price {
+            font-size: 11px;
+            color: var(--brand-primary-dark);
+        }
+
+        .building-chip:active .building-name,
+        .building-chip:active .building-price {
+            color: white;
+        }
+
         .notify-name {
             font-size: 14px;
             font-weight: 500;
@@ -1700,11 +1741,14 @@
             </div>
         </div>
         <div class="notify-tabs">
-            <button class="notify-tab active" onclick="switchNotifyTab(this, 'unread')">
-                未读<span class="count">3</span>
+            <button class="notify-tab active" onclick="switchNotifyTab(this, 'all')">
+                全部<span class="count">9</span>
+            </button>
+            <button class="notify-tab" onclick="switchNotifyTab(this, 'unread')">
+                未读<span class="count">5</span>
             </button>
             <button class="notify-tab" onclick="switchNotifyTab(this, 'read')">
-                已读<span class="count">5</span>
+                已读<span class="count">4</span>
             </button>
         </div>
         <div class="notify-list" id="notifyList"></div>
@@ -1921,18 +1965,25 @@
         }
 
         // ========== 通知面板 ==========
-        let currentNotifyTab = 'unread';
+        let currentNotifyTab = 'all';
 
         // 模拟通知数据
         const notifications = [
-            { id: 1, name: '任务催办-重度', message: '任务「中海汇德里探盘」即将到期（2小时后），请尽快完成！', time: '刚刚', type: 'urgent', tag: '紧急', read: false },
-            { id: 2, name: '任务超时提醒', message: '任务「万科翡翠公园探盘」已超时，请尽快处理！', time: '10分钟前', type: 'urgent', tag: '紧急', read: false },
-            { id: 3, name: '手动催办', message: '区域经理王总提醒您：有新的探盘任务待执行', time: '30分钟前', type: 'urgent', tag: '紧急', read: false },
-            { id: 4, name: '任务催办-轻度', message: '任务「议价谈判话术练习」将于24小时后到期', time: '1小时前', type: 'normal', tag: '重要', read: true },
-            { id: 5, name: '内容生成完成', message: 'AI已为您生成「中海汇德里」探盘文案，点击查看', time: '2小时前', type: 'normal', tag: '普通', read: true },
-            { id: 6, name: '新盘上线通知', message: '「华润置地橡树湾」已上线，欢迎查看', time: '昨天', type: 'normal', tag: '普通', read: true },
-            { id: 7, name: '录音分析完成', message: '您的通话录音已分析完成，发现3个改进点', time: '昨天', type: 'normal', tag: '普通', read: true },
-            { id: 8, name: '任务完成通知', message: '您下发的「万科翡翠公园探盘任务」已完成', time: '2天前', type: 'normal', tag: '普通', read: true },
+            { id: 1, name: '任务催办-重度', message: '任务「中海汇德里探盘」即将到期（2小时后），请尽快完成！', time: '刚刚', type: 'urgent', tag: '紧急', read: false, taskType: 'house' },
+            { id: 2, name: '任务超时提醒', message: '任务「万科翡翠公园探盘」已超时，请尽快处理！', time: '10分钟前', type: 'urgent', tag: '紧急', read: false, taskType: 'house' },
+            { id: 3, name: '手动催办', message: '区域经理王总提醒您：有新的探盘任务待执行', time: '30分钟前', type: 'urgent', tag: '紧急', read: false, taskType: 'house' },
+            { id: 4, name: '新盘上线通知', message: '3个新盘已上线，欢迎查看', time: '10分钟前', type: 'normal', tag: '重要', read: false, taskType: 'newHouse', buildings: [
+                { name: '华润置地橡树湾', price: '65,000', status: '在售' },
+                { name: '万科城市之光', price: '58,000', status: '在售' },
+                { name: '保利海德公园', price: '72,000', status: '待售' }
+            ]},
+            { id: 5, name: '新盘上线通知', message: '「龙湖天琅」已上线，欢迎查看', time: '1小时前', type: 'normal', tag: '重要', read: false, taskType: 'newHouse', buildings: [
+                { name: '龙湖天琅', price: '88,000', status: '在售' }
+            ]},
+            { id: 6, name: '任务催办-轻度', message: '任务「议价谈判话术练习」将于24小时后到期', time: '2小时前', type: 'normal', tag: '重要', read: true, taskType: 'train' },
+            { id: 7, name: '内容生成完成', message: 'AI已为您生成「中海汇德里」探盘文案，点击查看', time: '3小时前', type: 'normal', tag: '普通', read: true, taskType: 'content' },
+            { id: 8, name: '录音分析完成', message: '您的通话录音已分析完成，发现3个改进点', time: '昨天', type: 'normal', tag: '普通', read: true, taskType: 'recording' },
+            { id: 9, name: '任务完成通知', message: '您下发的「万科翡翠公园探盘任务」已完成', time: '昨天', type: 'normal', tag: '普通', read: true, taskType: 'house' },
         ];
 
         function toggleNotifyPanel() {
@@ -1970,14 +2021,18 @@
 
             const unreadCount = notifications.filter(n => !n.read).length;
             const readCount = notifications.filter(n => n.read).length;
+            const totalCount = notifications.length;
 
             // 更新Tab角标
-            document.querySelectorAll('.notify-tab .count').forEach((countEl, i) => {
-                countEl.textContent = i === 0 ? unreadCount : readCount;
-            });
+            const tabs = document.querySelectorAll('.notify-tab');
+            tabs[0].querySelector('.count').textContent = totalCount; // 全部
+            tabs[1].querySelector('.count').textContent = unreadCount; // 未读
+            tabs[2].querySelector('.count').textContent = readCount; // 已读
 
             if (filtered.length === 0) {
-                const emptyText = currentNotifyTab === 'unread' ? '暂无未读通知' : '暂无已读通知';
+                let emptyText = '暂无通知';
+                if (currentNotifyTab === 'unread') emptyText = '暂无未读通知';
+                else if (currentNotifyTab === 'read') emptyText = '暂无已读通知';
                 list.innerHTML = `
                     <div class="notify-empty">
                         <div class="notify-empty-icon"><i class="fa fa-bell-slash"></i></div>
@@ -1987,12 +2042,45 @@
                 return;
             }
 
-            list.innerHTML = filtered.map(n => `
+            list.innerHTML = filtered.map(n => {
+                // 新盘上线通知特殊渲染
+                if (n.taskType === 'newHouse') {
+                    return renderNewHouseNotify(n);
+                }
+                return `
+                    <div class="notify-item ${n.read ? '' : 'unread'}" onclick="handleNotifyClick(${n.id})">
+                        <div class="notify-dot ${n.read ? 'read' : 'unread'}"></div>
+                        <div class="notify-content">
+                            <div class="notify-name">${n.name}</div>
+                            <div class="notify-message">${n.message}</div>
+                            <div class="notify-meta">
+                                <span class="notify-tag ${n.type === 'urgent' ? 'urgent' : 'normal'}">${n.tag}</span>
+                                <span class="notify-time">${n.time}</span>
+                            </div>
+                        </div>
+                        <div class="notify-arrow"><i class="fa fa-chevron-right"></i></div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // 渲染新盘上线通知（支持多楼盘）
+        function renderNewHouseNotify(n) {
+            const buildingCount = n.buildings ? n.buildings.length : 0;
+            const buildingsHtml = n.buildings ? n.buildings.map(b => `
+                <div class="building-chip" onclick="event.stopPropagation(); selectBuilding('${b.name}')">
+                    <span class="building-name">${b.name}</span>
+                    <span class="building-price">${b.price}</span>
+                </div>
+            `).join('') : '';
+
+            return `
                 <div class="notify-item ${n.read ? '' : 'unread'}" onclick="handleNotifyClick(${n.id})">
                     <div class="notify-dot ${n.read ? 'read' : 'unread'}"></div>
-                    <div class="notify-content">
+                    <div class="notify-content" style="flex:1;">
                         <div class="notify-name">${n.name}</div>
                         <div class="notify-message">${n.message}</div>
+                        <div class="building-list">${buildingsHtml}</div>
                         <div class="notify-meta">
                             <span class="notify-tag ${n.type === 'urgent' ? 'urgent' : 'normal'}">${n.tag}</span>
                             <span class="notify-time">${n.time}</span>
@@ -2000,13 +2088,38 @@
                     </div>
                     <div class="notify-arrow"><i class="fa fa-chevron-right"></i></div>
                 </div>
-            `).join('');
+            `;
+        }
+
+        // 选择楼盘创建任务
+        function selectBuilding(buildingName) {
+            // 标记为已读
+            const notify = notifications.find(n => n.taskType === 'newHouse' && n.buildings && n.buildings.some(b => b.name === buildingName));
+            if (notify && !notify.read) {
+                notify.read = true;
+                updateNotifyBadge();
+                renderNotifyList();
+            }
+            // 关闭通知面板
+            toggleNotifyPanel();
+            // 跳转到创建任务页面
+            showToast(`选择楼盘：${buildingName}，跳转创建任务`);
+            setTimeout(() => {
+                location.href = '../task/create.html?building=' + encodeURIComponent(buildingName);
+            }, 500);
         }
 
         function handleNotifyClick(id) {
-            // 标记为已读
             const notify = notifications.find(n => n.id === id);
-            if (notify && !notify.read) {
+            if (!notify) return;
+
+            // 新盘上线通知不自动标记已读，需要点击具体楼盘
+            if (notify.taskType === 'newHouse') {
+                return;
+            }
+
+            // 标记为已读
+            if (!notify.read) {
                 notify.read = true;
                 updateNotifyBadge();
                 renderNotifyList();
