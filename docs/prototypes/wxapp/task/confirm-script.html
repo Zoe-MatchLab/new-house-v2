@@ -977,73 +977,54 @@
                         <i class="fa fa-chevron-down video-expand-icon"></i>
                     </div>
                     <div class="video-content">
-                        <!-- 视频预览区（闪电/普通生成显示） -->
+                        <!-- 闪电生成：视频预览 -->
                         <div class="video-preview-section" id="videoPreviewSection">
-                            <div style="background:var(--color-bg);border-radius:var(--radius-lg);padding:var(--spacing-md);margin-bottom:var(--spacing-md);">
-                                <div style="display:flex;align-items:center;justify-content:center;height:160px;background:#000;border-radius:var(--radius-md);margin-bottom:var(--spacing-md);position:relative;">
+                            <div style="background:var(--color-bg);border-radius:var(--radius-lg);padding:var(--spacing-md);">
+                                <div style="display:flex;align-items:center;justify-content:center;height:120px;background:#000;border-radius:var(--radius-md);margin-bottom:var(--spacing-md);position:relative;">
                                     <i class="fa fa-play-circle" style="font-size:48px;color:white;opacity:0.8;"></i>
                                     <div style="position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,0.6);color:white;font-size:11px;padding:2px 6px;border-radius:4px;">00:45/01:00</div>
                                 </div>
-                                <div style="font-size:13px;color:var(--color-sub);text-align:center;">系统已为您准备好探盘视频</div>
-                            </div>
-                            
-                            <!-- 音频上传（非必传） -->
-                            <div class="audio-upload-section" id="audioUploadSection" style="display:none;">
-                                <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--color-bg);border-radius:var(--radius-lg);margin-bottom:8px;">
-                                    <div style="display:flex;align-items:center;gap:8px;">
-                                        <i class="fa fa-microphone" style="color:var(--color-purple);"></i>
-                                        <span style="font-size:13px;color:var(--color-title);">配音音频</span>
-                                        <span style="font-size:11px;color:var(--color-sub);">(非必传)</span>
-                                    </div>
-                                    <button style="padding:6px 12px;background:var(--color-purple);color:white;border:none;border-radius:6px;font-size:12px;" onclick="showToast('请上传配音文件')">
-                                        <i class="fa fa-upload"></i> 上传
-                                    </button>
+                                <div style="display:flex;align-items:center;justify-content:space-between;">
+                                    <div style="font-size:13px;color:var(--color-sub);">系统已为您准备好探盘视频</div>
+                                    <button class="action-btn" onclick="showToast('查看视频')"><i class="fa fa-play"></i>预览</button>
                                 </div>
-                                <div style="font-size:12px;color:var(--color-sub);">支持 MP3、WAV 格式，时长建议60秒左右</div>
                             </div>
+                        </div>
+
+                        <!-- 音频上传（普通/大师生成显示） -->
+                        <div class="audio-upload-section" id="audioUploadSection" style="display:none;margin-bottom:var(--spacing-md);">
+                            <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:var(--color-bg);border-radius:var(--radius-md);">
+                                <div style="display:flex;align-items:center;gap:8px;">
+                                    <i class="fa fa-microphone" style="color:var(--color-purple);"></i>
+                                    <span style="font-size:13px;color:var(--color-title);">配音音频</span>
+                                </div>
+                                <button style="padding:6px 12px;background:var(--color-purple);color:white;border:none;border-radius:6px;font-size:12px;" onclick="showToast('请上传配音文件')">
+                                    <i class="fa fa-upload"></i> 上传
+                                </button>
+                            </div>
+                            <div style="font-size:11px;color:var(--color-sub);margin-top:4px;padding-left:4px;">支持 MP3、WAV 格式，时长60秒左右</div>
                         </div>
                         
                         <!-- 视频脚本区（仅大师生成显示） -->
                         <div class="video-script-section" id="videoScriptSection" style="display:none;">
-                            <div class="video-generation-methods">
-                                <div class="method-title">大师生成 · 已选</div>
+                            <!-- 素材上传 -->
+                            <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:var(--color-bg);border-radius:var(--radius-md);margin-bottom:var(--spacing-sm);">
+                                <div style="display:flex;align-items:center;gap:8px;">
+                                    <i class="fa fa-photo-video" style="color:var(--color-purple);"></i>
+                                    <span style="font-size:13px;color:var(--color-title);">自定义素材</span>
+                                </div>
+                                <button style="padding:6px 12px;background:var(--color-purple);color:white;border:none;border-radius:6px;font-size:12px;" onclick="showToast('请上传视频素材')">
+                                    <i class="fa fa-upload"></i> 上传
+                                </button>
                             </div>
                             
                             <!-- 脚本内容 -->
                             <div class="video-script-content">
                                 <div class="video-script-text" id="content_video"></div>
                             </div>
-                            
-                            <!-- 素材和音频上传 -->
-                            <div style="margin-top:var(--spacing-md);">
-                                <!-- 素材上传 -->
-                                <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--color-bg);border-radius:var(--radius-lg);margin-bottom:8px;">
-                                    <div style="display:flex;align-items:center;gap:8px;">
-                                        <i class="fa fa-photo-video" style="color:var(--color-purple);"></i>
-                                        <span style="font-size:13px;color:var(--color-title);">自定义素材</span>
-                                    </div>
-                                    <button style="padding:6px 12px;background:var(--color-purple);color:white;border:none;border-radius:6px;font-size:12px;" onclick="showToast('请上传视频素材')">
-                                        <i class="fa fa-upload"></i> 上传
-                                    </button>
-                                </div>
-                                
-                                <!-- 音频上传 -->
-                                <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--color-bg);border-radius:var(--radius-lg);margin-bottom:8px;">
-                                    <div style="display:flex;align-items:center;gap:8px;">
-                                        <i class="fa fa-microphone" style="color:var(--color-purple);"></i>
-                                        <span style="font-size:13px;color:var(--color-title);">配音音频</span>
-                                        <span style="font-size:11px;color:var(--color-sub);">(非必传)</span>
-                                    </div>
-                                    <button style="padding:6px 12px;background:var(--color-purple);color:white;border:none;border-radius:6px;font-size:12px;" onclick="showToast('请上传配音文件')">
-                                        <i class="fa fa-upload"></i> 上传
-                                    </button>
-                                </div>
-                                <div style="font-size:12px;color:var(--color-sub);">支持 MP4、MOV 格式，支持多段视频拼接；音频支持 MP3、WAV 格式</div>
-                            </div>
                         </div>
                         
                         <div class="video-actions" id="videoActions">
-                            <button class="action-btn" onclick="showToast('查看视频')"><i class="fa fa-play"></i>预览视频</button>
                             <button class="action-btn" onclick="changeVideoMethod()"><i class="fa fa-exchange"></i>换一种方式</button>
                         </div>
                     </div>
@@ -1325,35 +1306,32 @@ VIP认筹通道已开启，欢迎私信咨询！`,
             const scriptSection = document.getElementById('videoScriptSection');
             const audioSection = document.getElementById('audioUploadSection');
             const videoMeta = document.getElementById('videoMeta');
-            const videoActions = document.getElementById('videoActions');
             const contentEl = document.getElementById('content_video');
             
             if (selectedVideoMethod === 'master') {
-                // 大师生成：显示脚本
+                // 大师生成：显示脚本 + 音频上传
                 previewSection.style.display = 'none';
+                audioSection.style.display = 'block';
                 scriptSection.style.display = 'block';
                 if (contentEl) contentEl.textContent = CONTENTS.video;
-                selectedCopies.add('video');
-            } else {
-                // 闪电/普通生成：显示视频预览
+            } else if (selectedVideoMethod === 'normal') {
+                // 普通生成：显示视频预览 + 音频上传
                 previewSection.style.display = 'block';
+                audioSection.style.display = 'block';
                 scriptSection.style.display = 'none';
-                
-                // 普通生成显示音频上传
-                if (selectedVideoMethod === 'normal') {
-                    audioSection.style.display = 'block';
-                } else {
-                    audioSection.style.display = 'none';
-                }
-                selectedCopies.add('video');
+            } else {
+                // 闪电生成：只显示视频预览
+                previewSection.style.display = 'block';
+                audioSection.style.display = 'none';
+                scriptSection.style.display = 'none';
             }
             
             // 更新元数据
             if (videoMeta) {
                 const methodLabels = {
                     'lightning': '约60秒 · 系统视频 · 闪电生成',
-                    'normal': '约60秒 · 系统视频 · AI混剪',
-                    'master': '约60秒 · 自定义脚本 · 大师生成'
+                    'normal': '约60秒 · 系统视频 + 音频',
+                    'master': '约60秒 · 脚本 + 素材'
                 };
                 videoMeta.textContent = methodLabels[selectedVideoMethod];
             }
