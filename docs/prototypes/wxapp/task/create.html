@@ -417,6 +417,16 @@
         .point-item { display: flex; align-items: center; gap: 4px; padding: 6px 10px; border-radius: 6px; font-size: 12px; background: white; }
         .point-item.required { border: 1px solid var(--brand-primary); color: var(--brand-primary); }
         .point-item.normal { border: 1px solid var(--color-border); color: var(--color-text); }
+        /* 训练项目选择器 */
+        .selector-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: var(--color-bg); border-radius: var(--radius-sm); cursor: pointer; }
+        .selector-row:active { background: var(--color-border); }
+        .selector-info { display: flex; align-items: center; gap: 8px; }
+        .selector-text { font-size: 13px; color: var(--color-title); }
+        .selector-arrow { color: var(--color-sub); }
+        .tag-orange { display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; background: var(--brand-primary-light); color: var(--brand-primary); border-radius: 4px; font-size: 12px; }
+        /* 提醒输入禁用态 */
+        .reminder-input:disabled { background: var(--color-bg); color: var(--color-sub); opacity: 0.6; }
+        .reminder-row.disabled .reminder-input { background: var(--color-bg); color: var(--color-sub); opacity: 0.6; }
         /* 楼盘标题栏 */
         .house-title-bar { display: flex; align-items: center; gap: 12px; }
         .house-icon-box { width: 40px; height: 40px; background: var(--brand-primary-light); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; }
@@ -660,18 +670,6 @@
                                     <input type="number" class="field" value="200" style="width:80px;text-align:center;">
                                     <span style="color:var(--color-sub);font-size:13px;">米</span>
                                 </div>
-                                <div class="input-row" style="flex-direction:column;align-items:flex-start;gap:8px;">
-                                    <span class="label">偏移阈值</span>
-                                    <div style="display:flex;align-items:center;gap:10px;width:100%;">
-                                        <input type="range" min="200" max="1000" step="100" value="500" style="flex:1;-webkit-appearance:none;height:4px;background:var(--color-border);border-radius:2px;">
-                                        <span style="min-width:45px;text-align:right;font-size:14px;color:var(--color-title);">500m</span>
-                                    </div>
-                                </div>
-                                <div class="threshold-bar">
-                                    <div class="threshold-item green"><strong>≤200m</strong>正常</div>
-                                    <div class="threshold-item yellow"><strong>200-500m</strong>警告</div>
-                                    <div class="threshold-item red"><strong>>500m</strong>拦截</div>
-                                </div>
                             </div>
                         </div>
 
@@ -795,19 +793,18 @@
                                 <div class="sub-config" id="training-config">
                                     <div style="padding-top:12px;border-top:1px solid var(--color-border);margin-top:12px;">
                                         <div class="form-label" style="margin-bottom:10px;">训练项目</div>
-                                        <div class="checkbox-group" style="display:flex;flex-wrap:wrap;gap:12px;">
-                                            <label class="checkbox-item" style="display:flex;align-items:center;gap:6px;font-size:14px;cursor:pointer;">
-                                                <input type="checkbox" checked style="width:18px;height:18px;accent-color:var(--brand-primary);"> 产品知识
-                                            </label>
-                                            <label class="checkbox-item" style="display:flex;align-items:center;gap:6px;font-size:14px;cursor:pointer;">
-                                                <input type="checkbox" style="width:18px;height:18px;accent-color:var(--brand-primary);"> 竞品对比
-                                            </label>
-                                            <label class="checkbox-item" style="display:flex;align-items:center;gap:6px;font-size:14px;cursor:pointer;">
-                                                <input type="checkbox" style="width:18px;height:18px;accent-color:var(--brand-primary);"> 话术技巧
-                                            </label>
-                                            <label class="checkbox-item" style="display:flex;align-items:center;gap:6px;font-size:14px;cursor:pointer;">
-                                                <input type="checkbox" style="width:18px;height:18px;accent-color:var(--brand-primary);"> 户型解读
-                                            </label>
+                                        <div class="selector-row" onclick="selectTrainingProjects()">
+                                            <div class="selector-info">
+                                                <span class="selector-text" id="trainingProjectText">已选择 3 个项目</span>
+                                            </div>
+                                            <div class="selector-arrow">
+                                                <i class="fa fa-angle-right"></i>
+                                            </div>
+                                        </div>
+                                        <div class="selected-tags" id="trainingProjectTags" style="margin-top:10px;display:flex;flex-wrap:wrap;gap:8px;">
+                                            <span class="tag-orange"><i class="fa fa-check"></i> 产品知识</span>
+                                            <span class="tag-orange"><i class="fa fa-check"></i> 竞品对比</span>
+                                            <span class="tag-orange"><i class="fa fa-check"></i> 话术技巧</span>
                                         </div>
                                     </div>
                                 </div>
@@ -897,10 +894,10 @@
                                 </div>
                                 <div class="reminder-right">
                                     <span class="reminder-hint">截止前</span>
-                                    <input type="number" class="reminder-input" value="24" min="1">
+                                    <input type="number" class="reminder-input" id="lightHours" value="48" min="1" oninput="onLightChange()">
                                     <span class="reminder-hint">小时</span>
                                     <label class="switch" style="width:36px;height:22px;">
-                                        <input type="checkbox" checked>
+                                        <input type="checkbox" id="lightSwitch" checked onchange="onLightSwitch()">
                                         <span class="slider" style="height:18px;border-radius:18px;"></span>
                                     </label>
                                 </div>
@@ -913,10 +910,10 @@
                                 </div>
                                 <div class="reminder-right">
                                     <span class="reminder-hint">截止前</span>
-                                    <input type="number" class="reminder-input" value="12" min="1">
+                                    <input type="number" class="reminder-input" id="midHours" value="24" min="1" oninput="onMidChange()">
                                     <span class="reminder-hint">小时</span>
                                     <label class="switch" style="width:36px;height:22px;">
-                                        <input type="checkbox" checked>
+                                        <input type="checkbox" id="midSwitch" checked onchange="onMidSwitch()">
                                         <span class="slider" style="height:18px;border-radius:18px;"></span>
                                     </label>
                                 </div>
@@ -929,10 +926,10 @@
                                 </div>
                                 <div class="reminder-right">
                                     <span class="reminder-hint">截止前</span>
-                                    <input type="number" class="reminder-input" value="2" min="1">
+                                    <input type="number" class="reminder-input" id="highHours" value="2" min="1" oninput="onHighChange()">
                                     <span class="reminder-hint">小时</span>
                                     <label class="switch" style="width:36px;height:22px;">
-                                        <input type="checkbox" checked>
+                                        <input type="checkbox" id="highSwitch" checked onchange="onHighSwitch()">
                                         <span class="slider" style="height:18px;border-radius:18px;"></span>
                                     </label>
                                 </div>
@@ -1093,6 +1090,11 @@
             config.classList.toggle('show', checkbox.checked);
         }
 
+        // 选择话术训练项目
+        function selectTrainingProjects() {
+            showToast('跳转到项目列表页选择');
+        }
+
         // 录音分析开关
         function toggleRecording() {
             const config = document.getElementById('recording-config');
@@ -1102,14 +1104,96 @@
 
         // 删除点位
         function deletePoint(el) {
-            el.closest('.point-card').remove();
+            el.closest('.point-card-bg').remove();
+        }
+
+        // ========== 提醒时间校验 ==========
+        // 轻度开关
+        function onLightSwitch() {
+            const checked = document.getElementById('lightSwitch').checked;
+            const input = document.getElementById('lightHours');
+            input.disabled = !checked;
+            if (!checked) {
+                // 关闭轻度时，同时关闭中度和重度
+                document.getElementById('midSwitch').checked = false;
+                document.getElementById('midHours').disabled = true;
+                document.getElementById('highSwitch').checked = false;
+                document.getElementById('highHours').disabled = true;
+            } else {
+                // 开启轻度时，自动开启中度
+                document.getElementById('midSwitch').checked = true;
+                document.getElementById('midHours').disabled = false;
+            }
+        }
+
+        // 中度开关
+        function onMidSwitch() {
+            const checked = document.getElementById('midSwitch').checked;
+            const input = document.getElementById('midHours');
+            input.disabled = !checked;
+            if (!checked) {
+                // 关闭中度时，同时关闭重度
+                document.getElementById('highSwitch').checked = false;
+                document.getElementById('highHours').disabled = true;
+            }
+        }
+
+        // 重度开关
+        function onHighSwitch() {
+            const checked = document.getElementById('highSwitch').checked;
+            const input = document.getElementById('highHours');
+            input.disabled = !checked;
+        }
+
+        // 轻度时间变化
+        function onLightChange() {
+            const lightVal = parseInt(document.getElementById('lightHours').value) || 0;
+            const midInput = document.getElementById('midHours');
+            const highInput = document.getElementById('highHours');
+            
+            // 中度输入框：必须小于轻度
+            midInput.max = lightVal > 0 ? lightVal - 1 : 0;
+            if (parseInt(midInput.value) >= lightVal && lightVal > 0) {
+                midInput.value = lightVal - 1;
+            }
+            if (lightVal <= 0) {
+                midInput.value = '';
+            }
+            
+            // 重度输入框：必须小于中度
+            const midVal = parseInt(midInput.value) || 0;
+            highInput.max = midVal > 0 ? midVal - 1 : 0;
+            if (parseInt(highInput.value) >= midVal && midVal > 0) {
+                highInput.value = midVal - 1;
+            }
+            if (midVal <= 0) {
+                highInput.value = '';
+            }
+        }
+
+        // 中度时间变化
+        function onMidChange() {
+            const lightVal = parseInt(document.getElementById('lightHours').value) || 0;
+            const midVal = parseInt(document.getElementById('midHours').value) || 0;
+            const highInput = document.getElementById('highHours');
+            
+            // 重度输入框：必须小于中度且小于轻度
+            highInput.max = (midVal > 0 && midVal < lightVal) ? midVal - 1 : 0;
+            if (parseInt(highInput.value) >= midVal || highInput.value >= lightVal) {
+                highInput.value = midVal > 0 && midVal < lightVal ? midVal - 1 : '';
+            }
+        }
+
+        // 初始化提醒校验
+        function initReminderValidation() {
+            onLightChange();
         }
 
         // 更新创建按钮状态
         function updateCreateBtn() {
             const title = document.getElementById('taskTitle').value.trim();
             const hasType = selectedType === 'house'; // 当前只支持探盘任务完整配置
-            const hasBuilding = document.getElementById('buildingName').textContent !== '请选择楼盘';
+            const hasBuilding = document.querySelector('.house-name') && document.querySelector('.house-name').textContent.trim() !== '';
             const hasExecutor = executors.length > 0;
             const hasTime = document.getElementById('startTime').value && document.getElementById('endTime').value;
             
@@ -1151,6 +1235,8 @@
         // 时间输入监听
         document.getElementById('startTime').addEventListener('change', updateCreateBtn);
         document.getElementById('endTime').addEventListener('change', updateCreateBtn);
+        // 初始化
+        initReminderValidation();
     </script>
 </body>
 </html>
