@@ -965,51 +965,86 @@
                     </div>
                 </div>
 
-                <!-- 视频脚本 -->
+                <!-- 视频卡片 -->
                 <div class="video-card" id="card_video" style="display:none;">
                     <div class="video-header" onclick="toggleVideoCard()">
                         <input type="checkbox" class="video-checkbox" id="check_video" onclick="event.stopPropagation(); selectCopy('video')">
                         <div class="video-info">
                             <div class="video-platform">短视频</div>
-                            <div class="video-title" id="title_video">中海汇德里 | 楼盘介绍脚本</div>
-                            <div class="video-meta">约60秒</div>
+                            <div class="video-title" id="title_video">中海汇德里 | 楼盘介绍</div>
+                            <div class="video-meta" id="videoMeta">约60秒 · 系统视频</div>
                         </div>
                         <i class="fa fa-chevron-down video-expand-icon"></i>
                     </div>
                     <div class="video-content">
-                        <div class="video-generation-methods">
-                            <div class="method-title">视频生成方式</div>
-                            <div class="method-options">
-                                <div class="method-option selected" id="view_method_lightning">
-                                    <div class="method-radio"></div>
-                                    <div class="method-info">
-                                        <div class="method-name">闪电生成 <span class="method-badge fast">快速</span></div>
-                                        <div class="method-desc">直接使用已生成好的视频</div>
-                                    </div>
+                        <!-- 视频预览区（闪电/普通生成显示） -->
+                        <div class="video-preview-section" id="videoPreviewSection">
+                            <div style="background:var(--color-bg);border-radius:var(--radius-lg);padding:var(--spacing-md);margin-bottom:var(--spacing-md);">
+                                <div style="display:flex;align-items:center;justify-content:center;height:160px;background:#000;border-radius:var(--radius-md);margin-bottom:var(--spacing-md);position:relative;">
+                                    <i class="fa fa-play-circle" style="font-size:48px;color:white;opacity:0.8;"></i>
+                                    <div style="position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,0.6);color:white;font-size:11px;padding:2px 6px;border-radius:4px;">00:45/01:00</div>
                                 </div>
-                                <div class="method-option" id="view_method_normal">
-                                    <div class="method-radio"></div>
-                                    <div class="method-info">
-                                        <div class="method-name">普通生成 <span class="method-badge normal">推荐</span></div>
-                                        <div class="method-desc">AI混剪 + 声音替换</div>
+                                <div style="font-size:13px;color:var(--color-sub);text-align:center;">系统已为您准备好探盘视频</div>
+                            </div>
+                            
+                            <!-- 音频上传（非必传） -->
+                            <div class="audio-upload-section" id="audioUploadSection" style="display:none;">
+                                <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--color-bg);border-radius:var(--radius-lg);margin-bottom:8px;">
+                                    <div style="display:flex;align-items:center;gap:8px;">
+                                        <i class="fa fa-microphone" style="color:var(--color-purple);"></i>
+                                        <span style="font-size:13px;color:var(--color-title);">配音音频</span>
+                                        <span style="font-size:11px;color:var(--color-sub);">(非必传)</span>
                                     </div>
+                                    <button style="padding:6px 12px;background:var(--color-purple);color:white;border:none;border-radius:6px;font-size:12px;" onclick="showToast('请上传配音文件')">
+                                        <i class="fa fa-upload"></i> 上传
+                                    </button>
                                 </div>
-                                <div class="method-option" id="view_method_master">
-                                    <div class="method-radio"></div>
-                                    <div class="method-info">
-                                        <div class="method-name">大师生成 <span class="method-badge master">自定义</span></div>
-                                        <div class="method-desc">自定义素材 + 声音替换</div>
-                                    </div>
-                                </div>
+                                <div style="font-size:12px;color:var(--color-sub);">支持 MP3、WAV 格式，时长建议60秒左右</div>
                             </div>
                         </div>
-                        <div class="video-script-content">
-                            <div class="video-script-text" id="content_video"></div>
+                        
+                        <!-- 视频脚本区（仅大师生成显示） -->
+                        <div class="video-script-section" id="videoScriptSection" style="display:none;">
+                            <div class="video-generation-methods">
+                                <div class="method-title">大师生成 · 已选</div>
+                            </div>
+                            
+                            <!-- 脚本内容 -->
+                            <div class="video-script-content">
+                                <div class="video-script-text" id="content_video"></div>
+                            </div>
+                            
+                            <!-- 素材和音频上传 -->
+                            <div style="margin-top:var(--spacing-md);">
+                                <!-- 素材上传 -->
+                                <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--color-bg);border-radius:var(--radius-lg);margin-bottom:8px;">
+                                    <div style="display:flex;align-items:center;gap:8px;">
+                                        <i class="fa fa-photo-video" style="color:var(--color-purple);"></i>
+                                        <span style="font-size:13px;color:var(--color-title);">自定义素材</span>
+                                    </div>
+                                    <button style="padding:6px 12px;background:var(--color-purple);color:white;border:none;border-radius:6px;font-size:12px;" onclick="showToast('请上传视频素材')">
+                                        <i class="fa fa-upload"></i> 上传
+                                    </button>
+                                </div>
+                                
+                                <!-- 音频上传 -->
+                                <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--color-bg);border-radius:var(--radius-lg);margin-bottom:8px;">
+                                    <div style="display:flex;align-items:center;gap:8px;">
+                                        <i class="fa fa-microphone" style="color:var(--color-purple);"></i>
+                                        <span style="font-size:13px;color:var(--color-title);">配音音频</span>
+                                        <span style="font-size:11px;color:var(--color-sub);">(非必传)</span>
+                                    </div>
+                                    <button style="padding:6px 12px;background:var(--color-purple);color:white;border:none;border-radius:6px;font-size:12px;" onclick="showToast('请上传配音文件')">
+                                        <i class="fa fa-upload"></i> 上传
+                                    </button>
+                                </div>
+                                <div style="font-size:12px;color:var(--color-sub);">支持 MP4、MOV 格式，支持多段视频拼接；音频支持 MP3、WAV 格式</div>
+                            </div>
                         </div>
-                        <div class="video-actions">
-                            <button class="action-btn" onclick="copyText('video')"><i class="fa fa-copy"></i>复制脚本</button>
-                            <button class="action-btn" onclick="regenerateCopy('video')"><i class="fa fa-refresh"></i>重生</button>
-                            <button class="action-btn" onclick="openEditModal('video')"><i class="fa fa-edit"></i>编辑</button>
+                        
+                        <div class="video-actions" id="videoActions">
+                            <button class="action-btn" onclick="showToast('查看视频')"><i class="fa fa-play"></i>预览视频</button>
+                            <button class="action-btn" onclick="changeVideoMethod()"><i class="fa fa-exchange"></i>换一种方式</button>
                         </div>
                     </div>
                 </div>
@@ -1249,34 +1284,89 @@ VIP认筹通道已开启，欢迎私信咨询！`,
                 if (card) {
                     card.style.display = 'block';
                     card.classList.add('revealed');
-                    const titleEl = document.getElementById('title_' + channel);
-                    const contentEl = document.getElementById('content_' + channel);
-                    if (titleEl) titleEl.textContent = houseName + ' | ' + (channel === 'moments' ? '火热认筹中' : channel === 'wechat' ? '开盘预告' : '探盘日记');
-                    if (contentEl) contentEl.textContent = CONTENTS[channel];
+                    
+                    if (channel === 'video') {
+                        // 视频卡片特殊处理
+                        const titleEl = document.getElementById('title_video');
+                        const videoMeta = document.getElementById('videoMeta');
+                        if (titleEl) titleEl.textContent = houseName + ' | 楼盘介绍';
+                        
+                        // 根据生成方式显示不同内容
+                        updateVideoCardContent();
+                    } else {
+                        const titleEl = document.getElementById('title_' + channel);
+                        const contentEl = document.getElementById('content_' + channel);
+                        if (titleEl) titleEl.textContent = houseName + ' | ' + (channel === 'moments' ? '火热认筹中' : channel === 'wechat' ? '开盘预告' : '探盘日记');
+                        if (contentEl) contentEl.textContent = CONTENTS[channel];
+                    }
                 }
             });
-
-            // 更新视频方式显示
-            updateVideoMethodView();
 
             // 默认展开第一个
             if (selectedChannels.size > 0) {
                 const firstChannel = Array.from(selectedChannels)[0];
-                toggleCard(firstChannel);
+                if (firstChannel === 'video') {
+                    toggleVideoCard();
+                } else {
+                    toggleCard(firstChannel);
+                }
             }
 
             isGenerated = true;
             selectedCopies = new Set(selectedChannels);
+            // 视频不需要选择（自动加入）
             updateConfirmBtn();
             updateBottomBar();
         }
 
-        // 更新视频方式视图
-        function updateVideoMethodView() {
-            document.querySelectorAll('#view_method_lightning, #view_method_normal, #view_method_master').forEach(el => {
-                el.classList.remove('selected');
-            });
-            document.getElementById('view_method_' + selectedVideoMethod)?.classList.add('selected');
+        // 更新视频卡片内容显示
+        function updateVideoCardContent() {
+            const previewSection = document.getElementById('videoPreviewSection');
+            const scriptSection = document.getElementById('videoScriptSection');
+            const audioSection = document.getElementById('audioUploadSection');
+            const videoMeta = document.getElementById('videoMeta');
+            const videoActions = document.getElementById('videoActions');
+            const contentEl = document.getElementById('content_video');
+            
+            if (selectedVideoMethod === 'master') {
+                // 大师生成：显示脚本
+                previewSection.style.display = 'none';
+                scriptSection.style.display = 'block';
+                if (contentEl) contentEl.textContent = CONTENTS.video;
+                selectedCopies.add('video');
+            } else {
+                // 闪电/普通生成：显示视频预览
+                previewSection.style.display = 'block';
+                scriptSection.style.display = 'none';
+                
+                // 普通生成显示音频上传
+                if (selectedVideoMethod === 'normal') {
+                    audioSection.style.display = 'block';
+                } else {
+                    audioSection.style.display = 'none';
+                }
+                selectedCopies.add('video');
+            }
+            
+            // 更新元数据
+            if (videoMeta) {
+                const methodLabels = {
+                    'lightning': '约60秒 · 系统视频 · 闪电生成',
+                    'normal': '约60秒 · 系统视频 · AI混剪',
+                    'master': '约60秒 · 自定义脚本 · 大师生成'
+                };
+                videoMeta.textContent = methodLabels[selectedVideoMethod];
+            }
+        }
+
+        // 更换视频生成方式（生成后）
+        function changeVideoMethod() {
+            // 简单的切换循环
+            const methods = ['lightning', 'normal', 'master'];
+            const currentIndex = methods.indexOf(selectedVideoMethod);
+            selectedVideoMethod = methods[(currentIndex + 1) % methods.length];
+            updateVideoCardContent();
+            showToast('已切换为' + (selectedVideoMethod === 'lightning' ? '闪电生成' : selectedVideoMethod === 'normal' ? '普通生成' : '大师生成'));
         }
 
         // 显示配置区域
@@ -1318,10 +1408,16 @@ VIP认筹通道已开启，欢迎私信咨询！`,
         // 选择文案
         function selectCopy(type) {
             const checkbox = document.getElementById('check_' + type);
-            if (checkbox.checked) {
+            if (type === 'video') {
+                // 视频自动选中，不允许取消
+                checkbox.checked = true;
                 selectedCopies.add(type);
             } else {
-                selectedCopies.delete(type);
+                if (checkbox.checked) {
+                    selectedCopies.add(type);
+                } else {
+                    selectedCopies.delete(type);
+                }
             }
             updateConfirmBtn();
         }
@@ -1333,7 +1429,16 @@ VIP认筹通道已开启，欢迎私信咨询！`,
             
             if (selectedCopies.size > 0) {
                 btn.classList.add('ready');
-                hint.textContent = `已选择 ${selectedCopies.size} 个文案`;
+                const textCount = selectedCopies.size - (selectedCopies.has('video') ? 1 : 0);
+                let hintText = '';
+                if (selectedCopies.has('video') && textCount > 0) {
+                    hintText = `已选择 ${textCount} 个文案 + 视频`;
+                } else if (selectedCopies.has('video')) {
+                    hintText = `已选择视频`;
+                } else {
+                    hintText = `已选择 ${textCount} 个文案`;
+                }
+                hint.textContent = hintText;
             } else {
                 btn.classList.remove('ready');
                 hint.textContent = '请选择要使用的文案版本';
@@ -1350,20 +1455,40 @@ VIP认筹通道已开启，欢迎私信咨询！`,
 
         // 重新生成单个
         function regenerateCopy(type) {
-            const contentEl = document.getElementById('content_' + type);
-            if (contentEl) {
-                contentEl.textContent = '正在重新生成...';
-                setTimeout(() => {
-                    contentEl.textContent = CONTENTS[type];
-                    showToast(CHANNEL_NAMES[type] + '已重新生成');
-                }, 1500);
+            if (type === 'video') {
+                // 视频只能重新生成脚本（仅大师生成）
+                if (selectedVideoMethod === 'master') {
+                    const contentEl = document.getElementById('content_video');
+                    if (contentEl) {
+                        contentEl.textContent = '正在重新生成脚本...';
+                        setTimeout(() => {
+                            contentEl.textContent = CONTENTS.video;
+                            showToast('视频脚本已重新生成');
+                        }, 1500);
+                    }
+                } else {
+                    showToast('闪电/普通生成不支持重新生成脚本');
+                }
+            } else {
+                const contentEl = document.getElementById('content_' + type);
+                if (contentEl) {
+                    contentEl.textContent = '正在重新生成...';
+                    setTimeout(() => {
+                        contentEl.textContent = CONTENTS[type];
+                        showToast(CHANNEL_NAMES[type] + '已重新生成');
+                    }, 1500);
+                }
             }
         }
 
         // 复制文本
         function copyText(type) {
+            if (type === 'video' && selectedVideoMethod !== 'master') {
+                showToast('闪电/普通生成无脚本可复制');
+                return;
+            }
             const contentEl = document.getElementById('content_' + type);
-            if (contentEl) {
+            if (contentEl && contentEl.textContent) {
                 navigator.clipboard.writeText(contentEl.textContent).then(() => {
                     showToast('已复制到剪贴板');
                 }).catch(() => {
