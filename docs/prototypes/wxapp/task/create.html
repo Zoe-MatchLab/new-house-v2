@@ -371,6 +371,29 @@
             cursor: pointer;
         }
         .add-btn:active { background: var(--color-bg); border-color: var(--brand-primary); color: var(--brand-primary); }
+        /* 提醒行 */
+        .reminder-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--color-border);
+        }
+        .reminder-row:last-child { border-bottom: none; }
+        .reminder-left { display: flex; align-items: center; gap: 8px; }
+        .reminder-badge { font-size: 11px; padding: 2px 8px; border-radius: 4px; font-weight: 500; }
+        .reminder-badge.light { background: var(--color-success-light); color: var(--color-success); }
+        .reminder-badge.mid { background: #FFF7E6; color: var(--color-warning); }
+        .reminder-badge.high { background: #FFECE8; color: var(--color-danger); }
+        .reminder-desc { font-size: 13px; color: var(--color-text); }
+        .reminder-right { display: flex; align-items: center; gap: 8px; }
+        .reminder-hint { font-size: 12px; color: var(--color-sub); }
+        .reminder-input { width: 50px; height: 28px; border: 1px solid var(--color-border); border-radius: 6px; text-align: center; font-size: 13px; }
+        .reminder-input:focus { outline: none; border-color: var(--brand-primary); }
+        /* 人员标签 */
+        .person-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+        .person-tag { display: flex; align-items: center; gap: 4px; padding: 6px 10px; background: var(--brand-primary-light); color: var(--brand-primary); border-radius: 16px; font-size: 13px; }
+        .person-tag .remove { width: 16px; height: 16px; background: var(--brand-primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; cursor: pointer; }
         /* 时间区间 */
         .time-range {
             display: flex;
@@ -722,38 +745,91 @@
                         </div>
                     </div>
                     <!-- 提醒时间 -->
-                    <div class="form-item">
+                    <div class="form-item" style="flex-direction:column;align-items:flex-start;gap:12px;">
                         <div class="form-label">提醒时间</div>
-                        <div style="flex:1;">
-                            <div class="reminder-tags" id="reminderTags">
-                                <button class="reminder-tag" data-level="light" onclick="toggleReminder(this)">
-                                    <i class="fa fa-bell-o"></i> 轻度
-                                </button>
-                                <button class="reminder-tag" data-level="mid" onclick="toggleReminder(this)">
-                                    <i class="fa fa-bell"></i> 中度
-                                </button>
-                                <button class="reminder-tag" data-level="high" onclick="toggleReminder(this)">
-                                    <i class="fa fa-bell-o"></i> 重度
-                                </button>
+                        <div style="width:100%;">
+                            <!-- 轻度提醒 -->
+                            <div class="reminder-row">
+                                <div class="reminder-left">
+                                    <span class="reminder-badge light">轻度</span>
+                                    <span class="reminder-desc">提醒</span>
+                                </div>
+                                <div class="reminder-right">
+                                    <span class="reminder-hint">截止前</span>
+                                    <input type="number" class="reminder-input" value="24" min="1">
+                                    <span class="reminder-hint">小时</span>
+                                    <label class="switch" style="width:36px;height:22px;">
+                                        <input type="checkbox" checked>
+                                        <span class="slider" style="height:18px;border-radius:18px;"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <!-- 中度提醒 -->
+                            <div class="reminder-row">
+                                <div class="reminder-left">
+                                    <span class="reminder-badge mid">中度</span>
+                                    <span class="reminder-desc">提醒</span>
+                                </div>
+                                <div class="reminder-right">
+                                    <span class="reminder-hint">截止前</span>
+                                    <input type="number" class="reminder-input" value="12" min="1">
+                                    <span class="reminder-hint">小时</span>
+                                    <label class="switch" style="width:36px;height:22px;">
+                                        <input type="checkbox" checked>
+                                        <span class="slider" style="height:18px;border-radius:18px;"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <!-- 重度提醒 -->
+                            <div class="reminder-row">
+                                <div class="reminder-left">
+                                    <span class="reminder-badge high">重度</span>
+                                    <span class="reminder-desc">提醒</span>
+                                </div>
+                                <div class="reminder-right">
+                                    <span class="reminder-hint">截止前</span>
+                                    <input type="number" class="reminder-input" value="2" min="1">
+                                    <span class="reminder-hint">小时</span>
+                                    <label class="switch" style="width:36px;height:22px;">
+                                        <input type="checkbox" checked>
+                                        <span class="slider" style="height:18px;border-radius:18px;"></span>
+                                    </label>
+                                </div>
                             </div>
                         </div>
                     </div>
+
                     <!-- 执行人 -->
-                    <div class="form-item">
+                    <div class="form-item" style="flex-direction:column;align-items:flex-start;gap:10px;">
                         <div class="form-label required">执行人</div>
-                        <div class="executor-list" id="executorList">
-                            <button class="add-executor" onclick="addExecutor()">
-                                <i class="fa fa-plus"></i> 添加
+                        <div class="config-item" style="width:100%;padding:0;border:none;" onclick="addExecutor()">
+                            <div class="info" style="flex:1;">
+                                <div class="label" style="font-size:13px;color:var(--color-sub);">选择执行人</div>
+                                <div class="desc" style="font-size:12px;color:var(--color-sub);" id="executorCount">已选择 0 人</div>
+                            </div>
+                            <button style="padding:6px 12px;background:var(--brand-primary-light);color:var(--brand-primary);border:none;border-radius:6px;font-size:13px;cursor:pointer;">
+                                <i class="fa fa-plus"></i> 选择
                             </button>
                         </div>
+                        <div class="person-tags" id="executorTags">
+                            <!-- 执行人标签会动态添加 -->
+                        </div>
                     </div>
+
                     <!-- 通知人 -->
-                    <div class="form-item">
+                    <div class="form-item" style="flex-direction:column;align-items:flex-start;gap:10px;">
                         <div class="form-label">通知人</div>
-                        <div class="executor-list" id="notifyList">
-                            <button class="add-executor" onclick="addNotifier()">
-                                <i class="fa fa-plus"></i> 添加
+                        <div class="config-item" style="width:100%;padding:0;border:none;" onclick="addNotifier()">
+                            <div class="info" style="flex:1;">
+                                <div class="label" style="font-size:13px;color:var(--color-sub);">选择需要通知的人</div>
+                                <div class="desc" style="font-size:12px;color:var(--color-sub);" id="notifierCount">已选择 0 人</div>
+                            </div>
+                            <button style="padding:6px 12px;background:var(--brand-primary-light);color:var(--brand-primary);border:none;border-radius:6px;font-size:13px;cursor:pointer;">
+                                <i class="fa fa-plus"></i> 选择
                             </button>
+                        </div>
+                        <div class="person-tags" id="notifierTags">
+                            <!-- 通知人标签会动态添加 -->
                         </div>
                     </div>
                 </div>
@@ -810,12 +886,58 @@
 
         // 添加执行人
         function addExecutor() {
-            showToast('跳转到人员选择页');
+            // 模拟添加执行人
+            if (executors.length >= 5) {
+                showToast('最多添加5个执行人');
+                return;
+            }
+            const names = ['张三', '李四', '王五', '赵六'];
+            const name = names[executors.length] || ('经纪人' + (executors.length + 1));
+            executors.push(name);
+            renderExecutors();
+        }
+
+        // 移除执行人
+        function removeExecutor(index) {
+            executors.splice(index, 1);
+            renderExecutors();
+            updateCreateBtn();
+        }
+
+        // 渲染执行人列表
+        function renderExecutors() {
+            const container = document.getElementById('executorTags');
+            container.innerHTML = executors.map((name, i) => 
+                `<span class="person-tag"><i class="fa fa-user"></i> ${name} <span class="remove" onclick="removeExecutor(${i})">×</span></span>`
+            ).join('');
+            document.getElementById('executorCount').textContent = `已选择 ${executors.length} 人`;
         }
 
         // 添加通知人
         function addNotifier() {
-            showToast('跳转到通知人选择页');
+            if (notifiers.length >= 3) {
+                showToast('最多添加3个通知人');
+                return;
+            }
+            const names = ['管理员'];
+            const name = names[notifiers.length] || ('通知人' + (notifiers.length + 1));
+            notifiers.push(name);
+            renderNotifiers();
+        }
+
+        // 移除通知人
+        function removeNotifier(index) {
+            notifiers.splice(index, 1);
+            renderNotifiers();
+        }
+
+        // 渲染通知人列表
+        function renderNotifiers() {
+            const container = document.getElementById('notifierTags');
+            container.innerHTML = notifiers.map((name, i) => 
+                `<span class="person-tag"><i class="fa fa-user"></i> ${name} <span class="remove" onclick="removeNotifier(${i})">×</span></span>`
+            ).join('');
+            document.getElementById('notifierCount').textContent = `已选择 ${notifiers.length} 人`;
         }
 
         // 切换提醒
