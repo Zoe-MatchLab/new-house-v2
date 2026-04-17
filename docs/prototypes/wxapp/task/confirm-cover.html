@@ -44,7 +44,6 @@
             padding-bottom: calc(100px + env(safe-area-inset-bottom));
         }
 
-        /* 头部 */
         .header {
             background: linear-gradient(135deg, var(--brand-primary) 0%, #FF9500 100%);
             padding: calc(44px + env(safe-area-inset-top)) var(--spacing-md) var(--spacing-md);
@@ -65,7 +64,6 @@
         .header-title { font-size: 17px; font-weight: 600; flex: 1; text-align: center; }
         .step-badge { font-size: 11px; padding: 2px 10px; background: rgba(255,255,255,0.25); border-radius: 20px; }
 
-        /* 阶段进度 */
         .stage-progress {
             margin-top: 12px;
             padding: 10px 16px;
@@ -75,23 +73,13 @@
             align-items: center;
             justify-content: center;
         }
-        .stage-progress .dot {
-            font-size: 12px;
-            color: rgba(255,255,255,0.7);
-        }
+        .stage-progress .dot { font-size: 12px; color: rgba(255,255,255,0.7); }
         .stage-progress .dot.active { color: white; font-weight: 600; }
         .stage-progress .dot.completed { color: rgba(255,255,255,0.9); }
-        .stage-progress .line {
-            width: 28px; height: 2px;
-            background: rgba(255,255,255,0.5);
-            margin: 0 6px;
-            border-radius: 1px;
-        }
+        .stage-progress .line { width: 28px; height: 2px; background: rgba(255,255,255,0.5); margin: 0 6px; border-radius: 1px; }
 
-        /* 内容区域 */
         .content { padding: var(--spacing-md); }
 
-        /* 素材卡片 */
         .material-card {
             background: white;
             border-radius: var(--radius-xl);
@@ -100,7 +88,6 @@
             overflow: hidden;
         }
 
-        /* 卡片头部 */
         .card-header {
             display: flex;
             align-items: center;
@@ -130,12 +117,8 @@
         .status.done { background: var(--color-success-light); color: var(--color-success); }
         .status.pending { background: var(--color-bg); color: var(--color-sub); }
 
-        /* 素材预览区 */
-        .preview-area {
-            padding: var(--spacing-md);
-        }
+        .preview-area { padding: var(--spacing-md); }
 
-        /* 小红书 - 封面图 */
         .material-preview {
             display: flex;
             flex-direction: column;
@@ -154,7 +137,6 @@
             text-align: center;
         }
 
-        /* 朋友圈 - 九宫格 */
         .moments-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -175,7 +157,6 @@
             font-size: 24px;
         }
 
-        /* 公众号 - 封面+标题 */
         .wechat-preview {
             display: flex;
             gap: var(--spacing-md);
@@ -188,10 +169,7 @@
             object-fit: cover;
             flex-shrink: 0;
         }
-        .wechat-preview .content {
-            flex: 1;
-            padding: 0;
-        }
+        .wechat-preview .content { flex: 1; padding: 0; }
         .wechat-preview .title {
             font-size: 15px;
             font-weight: 600;
@@ -199,15 +177,9 @@
             line-height: 1.4;
             margin-bottom: var(--spacing-sm);
         }
-        .wechat-preview .source {
-            font-size: 12px;
-            color: var(--color-sub);
-        }
+        .wechat-preview .source { font-size: 12px; color: var(--color-sub); }
 
-        /* 视频号 - 视频封面 */
-        .video-preview {
-            position: relative;
-        }
+        .video-preview { position: relative; }
         .video-preview img {
             width: 100%;
             border-radius: var(--radius-lg);
@@ -237,7 +209,6 @@
             color: var(--color-info);
         }
 
-        /* 操作按钮 */
         .card-actions {
             display: flex;
             gap: var(--spacing-sm);
@@ -258,20 +229,10 @@
             transition: all var(--transition-fast);
         }
         .action-btn:active { transform: scale(0.98); }
-        .action-btn.secondary {
-            background: var(--color-bg);
-            color: var(--color-text);
-        }
-        .action-btn.primary {
-            background: var(--brand-primary);
-            color: white;
-        }
-        .action-btn.info {
-            background: var(--color-info);
-            color: white;
-        }
+        .action-btn.secondary { background: var(--color-bg); color: var(--color-text); }
+        .action-btn.primary { background: var(--brand-primary); color: white; }
+        .action-btn.info { background: var(--color-info); color: white; }
 
-        /* 底部操作栏 */
         .bottom-bar {
             position: fixed;
             bottom: 0; left: 0; right: 0;
@@ -298,7 +259,6 @@
         }
         .confirm-btn:active { transform: scale(0.99); }
 
-        /* Toast */
         .toast {
             position: fixed;
             top: 50%; left: 50%;
@@ -364,6 +324,9 @@
                 <button class="action-btn secondary" onclick="editMaterial('xiaohongshu')">
                     <i class="fa fa-edit"></i> 编辑
                 </button>
+                <button class="action-btn primary" onclick="downloadMaterial('xiaohongshu')">
+                    <i class="fa fa-download"></i> 下载
+                </button>
             </div>
         </div>
 
@@ -398,6 +361,9 @@
                 <button class="action-btn secondary" onclick="editMaterial('moments')">
                     <i class="fa fa-edit"></i> 编辑
                 </button>
+                <button class="action-btn primary" onclick="downloadMaterial('moments')">
+                    <i class="fa fa-download"></i> 下载
+                </button>
             </div>
         </div>
 
@@ -428,6 +394,9 @@
                 </button>
                 <button class="action-btn secondary" onclick="editMaterial('wechat')">
                     <i class="fa fa-edit"></i> 编辑
+                </button>
+                <button class="action-btn primary" onclick="downloadMaterial('wechat')">
+                    <i class="fa fa-download"></i> 下载
                 </button>
             </div>
         </div>
@@ -460,14 +429,16 @@
                 <button class="action-btn secondary" onclick="editMaterial('video')">
                     <i class="fa fa-edit"></i> 编辑
                 </button>
+                <button class="action-btn primary" onclick="downloadMaterial('video')">
+                    <i class="fa fa-download"></i> 下载
+                </button>
                 <button class="action-btn info" onclick="previewVideo()">
-                    <i class="fa fa-play"></i> 预览视频
+                    <i class="fa fa-play"></i> 预览
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- 底部操作栏 -->
     <div class="bottom-bar">
         <button class="confirm-btn" onclick="handleConfirm()">
             <i class="fa fa-check"></i> 确认素材并发布
@@ -496,6 +467,19 @@
                 'video': '视频封面'
             };
             showToast('编辑' + names[type]);
+        }
+
+        function downloadMaterial(type) {
+            const names = {
+                'xiaohongshu': '小红书封面',
+                'moments': '朋友圈九宫格',
+                'wechat': '公众号封面',
+                'video': '视频封面'
+            };
+            showToast('正在下载' + names[type] + '...');
+            setTimeout(() => {
+                showToast(names[type] + '下载成功');
+            }, 1500);
         }
 
         function previewVideo() {
