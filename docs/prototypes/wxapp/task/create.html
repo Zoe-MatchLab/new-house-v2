@@ -446,6 +446,11 @@
         .point-form-label { font-size: 14px; color: var(--color-title); margin-bottom: 8px; display: block; }
         .point-form-input { width: 100%; height: 44px; border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 0 12px; font-size: 15px; }
         .point-form-input:focus { outline: none; border-color: var(--brand-primary); }
+        /* 上传类型标签 */
+        .upload-type { display: flex; align-items: center; gap: 4px; padding: 8px 12px; border: 1px solid var(--color-border); border-radius: 6px; font-size: 13px; color: var(--color-text); cursor: pointer; background: var(--color-bg); }
+        .upload-type:active { transform: scale(0.98); }
+        .upload-type.active { border-color: var(--brand-primary); background: var(--brand-primary-light); color: var(--brand-primary); }
+        .upload-type i { font-size: 14px; }
         /* 楼盘标题栏 */
         .house-title-bar { display: flex; align-items: center; gap: 12px; }
         .house-icon-box { width: 40px; height: 40px; background: var(--brand-primary-light); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; }
@@ -1276,6 +1281,10 @@
             document.getElementById('confirmAddPoint').disabled = !name;
         }
         
+        function selectUploadType(el) {
+            el.classList.toggle('active');
+        }
+        
         function confirmAddPoint() {
             const name = document.getElementById('pointNameInput').value.trim();
             if (!name) {
@@ -1314,18 +1323,48 @@
     <div class="modal-overlay hidden" id="addPointModal" onclick="closeAddPointModal()">
         <div class="modal-box" onclick="event.stopPropagation()">
             <div class="modal-header">
-                <span class="modal-title">添加点位</span>
+                <span class="modal-title">添加打卡点</span>
                 <div class="modal-close" onclick="closeAddPointModal()"><i class="fa fa-times"></i></div>
             </div>
             <div class="modal-body">
+                <!-- 打卡点标题 -->
                 <div class="point-form-item">
-                    <label class="point-form-label">点位名称</label>
-                    <input type="text" class="point-form-input" id="pointNameInput" placeholder="请输入点位名称" maxlength="20" oninput="updatePointNameBtn()">
+                    <label class="point-form-label">打卡点标题 <span style="color:var(--brand-primary)">*</span></label>
+                    <input type="text" class="point-form-input" id="pointNameInput" placeholder="如：沙盘照片..." maxlength="20" oninput="updatePointNameBtn()">
+                    <div style="font-size:11px;color:var(--color-sub);margin-top:4px;">1-20个字符</div>
+                </div>
+                <!-- 描述说明 -->
+                <div class="point-form-item">
+                    <label class="point-form-label">描述说明</label>
+                    <textarea class="point-form-input" style="height:80px;resize:none;padding-top:10px;" placeholder="描述该打卡点需要完成的内容..."></textarea>
+                </div>
+                <!-- 上传类型 -->
+                <div class="point-form-item">
+                    <label class="point-form-label">上传类型</label>
+                    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;">
+                        <div class="upload-type active" data-type="photo" onclick="selectUploadType(this)">
+                            <i class="fa fa-camera"></i>拍照
+                        </div>
+                        <div class="upload-type" data-type="video" onclick="selectUploadType(this)">
+                            <i class="fa fa-video-camera"></i>视频
+                        </div>
+                        <div class="upload-type" data-type="text" onclick="selectUploadType(this)">
+                            <i class="fa fa-pencil"></i>文字
+                        </div>
+                    </div>
+                </div>
+                <!-- 设为必填项 -->
+                <div class="point-form-item" style="flex-direction:row;align-items:center;">
+                    <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+                        <input type="checkbox" id="requiredCheck" style="width:18px;height:18px;accent-color:var(--brand-primary);">
+                        <span style="font-size:14px;color:var(--color-title);">设为必填项</span>
+                    </label>
+                    <div style="font-size:11px;color:var(--color-sub);margin-left:26px;">必填项将在执行端要求必须完成才能提交</div>
                 </div>
             </div>
             <div class="modal-footer">
                 <button class="modal-btn cancel" onclick="closeAddPointModal()">取消</button>
-                <button class="modal-btn confirm" id="confirmAddPoint" onclick="confirmAddPoint()" disabled>确定</button>
+                <button class="modal-btn confirm" id="confirmAddPoint" onclick="confirmAddPoint()" disabled>确认添加</button>
             </div>
         </div>
     </div>
