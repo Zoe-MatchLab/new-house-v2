@@ -210,8 +210,7 @@
         .type-tab[data-type="pending"].active { background: var(--color-sub); }
         .view-tabs {
             display: flex;
-            padding: 12px 16px;
-            gap: 8px;
+            padding: 0 16px;
             background: var(--color-card);
             border-bottom: 1px solid var(--color-border);
             overflow-x: auto;
@@ -219,16 +218,27 @@
         .view-tabs::-webkit-scrollbar { display: none; }
         .view-tab {
             flex: 0 0 auto;
-            padding: 8px 16px;
-            font-size: 14px;
+            padding: 12px 16px;
+            font-size: 15px;
             font-weight: 500;
             color: var(--color-sub);
-            border-radius: 16px;
             cursor: pointer;
             border: none;
             background: transparent;
+            position: relative;
         }
-        .view-tab.active { background: var(--brand-primary); color: white; }
+        .view-tab.active { color: var(--brand-primary); }
+        .view-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 24px;
+            height: 3px;
+            background: var(--brand-primary);
+            border-radius: 2px;
+        }
 
         /* 筛选弹窗 */
         .filter-modal-overlay {
