@@ -977,9 +977,9 @@
                         <i class="fa fa-chevron-down video-expand-icon"></i>
                     </div>
                     <div class="video-content">
-                        <!-- 闪电生成：视频预览 -->
+                        <!-- 视频预览区 -->
                         <div class="video-preview-section" id="videoPreviewSection">
-                            <div style="background:var(--color-bg);border-radius:var(--radius-lg);padding:var(--spacing-md);">
+                            <div style="background:var(--color-bg);border-radius:var(--radius-lg);padding:var(--spacing-md);margin-bottom:var(--spacing-md);">
                                 <div style="display:flex;align-items:center;justify-content:center;height:120px;background:#000;border-radius:var(--radius-md);margin-bottom:var(--spacing-md);position:relative;">
                                     <i class="fa fa-play-circle" style="font-size:48px;color:white;opacity:0.8;"></i>
                                     <div style="position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,0.6);color:white;font-size:11px;padding:2px 6px;border-radius:4px;">00:45/01:00</div>
@@ -991,8 +991,19 @@
                             </div>
                         </div>
 
+                        <!-- 模板选择 -->
+                        <div class="template-section" style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:var(--color-bg);border-radius:var(--radius-md);margin-bottom:var(--spacing-sm);">
+                            <div style="display:flex;align-items:center;gap:8px;">
+                                <i class="fa fa-film" style="color:var(--color-info);"></i>
+                                <span style="font-size:13px;color:var(--color-title);">视频模板</span>
+                            </div>
+                            <button style="padding:6px 12px;background:var(--color-info);color:white;border:none;border-radius:6px;font-size:12px;" onclick="selectTemplate()">
+                                <i class="fa fa-th-large"></i> 选择模板
+                            </button>
+                        </div>
+
                         <!-- 音频上传（普通/大师生成显示） -->
-                        <div class="audio-upload-section" id="audioUploadSection" style="display:none;margin-bottom:var(--spacing-md);">
+                        <div class="audio-upload-section" id="audioUploadSection" style="display:none;margin-bottom:var(--spacing-sm);">
                             <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:var(--color-bg);border-radius:var(--radius-md);">
                                 <div style="display:flex;align-items:center;gap:8px;">
                                     <i class="fa fa-microphone" style="color:var(--color-purple);"></i>
@@ -1002,25 +1013,31 @@
                                     <i class="fa fa-upload"></i> 上传
                                 </button>
                             </div>
-                            <div style="font-size:11px;color:var(--color-sub);margin-top:4px;padding-left:4px;">支持 MP3、WAV 格式，时长60秒左右</div>
+                        </div>
+                        
+                        <!-- 人像上传（仅大师生成显示） -->
+                        <div class="portrait-upload-section" id="portraitUploadSection" style="display:none;margin-bottom:var(--spacing-md);">
+                            <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:var(--color-bg);border-radius:var(--radius-md);">
+                                <div style="display:flex;align-items:center;gap:8px;">
+                                    <i class="fa fa-user-circle" style="color:var(--color-warning);"></i>
+                                    <span style="font-size:13px;color:var(--color-title);">人像图片</span>
+                                </div>
+                                <button style="padding:6px 12px;background:var(--color-warning);color:white;border:none;border-radius:6px;font-size:12px;" onclick="showToast('请上传人像图片')">
+                                    <i class="fa fa-upload"></i> 上传
+                                </button>
+                            </div>
+                            <div style="font-size:11px;color:var(--color-sub);margin-top:4px;padding-left:4px;">用于AI主播人脸替换，支持 JPG、PNG 格式</div>
                         </div>
                         
                         <!-- 视频脚本区（仅大师生成显示） -->
                         <div class="video-script-section" id="videoScriptSection" style="display:none;">
-                            <!-- 素材上传 -->
-                            <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:var(--color-bg);border-radius:var(--radius-md);margin-bottom:var(--spacing-sm);">
-                                <div style="display:flex;align-items:center;gap:8px;">
-                                    <i class="fa fa-photo-video" style="color:var(--color-purple);"></i>
-                                    <span style="font-size:13px;color:var(--color-title);">自定义素材</span>
-                                </div>
-                                <button style="padding:6px 12px;background:var(--color-purple);color:white;border:none;border-radius:6px;font-size:12px;" onclick="showToast('请上传视频素材')">
-                                    <i class="fa fa-upload"></i> 上传
-                                </button>
-                            </div>
-                            
-                            <!-- 脚本内容 -->
                             <div class="video-script-content">
                                 <div class="video-script-text" id="content_video"></div>
+                            </div>
+                            <div class="video-actions" style="margin-top:var(--spacing-md);">
+                                <button class="action-btn" onclick="copyText('video')"><i class="fa fa-copy"></i>复制脚本</button>
+                                <button class="action-btn" onclick="regenerateCopy('video')"><i class="fa fa-refresh"></i>重生</button>
+                                <button class="action-btn" onclick="openEditModal('video')"><i class="fa fa-edit"></i>编辑</button>
                             </div>
                         </div>
                         
@@ -1305,24 +1322,28 @@ VIP认筹通道已开启，欢迎私信咨询！`,
             const previewSection = document.getElementById('videoPreviewSection');
             const scriptSection = document.getElementById('videoScriptSection');
             const audioSection = document.getElementById('audioUploadSection');
+            const portraitSection = document.getElementById('portraitUploadSection');
             const videoMeta = document.getElementById('videoMeta');
             const contentEl = document.getElementById('content_video');
             
             if (selectedVideoMethod === 'master') {
-                // 大师生成：显示脚本 + 音频上传
-                previewSection.style.display = 'none';
+                // 大师生成：显示脚本 + 音频上传 + 人像上传
+                previewSection.style.display = 'block';
                 audioSection.style.display = 'block';
+                portraitSection.style.display = 'block';
                 scriptSection.style.display = 'block';
                 if (contentEl) contentEl.textContent = CONTENTS.video;
             } else if (selectedVideoMethod === 'normal') {
                 // 普通生成：显示视频预览 + 音频上传
                 previewSection.style.display = 'block';
                 audioSection.style.display = 'block';
+                portraitSection.style.display = 'none';
                 scriptSection.style.display = 'none';
             } else {
                 // 闪电生成：只显示视频预览
                 previewSection.style.display = 'block';
                 audioSection.style.display = 'none';
+                portraitSection.style.display = 'none';
                 scriptSection.style.display = 'none';
             }
             
@@ -1331,10 +1352,19 @@ VIP认筹通道已开启，欢迎私信咨询！`,
                 const methodLabels = {
                     'lightning': '约60秒 · 系统视频 · 闪电生成',
                     'normal': '约60秒 · 系统视频 + 音频',
-                    'master': '约60秒 · 脚本 + 素材'
+                    'master': '约60秒 · 脚本 + 人像'
                 };
                 videoMeta.textContent = methodLabels[selectedVideoMethod];
             }
+        }
+        
+        // 选择视频模板
+        function selectTemplate() {
+            showToast('跳转到视频模板选择页');
+            setTimeout(() => {
+                // 模拟跳转模板页后返回
+                // location.href = 'video-template.html?from=confirm-script';
+            }, 500);
         }
 
         // 更换视频生成方式（生成后）
