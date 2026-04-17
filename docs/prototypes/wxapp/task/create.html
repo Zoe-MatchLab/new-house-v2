@@ -727,8 +727,8 @@
                                         <span class="point-tag-disabled"><i class="fa fa-ban"></i> 不可删除</span>
                                     </div>
                                     <div class="point-items">
-                                        <span class="point-item required"><i class="fa fa-camera"></i> 拍照</span>
-                                        <span class="point-item required"><i class="fa fa-pencil"></i> 填写内容</span>
+                                        <span class="point-item required"><i class="fa fa-image-o"></i> 图片</span>
+                                        <span class="point-item required"><i class="fa fa-file-text-o"></i> 文本</span>
                                     </div>
                                 </div>
 
@@ -743,8 +743,8 @@
                                         <span class="point-tag-disabled"><i class="fa fa-ban"></i> 不可删除</span>
                                     </div>
                                     <div class="point-items">
-                                        <span class="point-item required"><i class="fa fa-camera"></i> 拍照</span>
-                                        <span class="point-item required"><i class="fa fa-video-camera"></i> 录制视频</span>
+                                        <span class="point-item required"><i class="fa fa-image-o"></i> 图片</span>
+                                        <span class="point-item required"><i class="fa fa-video-camera"></i> 视频</span>
                                     </div>
                                 </div>
 
@@ -1309,9 +1309,10 @@
                     <span class="point-action-btn" onclick="deletePoint(this)"><i class="fa fa-trash-o"></i> 删除</span>
                 </div>
                 <div class="point-items">
-                    <span class="point-item normal"><i class="fa fa-camera"></i> 拍照</span>
-                    <span class="point-item normal"><i class="fa fa-video-camera"></i> 录制视频</span>
-                    <span class="point-item normal"><i class="fa fa-pencil"></i> 填写内容</span>
+                    <span class="point-item normal"><i class="fa fa-image-o"></i> 图片</span>
+                    <span class="point-item normal"><i class="fa fa-video-camera"></i> 视频</span>
+                    <span class="point-item normal"><i class="fa fa-microphone"></i> 音频</span>
+                    <span class="point-item normal"><i class="fa fa-file-text-o"></i> 文本</span>
                 </div>
             `;
             container.insertBefore(newPoint, addBtn);
@@ -1343,14 +1344,17 @@
                 <div class="point-form-item">
                     <label class="point-form-label">上传类型</label>
                     <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;">
-                        <div class="upload-type active" data-type="photo" onclick="selectUploadType(this)">
-                            <i class="fa fa-camera"></i>拍照
+                        <div class="upload-type" data-type="text" onclick="selectUploadType(this)">
+                            <i class="fa fa-file-text-o"></i>文本
+                        </div>
+                        <div class="upload-type active" data-type="image" onclick="selectUploadType(this)">
+                            <i class="fa fa-image-o"></i>图片
                         </div>
                         <div class="upload-type" data-type="video" onclick="selectUploadType(this)">
                             <i class="fa fa-video-camera"></i>视频
                         </div>
-                        <div class="upload-type" data-type="text" onclick="selectUploadType(this)">
-                            <i class="fa fa-pencil"></i>文字
+                        <div class="upload-type" data-type="audio" onclick="selectUploadType(this)">
+                            <i class="fa fa-microphone"></i>音频
                         </div>
                     </div>
                 </div>
