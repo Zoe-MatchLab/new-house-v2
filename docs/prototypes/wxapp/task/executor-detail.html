@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>探盘任务详情</title>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --brand-primary: #FA8C16;
+            --brand-primary-dark: #E67A0E;
+            --brand-primary-light: #FFF7E6;
+            --color-success: #00B42A;
+            --color-success-light: #E8FFEA;
+            --color-warning: #FF7D00;
+            --color-warning-light: #FFF7E6;
+            --color-danger: #FA5151;
+            --color-danger-light: #FFECE8;
+            --color-purple: #722ED1;
+            --color-purple-light: #F7F0FF;
+            --color-title: #1D2129;
+            --color-text: #4E5969;
+            --color-sub: #86909C;
+            --color-border: #E5E6EB;
+            --color-bg: #F7F8FA;
+            --color-card: #FFFFFF;
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --radius-sm: 4px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --radius-xl: 16px;
+            --font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body {
+            font-family: var(--font-family);
+            font-size: 14px;
+            line-height: 1.5;
+            color: var(--color-text);
+            background: var(--color-bg);
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+            padding-bottom: calc(80px + env(safe-area-inset-bottom));
+        }
+
+        /* ========== 页面容器 ========== */
+        .page { min-height: 100vh; }
+
+        /* ========== 顶部导航 ========== */
+        .nav-bar {
+            background: linear-gradient(135deg, var(--brand-primary) 0%, #FF9500 100%);
+            padding: calc(12px + env(safe-area-inset-top)) var(--spacing-md) 12px;
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .nav-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .nav-back {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.2);
+            border-radius: var(--radius-lg);
+            color: white;
+            text-decoration: none;
+        }
+        .nav-back:active { background: rgba(255,255,255,0.3); }
+        .nav-title { font-size: 17px; font-weight: 600; }
+        .nav-share {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.2);
+            border-radius: var(--radius-lg);
+            color: white;
+        }
+
+        /* ========== 任务概览 ========== */
+        .task-overview {
+            background: var(--color-card);
+            padding: var(--spacing-md);
+            border-bottom: 1px solid var(--color-border);
+        }
+        .task-header {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+        }
+        .task-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-lg);
+            background: var(--brand-primary-light);
+            color: var(--brand-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+        .task-info { flex: 1; }
+        .task-name { font-size: 16px; font-weight: 600; color: var(--color-title); margin-bottom: 4px; }
+        .task-meta { font-size: 12px; color: var(--color-sub); display: flex; align-items: center; gap: 8px; }
+        .task-status {
+            padding: 4px 10px;
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .task-status.progress { background: var(--color-warning-light); color: var(--color-warning); }
+        .task-status.completed { background: var(--color-success-light); color: var(--color-success); }
+
+        /* ========== 进度条 ========== */
+        .progress-section {
+            background: var(--color-card);
+            padding: var(--spacing-md);
+            border-bottom: 1px solid var(--color-border);
+        }
+        .progress-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--spacing-sm);
+        }
+        .progress-title { font-size: 13px; color: var(--color-sub); }
+        .progress-value { font-size: 13px; font-weight: 600; color: var(--brand-primary); }
+        .progress-bar {
+            height: 8px;
+            background: var(--color-border);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: var(--spacing-sm);
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--brand-primary), #FF9500);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+        .progress-fill.completed { background: var(--color-success); }
+        .stages {
+            display: flex;
+            justify-content: space-between;
+        }
+        .stage {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+        .stage-dot {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .stage-dot.pending { background: var(--color-border); color: var(--color-sub); }
+        .stage-dot.active { background: var(--brand-primary); color: white; }
+        .stage-dot.completed { background: var(--color-success); color: white; }
+        .stage-label { font-size: 11px; color: var(--color-sub); }
+        .stage-label.active { color: var(--brand-primary); font-weight: 500; }
+        .stage-label.completed { color: var(--color-success); font-weight: 500; }
+
+        /* ========== Tab切换 ========== */
+        .tabs {
+            display: flex;
+            background: var(--color-card);
+            padding: 0 var(--spacing-md);
+            border-bottom: 1px solid var(--color-border);
+        }
+        .tab {
+            flex: 1;
+            padding: 12px 0;
+            text-align: center;
+            font-size: 15px;
+            color: var(--color-sub);
+            position: relative;
+            cursor: pointer;
+        }
+        .tab.active { color: var(--brand-primary); font-weight: 600; }
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 32px;
+            height: 3px;
+            background: var(--brand-primary);
+            border-radius: 2px;
+        }
+
+        /* ========== 内容区域 ========== */
+        .content { padding: var(--spacing-md); }
+        .content.hidden { display: none; }
+
+        /* ========== 楼盘信息卡片 ========== */
+        .building-card {
+            background: var(--color-card);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--spacing-md);
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+        }
+        .building-header {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            padding: var(--spacing-md);
+            border-bottom: 1px solid var(--color-border);
+        }
+        .building-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-md);
+            background: var(--brand-primary-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--brand-primary);
+            font-size: 20px;
+        }
+        .building-info { flex: 1; }
+        .building-name { font-size: 15px; font-weight: 600; color: var(--color-title); }
+        .building-price { font-size: 14px; color: var(--brand-primary); font-weight: 600; margin-top: 2px; }
+        .building-status {
+            padding: 4px 10px;
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            background: var(--color-success-light);
+            color: var(--color-success);
+        }
+        .building-detail {
+            padding: var(--spacing-md);
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--spacing-sm);
+        }
+        .detail-item { }
+        .detail-label { font-size: 11px; color: var(--color-sub); margin-bottom: 2px; }
+        .detail-value { font-size: 13px; color: var(--color-title); }
+
+        /* ========== 打卡卡片 ========== */
+        .checkin-card {
+            background: var(--color-card);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--spacing-md);
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-md);
+            border-bottom: 1px solid var(--color-border);
+        }
+        .card-header i { color: var(--brand-primary); }
+        .card-header span { font-size: 15px; font-weight: 600; color: var(--color-title); }
+        .card-body { padding: var(--spacing-md); }
+
+        /* ========== 点位列表 ========== */
+        .point-list { display: flex; flex-direction: column; gap: var(--spacing-sm); }
+        .point-item {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            padding: var(--spacing-md);
+            background: var(--color-bg);
+            border-radius: var(--radius-md);
+        }
+        .point-item.completed { background: var(--color-success-light); }
+        .point-badge {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--brand-primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        .point-item.completed .point-badge { background: var(--color-success); }
+        .point-info { flex: 1; }
+        .point-name { font-size: 14px; font-weight: 500; color: var(--color-title); }
+        .point-desc { font-size: 12px; color: var(--color-sub); margin-top: 2px; }
+        .point-item.completed .point-desc { color: var(--color-success); }
+        .point-action {
+            padding: 6px 12px;
+            border-radius: var(--radius-md);
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        .point-action.do { background: var(--brand-primary); color: white; }
+        .point-action.done { background: var(--color-success); color: white; }
+        .point-upload-types {
+            display: flex;
+            gap: 6px;
+            margin-top: 8px;
+        }
+        .upload-type-tag {
+            font-size: 11px;
+            padding: 2px 8px;
+            background: var(--color-card);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-sm);
+            color: var(--color-sub);
+        }
+
+        /* ========== 训练卡片 ========== */
+        .training-card {
+            background: var(--color-card);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--spacing-md);
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+        }
+        .training-item {
+            display: flex;
+            align-items: center;
+            padding: var(--spacing-md);
+            border-bottom: 1px solid var(--color-border);
+        }
+        .training-item:last-child { border-bottom: none; }
+        .training-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-md);
+            background: var(--color-purple-light);
+            color: var(--color-purple);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            margin-right: var(--spacing-md);
+        }
+        .training-info { flex: 1; }
+        .training-name { font-size: 14px; font-weight: 500; color: var(--color-title); }
+        .training-meta { font-size: 12px; color: var(--color-sub); margin-top: 2px; }
+        .training-action {
+            padding: 8px 16px;
+            border-radius: var(--radius-md);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        .training-action.start { background: var(--color-purple); color: white; }
+        .training-action.continue { background: var(--color-purple-light); color: var(--color-purple); }
+        .training-action.done { background: var(--color-success-light); color: var(--color-success); }
+
+        /* ========== 底部按钮 ========== */
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--color-card);
+            padding: var(--spacing-md);
+            padding-bottom: calc(var(--spacing-md) + env(safe-area-inset-bottom));
+            display: flex;
+            gap: var(--spacing-md);
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.06);
+        }
+        .btn {
+            flex: 1;
+            padding: 14px;
+            border-radius: var(--radius-lg);
+            font-size: 15px;
+            font-weight: 600;
+            text-align: center;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-sm);
+        }
+        .btn-primary { background: var(--brand-primary); color: white; }
+        .btn-primary:active { background: var(--brand-primary-dark); }
+        .btn-secondary { background: var(--color-bg); color: var(--color-text); }
+
+        /* ========== Toast ========== */
+        .toast {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.75);
+            color: white;
+            padding: 12px 24px;
+            border-radius: var(--radius-lg);
+            font-size: 14px;
+            z-index: 9999;
+            animation: toastIn 0.2s ease;
+        }
+        @keyframes toastIn {
+            from { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
+            to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <!-- 顶部导航 -->
+        <div class="nav-bar">
+            <div class="nav-inner">
+                <a href="javascript:history.back();" class="nav-back">
+                    <i class="fa fa-angle-left" style="font-size:20px;"></i>
+                </a>
+                <span class="nav-title">探盘任务</span>
+                <div class="nav-share">
+                    <i class="fa fa-share-alt"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- 任务概览 -->
+        <div class="task-overview">
+            <div class="task-header">
+                <div class="task-icon">
+                    <i class="fa fa-home"></i>
+                </div>
+                <div class="task-info">
+                    <div class="task-name">万科城市花园探盘任务</div>
+                    <div class="task-meta">
+                        <span class="task-status progress">进行中</span>
+                        <span>截止 04-18 18:00</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 进度条 -->
+        <div class="progress-section">
+            <div class="progress-header">
+                <span class="progress-title">整体进度</span>
+                <span class="progress-value">2/4 阶段</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 50%;"></div>
+            </div>
+            <div class="stages">
+                <div class="stage">
+                    <div class="stage-dot completed"><i class="fa fa-check"></i></div>
+                    <span class="stage-label completed">打卡</span>
+                </div>
+                <div class="stage">
+                    <div class="stage-dot active">2</div>
+                    <span class="stage-label active">素材</span>
+                </div>
+                <div class="stage">
+                    <div class="stage-dot pending">3</div>
+                    <span class="stage-label">文案</span>
+                </div>
+                <div class="stage">
+                    <div class="stage-dot pending">4</div>
+                    <span class="stage-label">封面</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab切换 -->
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('checkin', this)">打卡</div>
+            <div class="tab" onclick="switchTab('training', this)">话术训练</div>
+            <div class="tab" onclick="switchTab('recording', this)">录音分析</div>
+        </div>
+
+        <!-- ========== 打卡内容 ========== -->
+        <div id="checkinContent" class="content">
+            <!-- 楼盘信息 -->
+            <div class="building-card">
+                <div class="building-header">
+                    <div class="building-icon">
+                        <i class="fa fa-building-o"></i>
+                    </div>
+                    <div class="building-info">
+                        <div class="building-name">万科城市花园</div>
+                        <div class="building-price">68,000 元/m²</div>
+                    </div>
+                    <div class="building-status">在售</div>
+                </div>
+                <div class="building-detail">
+                    <div class="detail-item">
+                        <div class="detail-label">物业类型</div>
+                        <div class="detail-value">住宅</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">开发商</div>
+                        <div class="detail-value">万科地产</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">开盘时间</div>
+                        <div class="detail-value">2026-03-01</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">交付时间</div>
+                        <div class="detail-value">2027-12-31</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 打卡点 -->
+            <div class="checkin-card">
+                <div class="card-header">
+                    <i class="fa fa-map-marker"></i>
+                    <span>采集点位</span>
+                    <span style="margin-left:auto;color:var(--color-sub);font-size:12px;">1/3 已完成</span>
+                </div>
+                <div class="card-body">
+                    <div class="point-list">
+                        <!-- 已完成 -->
+                        <div class="point-item completed">
+                            <div class="point-badge"><i class="fa fa-check"></i></div>
+                            <div class="point-info">
+                                <div class="point-name">接待处</div>
+                                <div class="point-desc">已完成 · 2026-04-16 14:30</div>
+                                <div class="point-upload-types">
+                                    <span class="upload-type-tag">图片 3张</span>
+                                    <span class="upload-type-tag">文本 1份</span>
+                                </div>
+                            </div>
+                            <div class="point-action done">已完成</div>
+                        </div>
+
+                        <!-- 待打卡 -->
+                        <div class="point-item">
+                            <div class="point-badge">2</div>
+                            <div class="point-info">
+                                <div class="point-name">沙盘区</div>
+                                <div class="point-desc">必打卡 · 拍照 + 视频</div>
+                                <div class="point-upload-types">
+                                    <span class="upload-type-tag">图片</span>
+                                    <span class="upload-type-tag">视频</span>
+                                </div>
+                            </div>
+                            <div class="point-action do" onclick="showToast('开始打卡')">开始打卡</div>
+                        </div>
+
+                        <!-- 待打卡 -->
+                        <div class="point-item">
+                            <div class="point-badge">3</div>
+                            <div class="point-info">
+                                <div class="point-name">样板间</div>
+                                <div class="point-desc">选打卡 · 拍照</div>
+                                <div class="point-upload-types">
+                                    <span class="upload-type-tag">图片</span>
+                                </div>
+                            </div>
+                            <div class="point-action do" onclick="showToast('开始打卡')">开始打卡</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== 话术训练内容 ========== -->
+        <div id="trainingContent" class="content hidden">
+            <div class="training-card">
+                <div class="training-item">
+                    <div class="training-icon">
+                        <i class="fa fa-book"></i>
+                    </div>
+                    <div class="training-info">
+                        <div class="training-name">产品知识</div>
+                        <div class="training-meta">5/10 题 · 已完成</div>
+                    </div>
+                    <div class="training-action done">已完成</div>
+                </div>
+                <div class="training-item">
+                    <div class="training-icon">
+                        <i class="fa fa-balance-scale"></i>
+                    </div>
+                    <div class="training-info">
+                        <div class="training-name">竞品对比</div>
+                        <div class="training-meta">3/8 题 · 进行中</div>
+                    </div>
+                    <div class="training-action continue" onclick="showToast('继续训练')">继续训练</div>
+                </div>
+                <div class="training-item">
+                    <div class="training-icon">
+                        <i class="fa fa-comments"></i>
+                    </div>
+                    <div class="training-info">
+                        <div class="training-name">话术技巧</div>
+                        <div class="training-meta">0/12 题 · 未开始</div>
+                    </div>
+                    <div class="training-action start" onclick="showToast('开始训练')">开始训练</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== 录音分析内容 ========== -->
+        <div id="recordingContent" class="content hidden">
+            <div class="checkin-card">
+                <div class="card-header">
+                    <i class="fa fa-microphone"></i>
+                    <span>录音分析</span>
+                </div>
+                <div class="card-body">
+                    <div style="text-align:center;padding:32px 16px;">
+                        <div style="font-size:48px;margin-bottom:16px;color:var(--color-sub);">
+                            <i class="fa fa-microphone"></i>
+                        </div>
+                        <div style="font-size:15px;color:var(--color-title);margin-bottom:8px;">暂无录音</div>
+                        <div style="font-size:13px;color:var(--color-sub);margin-bottom:16px;">开始通话后自动录音分析</div>
+                        <button class="btn-primary" style="width:auto;padding:12px 24px;" onclick="showToast('开始录音')">
+                            <i class="fa fa-phone"></i> 开始录音
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 历史录音 -->
+            <div class="checkin-card">
+                <div class="card-header">
+                    <i class="fa fa-history"></i>
+                    <span>历史录音</span>
+                </div>
+                <div class="card-body">
+                    <div style="display:flex;align-items:center;padding:12px 0;border-bottom:1px solid var(--color-border);">
+                        <div style="flex:1;">
+                            <div style="font-size:14px;color:var(--color-title);">与客户张先生通话</div>
+                            <div style="font-size:12px;color:var(--color-sub);margin-top:2px;">04-16 15:30 · 时长 12:35</div>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:8px;">
+                            <span class="tag" style="background:var(--color-warning-light);color:var(--color-warning);">3个改进点</span>
+                            <span style="color:var(--color-brand-primary);font-size:13px;">查看分析</span>
+                        </div>
+                    </div>
+                    <div style="display:flex;align-items:center;padding:12px 0;">
+                        <div style="flex:1;">
+                            <div style="font-size:14px;color:var(--color-title);">与客户李女士通话</div>
+                            <div style="font-size:12px;color:var(--color-sub);margin-top:2px;">04-15 10:20 · 时长 08:42</div>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:8px;">
+                            <span class="tag" style="background:var(--color-success-light);color:var(--color-success);">优秀</span>
+                            <span style="color:var(--color-brand-primary);font-size:13px;">查看分析</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 底部按钮 -->
+        <div class="footer">
+            <button class="btn btn-secondary" onclick="showToast('查看任务详情')">
+                <i class="fa fa-info-circle"></i> 任务详情
+            </button>
+            <button class="btn btn-primary" onclick="showToast('提交审核')">
+                提交审核 <i class="fa fa-check"></i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Tab切换
+        function switchTab(tab, el) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            el.classList.add('active');
+            
+            document.getElementById('checkinContent').classList.add('hidden');
+            document.getElementById('trainingContent').classList.add('hidden');
+            document.getElementById('recordingContent').classList.add('hidden');
+            
+            if (tab === 'checkin') {
+                document.getElementById('checkinContent').classList.remove('hidden');
+            } else if (tab === 'training') {
+                document.getElementById('trainingContent').classList.remove('hidden');
+            } else if (tab === 'recording') {
+                document.getElementById('recordingContent').classList.remove('hidden');
+            }
+        }
+
+        // Toast提示
+        function showToast(msg) {
+            const existing = document.querySelector('.toast');
+            if (existing) existing.remove();
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = msg;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2000);
+        }
+    </script>
+</body>
+</html>
