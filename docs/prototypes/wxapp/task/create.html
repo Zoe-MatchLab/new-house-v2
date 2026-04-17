@@ -412,6 +412,8 @@
         .point-tag-gray { font-size: 10px; padding: 2px 6px; border-radius: 4px; background: #E8E8E8; color: var(--color-sub); }
         .point-tag-disabled { font-size: 11px; color: var(--color-sub); display: flex; align-items: center; gap: 4px; }
         .point-action-btn { font-size: 12px; color: var(--color-danger); display: flex; align-items: center; gap: 4px; cursor: pointer; }
+        .point-actions { display: flex; gap: 12px; }
+        .point-action-btn.edit { color: var(--brand-primary); }
         /* 点位操作项 */
         .point-items { display: flex; flex-wrap: wrap; gap: 8px; }
         .point-item { display: flex; align-items: center; gap: 4px; padding: 6px 10px; border-radius: 6px; font-size: 12px; background: white; }
@@ -756,12 +758,16 @@
                                             <span class="point-name">样板间</span>
                                             <span class="point-tag-gray">选打卡</span>
                                         </div>
-                                        <span class="point-action-btn" onclick="deletePoint(this)"><i class="fa fa-trash-o"></i> 删除</span>
+                                        <div class="point-actions">
+                                            <span class="point-action-btn" onclick="editPoint(this)"><i class="fa fa-pencil"></i> 编辑</span>
+                                            <span class="point-action-btn" onclick="deletePoint(this)"><i class="fa fa-trash-o"></i> 删除</span>
+                                        </div>
                                     </div>
                                     <div class="point-items">
-                                        <span class="point-item normal"><i class="fa fa-camera"></i> 拍照</span>
-                                        <span class="point-item normal"><i class="fa fa-video-camera"></i> 录制视频</span>
-                                        <span class="point-item normal"><i class="fa fa-pencil"></i> 填写内容</span>
+                                        <span class="point-item normal"><i class="fa fa-image-o"></i> 图片</span>
+                                        <span class="point-item normal"><i class="fa fa-video-camera"></i> 视频</span>
+                                        <span class="point-item normal"><i class="fa fa-microphone"></i> 音频</span>
+                                        <span class="point-item normal"><i class="fa fa-file-text-o"></i> 文本</span>
                                     </div>
                                 </div>
 
@@ -920,10 +926,6 @@
                                     <span class="reminder-hint">截止前</span>
                                     <input type="number" class="reminder-input" id="lightHours" value="48" min="1" oninput="onLightChange()">
                                     <span class="reminder-hint">小时</span>
-                                    <label class="switch" style="width:36px;height:22px;">
-                                        <input type="checkbox" id="lightSwitch" checked onchange="onLightSwitch()">
-                                        <span class="slider" style="height:18px;border-radius:18px;"></span>
-                                    </label>
                                 </div>
                             </div>
                             <!-- 中度提醒 -->
@@ -936,10 +938,6 @@
                                     <span class="reminder-hint">截止前</span>
                                     <input type="number" class="reminder-input" id="midHours" value="24" min="1" oninput="onMidChange()">
                                     <span class="reminder-hint">小时</span>
-                                    <label class="switch" style="width:36px;height:22px;">
-                                        <input type="checkbox" id="midSwitch" checked onchange="onMidSwitch()">
-                                        <span class="slider" style="height:18px;border-radius:18px;"></span>
-                                    </label>
                                 </div>
                             </div>
                             <!-- 重度提醒 -->
@@ -952,10 +950,6 @@
                                     <span class="reminder-hint">截止前</span>
                                     <input type="number" class="reminder-input" id="highHours" value="2" min="1" oninput="onHighChange()">
                                     <span class="reminder-hint">小时</span>
-                                    <label class="switch" style="width:36px;height:22px;">
-                                        <input type="checkbox" id="highSwitch" checked onchange="onHighSwitch()">
-                                        <span class="slider" style="height:18px;border-radius:18px;"></span>
-                                    </label>
                                 </div>
                             </div>
                         </div>
@@ -1262,18 +1256,43 @@
         // 初始化
         initReminderValidation();
 
-        // ========== 添加点位弹窗 ==========
+        // ========== 添加/编辑点位弹窗 ==========
         let pointCount = 3; // 已有3个点位
+        let editingPointEl = null; // 正在编辑的点位元素
         
         function openAddPointModal() {
+            editingPointEl = null;
             document.getElementById('addPointModal').classList.remove('hidden');
             document.getElementById('pointNameInput').value = '';
             document.getElementById('pointNameInput').focus();
             updatePointNameBtn();
+            // 重置上传类型选中态
+            document.querySelectorAll('.upload-type').forEach(el => el.classList.remove('active'));
+            document.querySelector('.upload-type[data-type="image"]').classList.add('active');
+            document.getElementById('requiredCheck').checked = false;
+            // 更新弹窗标题和按钮
+            document.querySelector('.modal-title').textContent = '添加打卡点';
+            document.getElementById('confirmAddPoint').textContent = '确认添加';
+        }
+        
+        function editPoint(el) {
+            const pointCard = el.closest('.point-card-bg');
+            editingPointEl = pointCard;
+            const pointName = pointCard.querySelector('.point-name').textContent;
+            const isRequired = pointCard.querySelector('.point-tag-orange') !== null;
+            
+            document.getElementById('addPointModal').classList.remove('hidden');
+            document.getElementById('pointNameInput').value = pointName;
+            document.getElementById('requiredCheck').checked = isRequired;
+            updatePointNameBtn();
+            // 更新弹窗标题和按钮
+            document.querySelector('.modal-title').textContent = '编辑打卡点';
+            document.getElementById('confirmAddPoint').textContent = '保存修改';
         }
         
         function closeAddPointModal() {
             document.getElementById('addPointModal').classList.add('hidden');
+            editingPointEl = null;
         }
         
         function updatePointNameBtn() {
@@ -1292,14 +1311,26 @@
                 return;
             }
             
-            pointCount++;
-            // 找到添加按钮的位置，在其之前插入新点位
-            const addBtn = document.querySelector('.point-items ~ .add-btn, .collapse-body > .add-btn');
-            const container = addBtn.parentElement;
+            const isRequired = document.getElementById('requiredCheck').checked;
+            const badgeClass = isRequired ? 'point-tag-orange' : 'point-tag-gray';
+            const badgeText = isRequired ? '必打卡' : '选打卡';
             
-            const newPoint = document.createElement('div');
-            newPoint.className = 'point-card-bg';
-            newPoint.innerHTML = `
+            if (editingPointEl) {
+                // 编辑模式：更新现有点位
+                editingPointEl.querySelector('.point-name').textContent = name;
+                const badge = editingPointEl.querySelector('.point-badge + .point-name + .point-tag-orange, .point-badge + .point-name + .point-tag-gray');
+                if (badge) badge.className = badgeClass;
+                editingPointEl.querySelector('.point-tag-orange, .point-tag-gray').textContent = badgeText;
+                showToast('修改成功');
+            } else {
+                // 新增模式
+                pointCount++;
+                const addBtn = document.querySelector('.point-items ~ .add-btn, .collapse-body > .add-btn');
+                const container = addBtn.parentElement;
+                
+                const newPoint = document.createElement('div');
+                newPoint.className = 'point-card-bg';
+                newPoint.innerHTML = `
                 <div class="point-header-row">
                     <div class="point-title-row">
                         <span class="point-badge">${pointCount}</span>
