@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>阶段4：封面确认 - 房产AI助手</title>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --brand-primary: #FA8C16;
+            --brand-primary-dark: #E67A0E;
+            --brand-primary-light: #FFF7E6;
+            --color-success: #00B42A;
+            --color-success-light: #F6FFED;
+            --color-danger: #FA5151;
+            --color-warning: #FF7D00;
+            --color-warning-light: #FFF7E6;
+            --color-info: #007AFF;
+            --color-info-light: #E8F3FF;
+            --color-purple: #722ED1;
+            --color-purple-light: #F7F0FF;
+            --color-title: #1D2129;
+            --color-text: #4E5969;
+            --color-sub: #86909C;
+            --color-border: #E5E6EB;
+            --color-bg: #F7F8FA;
+            --color-card: #FFFFFF;
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --radius-sm: 4px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --radius-xl: 16px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
+            --transition-fast: 0.15s ease;
+            --transition-normal: 0.25s ease;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body {
+            font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif;
+            font-size: 14px;
+            color: var(--color-text);
+            background: var(--color-bg);
+            min-height: 100vh;
+            padding-bottom: calc(100px + env(safe-area-inset-bottom));
+        }
+
+        /* 头部 */
+        .header {
+            background: linear-gradient(135deg, var(--brand-primary) 0%, #FF9500 100%);
+            padding: calc(44px + env(safe-area-inset-top)) var(--spacing-md) var(--spacing-md);
+            color: white;
+        }
+        .header-top {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+        }
+        .back-btn {
+            width: 32px; height: 32px;
+            display: flex; align-items: center; justify-content: center;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            cursor: pointer; border: none; color: white;
+        }
+        .header-title { font-size: 17px; font-weight: 600; flex: 1; text-align: center; }
+        .step-badge { font-size: 11px; padding: 2px 10px; background: rgba(255,255,255,0.25); border-radius: 20px; }
+
+        /* 阶段进度 */
+        .stage-progress {
+            margin-top: 12px;
+            padding: 10px 16px;
+            background: rgba(255,255,255,0.15);
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .stage-progress .dot {
+            font-size: 12px;
+            color: rgba(255,255,255,0.7);
+        }
+        .stage-progress .dot.active { color: white; font-weight: 600; }
+        .stage-progress .dot.completed { color: rgba(255,255,255,0.9); }
+        .stage-progress .line {
+            width: 28px; height: 2px;
+            background: rgba(255,255,255,0.5);
+            margin: 0 6px;
+            border-radius: 1px;
+        }
+        .stage-progress .line.inactive { background: rgba(255,255,255,0.25); }
+
+        /* 提示区域 */
+        .tip-card {
+            margin: var(--spacing-md);
+            padding: var(--spacing-md);
+            background: var(--color-info-light);
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: flex-start;
+            gap: var(--spacing-sm);
+        }
+        .tip-card i { color: var(--color-info); font-size: 18px; margin-top: 2px; }
+        .tip-card-text { font-size: 13px; color: var(--color-info); line-height: 1.5; }
+
+        /* 内容区域 */
+        .content { padding: 0 var(--spacing-md); }
+
+        /* 封面卡片 */
+        .cover-card {
+            background: white;
+            border-radius: var(--radius-xl);
+            margin-bottom: var(--spacing-md);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+        }
+        .cover-preview {
+            aspect-ratio: 16/9;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .cover-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .cover-preview-placeholder {
+            color: white;
+            text-align: center;
+        }
+        .cover-preview-placeholder i { font-size: 48px; margin-bottom: 8px; opacity: 0.8; }
+        .cover-preview-placeholder span { font-size: 14px; opacity: 0.8; }
+        .cover-badge {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            padding: 4px 10px;
+            background: rgba(0,0,0,0.5);
+            color: white;
+            font-size: 11px;
+            border-radius: var(--radius-sm);
+        }
+
+        /* 封面信息 */
+        .cover-info {
+            padding: var(--spacing-md);
+        }
+        .cover-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--color-title);
+            margin-bottom: var(--spacing-sm);
+        }
+        .cover-meta {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            font-size: 12px;
+            color: var(--color-sub);
+        }
+        .cover-meta span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* 封面列表 */
+        .cover-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--spacing-sm);
+        }
+        .cover-item {
+            background: white;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+        .cover-item:active { transform: scale(0.98); }
+        .cover-item.selected {
+            border-color: var(--brand-primary);
+            box-shadow: 0 0 0 3px var(--brand-primary-light);
+        }
+        .cover-item-img {
+            aspect-ratio: 16/9;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .cover-item-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .cover-item-img i {
+            font-size: 24px;
+            color: white;
+            opacity: 0.8;
+        }
+        .cover-item-name {
+            padding: 8px;
+            font-size: 12px;
+            color: var(--color-text);
+            text-align: center;
+        }
+
+        /* 操作按钮 */
+        .action-bar {
+            padding: var(--spacing-md);
+            display: flex;
+            gap: var(--spacing-sm);
+        }
+        .action-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: var(--radius-lg);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: all var(--transition-fast);
+        }
+        .action-btn:active { transform: scale(0.98); }
+        .action-btn.primary {
+            background: var(--brand-primary);
+            color: white;
+        }
+        .action-btn.secondary {
+            background: var(--color-bg);
+            color: var(--color-text);
+        }
+
+        /* 底部操作栏 */
+        .bottom-bar {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            background: white;
+            padding: var(--spacing-md);
+            padding-bottom: calc(var(--spacing-md) + env(safe-area-inset-bottom));
+            box-shadow: 0 -4px 12px rgba(0,0,0,0.08);
+            display: flex;
+            gap: var(--spacing-md);
+        }
+        .confirm-btn {
+            flex: 1;
+            padding: 14px;
+            background: var(--color-border);
+            border: none;
+            border-radius: var(--radius-xl);
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+            cursor: not-allowed;
+            transition: all var(--transition-normal);
+        }
+        .confirm-btn.ready {
+            background: linear-gradient(135deg, var(--brand-primary) 0%, #FF9500 100%);
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(250,140,22,0.3);
+        }
+        .confirm-btn:active { transform: scale(0.99); }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.75);
+            color: white;
+            padding: 16px 32px;
+            border-radius: var(--radius-lg);
+            z-index: 99999;
+            font-size: 15px;
+            animation: toastIn 0.3s ease forwards;
+            pointer-events: none;
+        }
+        @keyframes toastIn {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.85); }
+            100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-top">
+            <button class="back-btn" onclick="goBack()">
+                <i class="fa fa-angle-left" style="font-size:20px;"></i>
+            </button>
+            <span class="header-title">阶段4：封面确认</span>
+            <span class="step-badge">4/4</span>
+        </div>
+        <div class="stage-progress">
+            <span class="dot completed">阶段1</span>
+            <div class="line"></div>
+            <span class="dot completed">阶段2</span>
+            <div class="line"></div>
+            <span class="dot completed">阶段3</span>
+            <div class="line"></div>
+            <span class="dot active">阶段4</span>
+        </div>
+    </div>
+
+    <!-- 提示区域 -->
+    <div class="tip-card">
+        <i class="fa fa-lightbulb-o"></i>
+        <div class="tip-card-text">
+            请为您的内容选择合适的封面图，也可以让AI自动生成专属封面
+        </div>
+    </div>
+
+    <div class="content">
+        <!-- 已选封面预览 -->
+        <div class="cover-card">
+            <div class="cover-preview">
+                <img src="https://picsum.photos/400/225?random=1" alt="封面预览" id="selectedCoverImg">
+                <div class="cover-badge">已选封面</div>
+            </div>
+            <div class="cover-info">
+                <div class="cover-title" id="selectedCoverTitle">中海汇德里 | 探盘日记</div>
+                <div class="cover-meta">
+                    <span><i class="fa fa-image-o"></i> 1920×1080</span>
+                    <span><i class="fa fa-file-o"></i> JPG 2.4MB</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 操作按钮 -->
+        <div class="action-bar">
+            <button class="action-btn secondary" onclick="regenerateCover()">
+                <i class="fa fa-refresh"></i> 重新生成
+            </button>
+            <button class="action-btn primary" onclick="selectFromTemplate()">
+                <i class="fa fa-th-large"></i> 从模板选择
+            </button>
+        </div>
+
+        <!-- 封面模板列表 -->
+        <div style="font-size:13px;font-weight:600;color:var(--color-title);margin-bottom:var(--spacing-sm);">
+            更多封面模板
+        </div>
+        <div class="cover-list">
+            <div class="cover-item selected" onclick="selectCover(this, '中海汇德里封面A', 'https://picsum.photos/200/112?random=2')">
+                <div class="cover-item-img">
+                    <img src="https://picsum.photos/200/112?random=2" alt="封面A">
+                </div>
+                <div class="cover-item-name">现代简约</div>
+            </div>
+            <div class="cover-item" onclick="selectCover(this, '中海汇德里封面B', 'https://picsum.photos/200/112?random=3')">
+                <div class="cover-item-img">
+                    <img src="https://picsum.photos/200/112?random=3" alt="封面B">
+                </div>
+                <div class="cover-item-name">中式风格</div>
+            </div>
+            <div class="cover-item" onclick="selectCover(this, '中海汇德里封面C', 'https://picsum.photos/200/112?random=4')">
+                <div class="cover-item-img">
+                    <img src="https://picsum.photos/200/112?random=4" alt="封面C">
+                </div>
+                <div class="cover-item-name">轻奢典雅</div>
+            </div>
+            <div class="cover-item" onclick="selectCover(this, '中海汇德里封面D', 'https://picsum.photos/200/112?random=5')">
+                <div class="cover-item-img">
+                    <img src="https://picsum.photos/200/112?random=5" alt="封面D">
+                </div>
+                <div class="cover-item-name">商务精英</div>
+            </div>
+            <div class="cover-item" onclick="selectCover(this, '中海汇德里封面E', 'https://picsum.photos/200/112?random=6')">
+                <div class="cover-item-img">
+                    <img src="https://picsum.photos/200/112?random=6" alt="封面E">
+                </div>
+                <div class="cover-item-name">清新自然</div>
+            </div>
+            <div class="cover-item" onclick="selectCover(this, '中海汇德里封面F', 'https://picsum.photos/200/112?random=7')">
+                <div class="cover-item-img">
+                    <img src="https://picsum.photos/200/112?random=7" alt="封面F">
+                </div>
+                <div class="cover-item-name">科技未来</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部操作栏 -->
+    <div class="bottom-bar">
+        <button class="confirm-btn ready" id="confirmBtn" onclick="handleConfirm()">
+            <i class="fa fa-check"></i> 确认封面并发布
+        </button>
+    </div>
+
+    <script>
+        let selectedCover = {
+            title: '中海汇德里 | 探盘日记',
+            img: 'https://picsum.photos/400/225?random=1'
+        };
+
+        function selectCover(el, title, imgUrl) {
+            // 移除其他选中状态
+            document.querySelectorAll('.cover-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            // 添加选中状态
+            el.classList.add('selected');
+            // 更新预览
+            selectedCover.title = title;
+            selectedCover.img = imgUrl;
+            document.getElementById('selectedCoverImg').src = imgUrl;
+            document.getElementById('selectedCoverTitle').textContent = title;
+            // 更新按钮状态
+            document.getElementById('confirmBtn').classList.add('ready');
+            showToast('已选择封面：' + title);
+        }
+
+        function regenerateCover() {
+            showToast('正在重新生成封面...');
+            setTimeout(() => {
+                const newImg = 'https://picsum.photos/400/225?random=' + Math.floor(Math.random() * 100);
+                document.getElementById('selectedCoverImg').src = newImg;
+                selectedCover.img = newImg;
+                showToast('封面已重新生成');
+            }, 1500);
+        }
+
+        function selectFromTemplate() {
+            showToast('跳转到封面模板选择页');
+        }
+
+        function handleConfirm() {
+            showToast('正在发布内容...');
+            setTimeout(() => {
+                showToast('发布成功！');
+            }, 1000);
+        }
+
+        function goBack() {
+            history.back();
+        }
+
+        function showToast(msg) {
+            const existing = document.querySelector('.toast');
+            if (existing) existing.remove();
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = msg;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2000);
+        }
+    </script>
+</body>
+</html>
