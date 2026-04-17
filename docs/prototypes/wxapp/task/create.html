@@ -427,6 +427,25 @@
         /* 提醒输入禁用态 */
         .reminder-input:disabled { background: var(--color-bg); color: var(--color-sub); opacity: 0.6; }
         .reminder-row.disabled .reminder-input { background: var(--color-bg); color: var(--color-sub); opacity: 0.6; }
+        /* 弹窗 */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; display: flex; align-items: flex-end; justify-content: center; }
+        .modal-overlay.hidden { display: none; }
+        .modal-box { background: white; width: 100%; max-width: 420px; border-radius: var(--radius-lg) var(--radius-lg) 0 0; padding-bottom: env(safe-area-inset-bottom); }
+        .modal-header { display: flex; align-items: center; justify-content: space-between; padding: var(--spacing-md); border-bottom: 1px solid var(--color-border); }
+        .modal-title { font-size: 16px; font-weight: 600; color: var(--color-title); }
+        .modal-close { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; color: var(--color-sub); }
+        .modal-body { padding: var(--spacing-md); }
+        .modal-footer { display: flex; gap: 12px; padding: var(--spacing-md); border-top: 1px solid var(--color-border); }
+        .modal-btn { flex: 1; height: 44px; border-radius: var(--radius-md); font-size: 15px; font-weight: 500; cursor: pointer; border: none; }
+        .modal-btn.cancel { background: var(--color-bg); color: var(--color-text); }
+        .modal-btn.confirm { background: var(--brand-primary); color: white; }
+        .modal-btn:active { opacity: 0.8; }
+        .modal-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        /* 添加点位表单 */
+        .point-form-item { margin-bottom: 16px; }
+        .point-form-label { font-size: 14px; color: var(--color-title); margin-bottom: 8px; display: block; }
+        .point-form-input { width: 100%; height: 44px; border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 0 12px; font-size: 15px; }
+        .point-form-input:focus { outline: none; border-color: var(--brand-primary); }
         /* 楼盘标题栏 */
         .house-title-bar { display: flex; align-items: center; gap: 12px; }
         .house-icon-box { width: 40px; height: 40px; background: var(--brand-primary-light); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; }
@@ -741,7 +760,7 @@
                                     </div>
                                 </div>
 
-                                <button class="add-btn"><i class="fa fa-plus"></i> 添加点位</button>
+                                <button class="add-btn" onclick="openAddPointModal()"><i class="fa fa-plus"></i> 添加点位</button>
                             </div>
                         </div>
 
@@ -1237,6 +1256,78 @@
         document.getElementById('endTime').addEventListener('change', updateCreateBtn);
         // 初始化
         initReminderValidation();
+
+        // ========== 添加点位弹窗 ==========
+        let pointCount = 3; // 已有3个点位
+        
+        function openAddPointModal() {
+            document.getElementById('addPointModal').classList.remove('hidden');
+            document.getElementById('pointNameInput').value = '';
+            document.getElementById('pointNameInput').focus();
+            updatePointNameBtn();
+        }
+        
+        function closeAddPointModal() {
+            document.getElementById('addPointModal').classList.add('hidden');
+        }
+        
+        function updatePointNameBtn() {
+            const name = document.getElementById('pointNameInput').value.trim();
+            document.getElementById('confirmAddPoint').disabled = !name;
+        }
+        
+        function confirmAddPoint() {
+            const name = document.getElementById('pointNameInput').value.trim();
+            if (!name) {
+                showToast('请输入点位名称');
+                return;
+            }
+            
+            pointCount++;
+            const container = document.querySelector('.point-items').parentElement;
+            const addBtn = container.querySelector('.add-btn');
+            
+            const newPoint = document.createElement('div');
+            newPoint.className = 'point-card-bg';
+            newPoint.innerHTML = `
+                <div class="point-header-row">
+                    <div class="point-title-row">
+                        <span class="point-badge">${pointCount}</span>
+                        <span class="point-name">${name}</span>
+                        <span class="point-tag-gray">选打卡</span>
+                    </div>
+                    <span class="point-action-btn" onclick="deletePoint(this)"><i class="fa fa-trash-o"></i> 删除</span>
+                </div>
+                <div class="point-items">
+                    <span class="point-item normal"><i class="fa fa-camera"></i> 拍照</span>
+                    <span class="point-item normal"><i class="fa fa-video-camera"></i> 录制视频</span>
+                    <span class="point-item normal"><i class="fa fa-pencil"></i> 填写内容</span>
+                </div>
+            `;
+            container.insertBefore(newPoint, addBtn);
+            closeAddPointModal();
+            showToast('点位添加成功');
+        }
     </script>
+
+    <!-- 添加点位弹窗 -->
+    <div class="modal-overlay hidden" id="addPointModal" onclick="closeAddPointModal()">
+        <div class="modal-box" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <span class="modal-title">添加点位</span>
+                <div class="modal-close" onclick="closeAddPointModal()"><i class="fa fa-times"></i></div>
+            </div>
+            <div class="modal-body">
+                <div class="point-form-item">
+                    <label class="point-form-label">点位名称</label>
+                    <input type="text" class="point-form-input" id="pointNameInput" placeholder="请输入点位名称" maxlength="20" oninput="updatePointNameBtn()">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn cancel" onclick="closeAddPointModal()">取消</button>
+                <button class="modal-btn confirm" id="confirmAddPoint" onclick="confirmAddPoint()" disabled>确定</button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
