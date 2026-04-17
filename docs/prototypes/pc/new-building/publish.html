@@ -297,24 +297,6 @@
                     </div>
                     <div id="routebook-detail-container" class="section-body space-y-5">
 
-                        <!-- 3.0 路书内容 -->
-                        <div class="sub-section">
-                            <div class="sub-section-title">
-                                <span class="w-6 h-6 rounded bg-primary text-white text-xs flex items-center justify-center">0</span>
-                                路书内容
-                            </div>
-                            <div class="space-y-4">
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1 required-field">探盘路线</label>
-                                    <textarea rows="2" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" placeholder="请输入探盘路线，如：从大门进入，经过营销中心→示范区→样板间→会所"></textarea>
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1 required-field">重点介绍</label>
-                                    <textarea rows="3" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" placeholder="请输入楼盘重点介绍内容，如：项目主打智能化社区，配备人脸识别系统、智能梯控等"></textarea>
-                                </div>
-                            </div>
-                        </div>
-
                         <!-- 3.1 打卡配置 -->
                         <div class="sub-section">
                             <div class="sub-section-title">
@@ -328,32 +310,6 @@
                                         <div class="flex items-center">
                                             <input type="number" class="w-24 border border-gray-300 rounded-lg px-3 py-2 text-sm text-center" value="200" min="50">
                                             <span class="ml-2 text-sm text-gray-500">米</span>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-1">偏移阈值</label>
-                                        <div class="flex items-center">
-                                            <input type="range" class="flex-1" min="200" max="1000" step="100" value="500" oninput="updateThreshold(this.value)">
-                                            <span id="threshold-val" class="ml-3 text-sm font-medium w-14">500m</span>
-                                        </div>
-                                        <p class="text-xs text-gray-400 mt-1">可在[200m, 1000m]范围内调整，步进100m</p>
-                                    </div>
-                                </div>
-                                <!-- 偏移阈值说明 -->
-                                <div class="bg-white rounded border border-gray-200 p-3">
-                                    <div class="text-xs text-gray-500 mb-2">打卡偏移阈值说明：</div>
-                                    <div class="grid grid-cols-3 gap-2 text-xs">
-                                        <div class="text-center p-2 bg-green-50 rounded">
-                                            <div class="text-success font-medium">≤200m</div>
-                                            <div class="text-gray-500">正常打卡</div>
-                                        </div>
-                                        <div class="text-center p-2 bg-yellow-50 rounded">
-                                            <div class="text-warning font-medium">200-500m</div>
-                                            <div class="text-gray-500">警告（记录但标记异常）</div>
-                                        </div>
-                                        <div class="text-center p-2 bg-red-50 rounded">
-                                            <div class="text-danger font-medium">>500m</div>
-                                            <div class="text-gray-500">拦截（不允许打卡）</div>
                                         </div>
                                     </div>
                                 </div>
@@ -556,7 +512,7 @@
                             <label class="switch"><input type="checkbox" id="training-switch" onchange="toggleTrainingConfig(this)"><span class="slider"></span></label>
                         </div>
                         <div id="training-detail" class="hidden space-y-4 pt-4 border-t border-gray-200">
-                            <div>
+                            <!-- <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">训练项目选择 <span class="text-danger">*</span></label>
                                 <div class="grid grid-cols-3 gap-2">
                                     <label class="flex items-center gap-2 bg-white border border-gray-200 rounded px-3 py-2 cursor-pointer hover:border-primary text-sm">
@@ -578,7 +534,7 @@
                                         <input type="checkbox" class="train-proj"> 销售礼仪
                                     </label>
                                 </div>
-                            </div>
+                            </div> -->
                             <div>
                                 <div class="flex justify-between items-center mb-2">
                                     <label class="text-sm font-medium text-gray-700">选择题库 <span class="text-danger">*</span></label>
