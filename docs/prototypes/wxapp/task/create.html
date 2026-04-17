@@ -552,7 +552,7 @@
     <div class="page">
         <!-- 标题栏 -->
         <div class="header">
-            <a href="list.html" class="back-btn"><i class="fa fa-angle-left" style="font-size:20px;"></i></a>
+            <a href="javascript:history.back();" class="back-btn"><i class="fa fa-angle-left" style="font-size:20px;"></i></a>
             <span class="header-title">创建任务</span>
             <button class="header-btn" onclick="saveDraft()">存草稿</button>
         </div>
@@ -1258,6 +1258,21 @@
         document.getElementById('endTime').addEventListener('change', updateCreateBtn);
         // 初始化
         initReminderValidation();
+
+        // ========== URL参数处理 ==========
+        (function() {
+            const params = new URLSearchParams(window.location.search);
+            const building = params.get('building');
+            if (building) {
+                document.getElementById('buildingName').textContent = decodeURIComponent(building);
+                document.getElementById('buildingName').classList.remove('empty');
+                document.getElementById('buildingDetail').style.display = 'block';
+                // 自动选择任务类型为探盘任务
+                document.getElementById('taskType').value = 'house';
+                onTaskTypeChange();
+                updateCreateBtn();
+            }
+        })();
 
         // ========== 添加/编辑点位弹窗 ==========
         let pointCount = 3; // 已有3个点位
