@@ -179,38 +179,225 @@
         .material-hint i { color: var(--color-info); font-size: 18px; margin-top: 2px; }
         .material-hint-text { font-size: 13px; color: var(--color-info); line-height: 1.5; }
 
-        /* 生成按钮区域 */
+        /* ========== 选择配置区域 ========== */
+        .config-section {
+            padding: 0 var(--spacing-md) var(--spacing-md);
+        }
+        .config-section.hidden { display: none; }
+
+        .config-card {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .config-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--color-title);
+            margin-bottom: var(--spacing-md);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+        .config-title i { color: var(--brand-primary); }
+
+        /* 渠道选择 */
+        .channel-options {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+        }
+
+        .channel-option {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            padding: var(--spacing-md);
+            background: var(--color-bg);
+            border-radius: var(--radius-lg);
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+        .channel-option:active { transform: scale(0.99); }
+        .channel-option.selected {
+            border-color: var(--brand-primary);
+            background: var(--brand-primary-light);
+        }
+
+        .channel-checkbox {
+            width: 22px;
+            height: 22px;
+            border: 2px solid var(--color-border);
+            border-radius: var(--radius-sm);
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition-fast);
+        }
+        .channel-option.selected .channel-checkbox {
+            border-color: var(--brand-primary);
+            background: var(--brand-primary);
+        }
+        .channel-option.selected .channel-checkbox::after {
+            content: '';
+            width: 10px;
+            height: 6px;
+            border-left: 2px solid white;
+            border-bottom: 2px solid white;
+            transform: rotate(-45deg) translateY(-1px);
+        }
+
+        .channel-info { flex: 1; }
+        .channel-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--color-title);
+            margin-bottom: 2px;
+        }
+        .channel-desc {
+            font-size: 12px;
+            color: var(--color-sub);
+        }
+        .channel-tag {
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: var(--radius-sm);
+        }
+        .channel-tag.xiaohongshu { background: #FFE7D6; color: var(--brand-primary); }
+        .channel-tag.moments { background: #FFE5F0; color: #FF6B9D; }
+        .channel-tag.wechat { background: #E8FFEA; color: var(--color-success); }
+        .channel-tag.video { background: #E8F3FF; color: var(--color-info); }
+
+        /* 视频生成方式 */
+        .method-options {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+        }
+
+        .method-option {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--spacing-md);
+            padding: var(--spacing-md);
+            background: var(--color-bg);
+            border-radius: var(--radius-lg);
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+        .method-option:active { transform: scale(0.99); }
+        .method-option.selected {
+            border-color: var(--brand-primary);
+            background: var(--brand-primary-light);
+        }
+
+        .method-radio {
+            width: 22px;
+            height: 22px;
+            border: 2px solid var(--color-border);
+            border-radius: 50%;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition-fast);
+        }
+        .method-option.selected .method-radio {
+            border-color: var(--brand-primary);
+            background: var(--brand-primary);
+        }
+        .method-option.selected .method-radio::after {
+            content: '';
+            width: 10px;
+            height: 10px;
+            background: white;
+            border-radius: 50%;
+        }
+
+        .method-info { flex: 1; }
+        .method-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--color-title);
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+        .method-badge {
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: var(--radius-sm);
+            font-weight: normal;
+        }
+        .method-badge.fast { background: #FFF3E0; color: var(--color-warning); }
+        .method-badge.normal { background: var(--color-info-light); color: var(--color-info); }
+        .method-badge.master { background: var(--color-purple-light); color: var(--color-purple); }
+        .method-desc {
+            font-size: 12px;
+            color: var(--color-sub);
+        }
+        .method-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: var(--spacing-sm);
+        }
+        .method-feature {
+            font-size: 11px;
+            padding: 2px 8px;
+            background: var(--color-card);
+            border-radius: var(--radius-sm);
+            color: var(--color-text);
+        }
+        .method-option.selected .method-feature {
+            background: white;
+        }
+
+        /* 生成按钮 */
         .generate-section {
             padding: var(--spacing-md);
         }
         .generate-section.hidden { display: none; }
-        
+
         .generate-btn {
             width: 100%;
             padding: var(--spacing-lg);
-            background: linear-gradient(135deg, var(--color-purple) 0%, #8B5CF6 100%);
+            background: var(--color-border);
             border: none;
             border-radius: var(--radius-xl);
             color: white;
             font-size: 16px;
             font-weight: 600;
-            cursor: pointer;
+            cursor: not-allowed;
+            transition: all var(--transition-normal);
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: var(--spacing-sm);
-            box-shadow: 0 4px 16px rgba(114, 46, 209, 0.3);
-            transition: all var(--transition-normal);
         }
-        .generate-btn:active { transform: scale(0.98); }
+        .generate-btn.ready {
+            background: linear-gradient(135deg, var(--color-purple) 0%, #8B5CF6 100%);
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(114, 46, 209, 0.3);
+        }
+        .generate-btn.ready:active { transform: scale(0.98); }
         .generate-btn i { font-size: 32px; }
         .generate-btn-hint { font-size: 12px; opacity: 0.8; font-weight: normal; }
 
-        /* 文案列表 */
-        .copywriter-list { padding: 0 var(--spacing-md); display: none; }
-        .copywriter-list.show { display: block; }
+        /* 已生成内容区域 */
+        .content-section { display: none; }
+        .content-section.show { display: block; }
 
-        /* 全选工具栏 */
+        /* 文案列表 */
+        .copywriter-list { padding: 0 var(--spacing-md); }
+
         .toolbar-btn {
             display: flex;
             align-items: center;
@@ -225,10 +412,7 @@
             cursor: pointer;
             transition: all var(--transition-fast);
         }
-        .toolbar-btn:active {
-            transform: scale(0.98);
-            opacity: 0.8;
-        }
+        .toolbar-btn:active { transform: scale(0.98); }
         .toolbar-btn i { color: var(--color-purple); }
         
         .copywriter-card {
@@ -289,9 +473,7 @@
             transition: transform var(--transition-fast);
             flex-shrink: 0;
         }
-        .copywriter-card.expanded .copywriter-expand-icon {
-            transform: rotate(180deg);
-        }
+        .copywriter-card.expanded .copywriter-expand-icon { transform: rotate(180deg); }
         
         .copywriter-content { padding: 0 var(--spacing-md) var(--spacing-md); display: none; }
         .copywriter-card.expanded .copywriter-content { display: block; }
@@ -327,13 +509,9 @@
             white-space: nowrap;
         }
         .action-btn:active { transform: scale(0.98); }
-        .action-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
         .action-btn i { font-size: 12px; }
 
-        /* ========== 视频脚本卡片（特殊样式）========== */
+        /* 视频卡片 */
         .video-card {
             background: white;
             border-radius: var(--radius-xl);
@@ -341,7 +519,6 @@
             box-shadow: var(--shadow-sm);
             overflow: hidden;
             border: 2px solid transparent;
-            transition: all var(--transition-normal);
         }
         .video-card.selected { border-color: var(--brand-primary); box-shadow: 0 0 0 4px var(--brand-primary-light); }
         
@@ -386,14 +563,11 @@
             color: var(--color-sub);
             transition: transform var(--transition-fast);
         }
-        .video-card.expanded .video-expand-icon {
-            transform: rotate(180deg);
-        }
+        .video-card.expanded .video-expand-icon { transform: rotate(180deg); }
         
         .video-content { display: none; padding: 0 var(--spacing-md) var(--spacing-md); }
         .video-card.expanded .video-content { display: block; }
 
-        /* 视频生成方式选择 */
         .video-generation-methods {
             display: flex;
             flex-direction: column;
@@ -410,111 +584,7 @@
             color: var(--color-title);
             margin-bottom: var(--spacing-sm);
         }
-        
-        .method-options {
-            display: flex;
-            flex-direction: column;
-            gap: var(--spacing-sm);
-        }
-        
-        .method-option {
-            display: flex;
-            align-items: flex-start;
-            gap: var(--spacing-md);
-            padding: var(--spacing-md);
-            background: white;
-            border-radius: var(--radius-lg);
-            border: 2px solid var(--color-border);
-            cursor: pointer;
-            transition: all var(--transition-fast);
-        }
-        
-        .method-option:active { transform: scale(0.99); }
-        
-        .method-option.selected {
-            border-color: var(--brand-primary);
-            background: var(--brand-primary-light);
-        }
-        
-        .method-option.disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        
-        .method-radio {
-            width: 20px;
-            height: 20px;
-            border: 2px solid var(--color-border);
-            border-radius: 50%;
-            flex-shrink: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-top: 2px;
-        }
-        
-        .method-option.selected .method-radio {
-            border-color: var(--brand-primary);
-            background: var(--brand-primary);
-        }
-        
-        .method-option.selected .method-radio::after {
-            content: '';
-            width: 8px;
-            height: 8px;
-            background: white;
-            border-radius: 50%;
-        }
-        
-        .method-info { flex: 1; }
-        
-        .method-name {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--color-title);
-            margin-bottom: 4px;
-            display: flex;
-            align-items: center;
-            gap: var(--spacing-sm);
-        }
-        
-        .method-badge {
-            font-size: 10px;
-            padding: 2px 6px;
-            border-radius: var(--radius-sm);
-            font-weight: normal;
-        }
-        
-        .method-badge.fast { background: #FFF3E0; color: var(--color-warning); }
-        .method-badge.normal { background: var(--color-info-light); color: var(--color-info); }
-        .method-badge.master { background: var(--color-purple-light); color: var(--color-purple); }
-        
-        .method-desc {
-            font-size: 12px;
-            color: var(--color-sub);
-            line-height: 1.5;
-        }
-        
-        .method-features {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-top: var(--spacing-sm);
-        }
-        
-        .method-feature {
-            font-size: 11px;
-            padding: 2px 8px;
-            background: var(--color-bg);
-            border-radius: var(--radius-sm);
-            color: var(--color-text);
-        }
-        
-        .method-option.selected .method-feature {
-            background: white;
-        }
 
-        /* 视频脚本内容 */
         .video-script-content {
             background: var(--color-bg);
             padding: var(--spacing-md);
@@ -528,7 +598,11 @@
             color: var(--color-text);
             white-space: pre-wrap;
         }
-        
+
+        .video-audio-section, .video-material-section {
+            margin-bottom: var(--spacing-md);
+        }
+
         .video-actions {
             display: flex;
             gap: var(--spacing-sm);
@@ -599,14 +673,8 @@
             font-weight: 500;
             cursor: pointer;
         }
-        .edit-action-btn.cancel {
-            background: var(--color-bg);
-            color: var(--color-text);
-        }
-        .edit-action-btn.save {
-            background: var(--brand-primary);
-            color: white;
-        }
+        .edit-action-btn.cancel { background: var(--color-bg); color: var(--color-text); }
+        .edit-action-btn.save { background: var(--brand-primary); color: white; }
 
         /* 底部操作 */
         .bottom-bar {
@@ -695,11 +763,8 @@
             <div class="generating-bar">
                 <div class="generating-fill" id="generatingFill" style="width: 0%"></div>
             </div>
-            <div class="generating-items">
-                <div id="genItem1"><i class="fa fa-circle-o"></i> 小红书文案生成中...</div>
-                <div id="genItem2"><i class="fa fa-circle-o"></i> 朋友圈文案生成中...</div>
-                <div id="genItem3"><i class="fa fa-circle-o"></i> 公众号文案生成中...</div>
-                <div id="genItem4"><i class="fa fa-circle-o"></i> 视频脚本生成中...</div>
+            <div class="generating-items" id="generatingItems">
+                <!-- 动态生成 -->
             </div>
         </div>
 
@@ -711,245 +776,248 @@
             </div>
         </div>
 
+        <!-- ========== 选择配置区域 ========== -->
+        <div class="config-section" id="configSection">
+            <!-- 渠道选择 -->
+            <div class="config-card">
+                <div class="config-title">
+                    <i class="fa fa-check-square"></i>
+                    <span>选择生成渠道</span>
+                    <span style="font-size:12px;color:var(--color-sub);font-weight:normal;">（可多选）</span>
+                </div>
+                <div class="channel-options">
+                    <div class="channel-option selected" onclick="toggleChannel('xiaohongshu')" id="channel_xiaohongshu">
+                        <div class="channel-checkbox"></div>
+                        <div class="channel-info">
+                            <div class="channel-name">小红书</div>
+                            <div class="channel-desc">种草探盘笔记，吸引年轻客户</div>
+                        </div>
+                        <span class="channel-tag xiaohongshu">~200字</span>
+                    </div>
+                    <div class="channel-option" onclick="toggleChannel('moments')" id="channel_moments">
+                        <div class="channel-checkbox"></div>
+                        <div class="channel-info">
+                            <div class="channel-name">朋友圈</div>
+                            <div class="channel-desc">简短推广文案，裂变传播</div>
+                        </div>
+                        <span class="channel-tag moments">~100字</span>
+                    </div>
+                    <div class="channel-option" onclick="toggleChannel('wechat')" id="channel_wechat">
+                        <div class="channel-checkbox"></div>
+                        <div class="channel-info">
+                            <div class="channel-name">公众号</div>
+                            <div class="channel-desc">详细项目介绍，树立专业形象</div>
+                        </div>
+                        <span class="channel-tag wechat">~500字</span>
+                    </div>
+                    <div class="channel-option selected" onclick="toggleChannel('video')" id="channel_video">
+                        <div class="channel-checkbox"></div>
+                        <div class="channel-info">
+                            <div class="channel-name">短视频</div>
+                            <div class="channel-desc">楼盘介绍视频脚本</div>
+                        </div>
+                        <span class="channel-tag video">~60秒</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 视频生成方式（仅视频选中时显示） -->
+            <div class="config-card" id="videoMethodCard">
+                <div class="config-title">
+                    <i class="fa fa-video-camera"></i>
+                    <span>视频生成方式</span>
+                </div>
+                <div class="method-options">
+                    <!-- 闪电生成 -->
+                    <div class="method-option selected" onclick="selectMethod('lightning')" id="method_lightning">
+                        <div class="method-radio"></div>
+                        <div class="method-info">
+                            <div class="method-name">
+                                闪电生成
+                                <span class="method-badge fast">快速</span>
+                            </div>
+                            <div class="method-desc">直接使用已生成好的视频，无需等待</div>
+                            <div class="method-features">
+                                <span class="method-feature">即时可用</span>
+                                <span class="method-feature">无需等待</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 普通生成 -->
+                    <div class="method-option" onclick="selectMethod('normal')" id="method_normal">
+                        <div class="method-radio"></div>
+                        <div class="method-info">
+                            <div class="method-name">
+                                普通生成
+                                <span class="method-badge normal">推荐</span>
+                            </div>
+                            <div class="method-desc">系统智能生成视频，支持声音替换</div>
+                            <div class="method-features">
+                                <span class="method-feature">AI混剪</span>
+                                <span class="method-feature">声音替换</span>
+                                <span class="method-feature">上传音频</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 大师生成 -->
+                    <div class="method-option" onclick="selectMethod('master')" id="method_master">
+                        <div class="method-radio"></div>
+                        <div class="method-info">
+                            <div class="method-name">
+                                大师生成
+                                <span class="method-badge master">自定义</span>
+                            </div>
+                            <div class="method-desc">基于上传的素材自定义生成，支持声音替换</div>
+                            <div class="method-features">
+                                <span class="method-feature">自定义素材</span>
+                                <span class="method-feature">声音替换</span>
+                                <span class="method-feature">上传音频</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- 生成按钮 -->
         <div class="generate-section" id="generateSection">
-            <button class="generate-btn" onclick="startGenerate()">
+            <button class="generate-btn ready" id="generateBtn" onclick="startGenerate()">
                 <i class="fa fa-magic"></i>
-                <span>一键生成四种文案</span>
-                <span class="generate-btn-hint">使用阶段2素材，生成小红书/朋友圈/公众号/视频脚本</span>
+                <span id="generateBtnText">生成选中的文案</span>
+                <span class="generate-btn-hint" id="generateBtnHint">将为您生成小红书、朋友圈、公众号、短视频</span>
             </button>
         </div>
 
-        <!-- 文案列表 -->
-        <div class="copywriter-list" id="copywriterList">
+        <!-- ========== 已生成内容区域 ========== -->
+        <div class="content-section" id="contentSection">
             <!-- 工具栏 -->
-            <div style="display:flex;justify-content:flex-end;margin-bottom:var(--spacing-sm);">
-                <button class="toolbar-btn" onclick="startGenerate()">
-                    <i class="fa fa-refresh"></i>
-                    <span>全部重新生成</span>
+            <div style="display:flex;justify-content:flex-end;padding:0 var(--spacing-md);margin-bottom:var(--spacing-sm);">
+                <button class="toolbar-btn" onclick="showConfig()">
+                    <i class="fa fa-plus"></i>
+                    <span>重新配置</span>
                 </button>
             </div>
 
-            <!-- 小红书文案 -->
-            <div class="copywriter-card" id="card_xiaohongshu">
-                <div class="copywriter-header" onclick="toggleCard('xiaohongshu')">
-                    <input type="checkbox" class="copywriter-checkbox" id="check_xiaohongshu" onclick="event.stopPropagation(); selectCopy('xiaohongshu')">
-                    <div class="copywriter-info">
-                        <div class="copywriter-platform xiaohongshu">小红书</div>
-                        <div class="copywriter-title" id="title_xiaohongshu">中海汇德里 | 探盘日记</div>
-                        <div class="copywriter-meta">约200字</div>
+            <!-- 文案列表 -->
+            <div class="copywriter-list" id="copywriterList">
+                <!-- 小红书 -->
+                <div class="copywriter-card" id="card_xiaohongshu" style="display:none;">
+                    <div class="copywriter-header" onclick="toggleCard('xiaohongshu')">
+                        <input type="checkbox" class="copywriter-checkbox" id="check_xiaohongshu" onclick="event.stopPropagation(); selectCopy('xiaohongshu')">
+                        <div class="copywriter-info">
+                            <div class="copywriter-platform xiaohongshu">小红书</div>
+                            <div class="copywriter-title" id="title_xiaohongshu">中海汇德里 | 探盘日记</div>
+                            <div class="copywriter-meta">约200字</div>
+                        </div>
+                        <i class="fa fa-chevron-down copywriter-expand-icon"></i>
                     </div>
-                    <i class="fa fa-chevron-down copywriter-expand-icon"></i>
-                </div>
-                <div class="copywriter-content">
-                    <div class="copywriter-text" id="content_xiaohongshu"></div>
-                    <div class="copywriter-actions">
-                        <button class="action-btn" onclick="copyText('xiaohongshu')">
-                            <i class="fa fa-copy"></i>复制
-                        </button>
-                        <button class="action-btn" onclick="regenerateCopy('xiaohongshu')">
-                            <i class="fa fa-refresh"></i>重生
-                        </button>
-                        <button class="action-btn" onclick="openEditModal('xiaohongshu')">
-                            <i class="fa fa-edit"></i>编辑
-                        </button>
+                    <div class="copywriter-content">
+                        <div class="copywriter-text" id="content_xiaohongshu"></div>
+                        <div class="copywriter-actions">
+                            <button class="action-btn" onclick="copyText('xiaohongshu')"><i class="fa fa-copy"></i>复制</button>
+                            <button class="action-btn" onclick="regenerateCopy('xiaohongshu')"><i class="fa fa-refresh"></i>重生</button>
+                            <button class="action-btn" onclick="openEditModal('xiaohongshu')"><i class="fa fa-edit"></i>编辑</button>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- 朋友圈文案 -->
-            <div class="copywriter-card" id="card_moments">
-                <div class="copywriter-header" onclick="toggleCard('moments')">
-                    <input type="checkbox" class="copywriter-checkbox" id="check_moments" onclick="event.stopPropagation(); selectCopy('moments')">
-                    <div class="copywriter-info">
-                        <div class="copywriter-platform moments">朋友圈</div>
-                        <div class="copywriter-title" id="title_moments">中海汇德里 | 火热认筹中</div>
-                        <div class="copywriter-meta">约100字</div>
+                <!-- 朋友圈 -->
+                <div class="copywriter-card" id="card_moments" style="display:none;">
+                    <div class="copywriter-header" onclick="toggleCard('moments')">
+                        <input type="checkbox" class="copywriter-checkbox" id="check_moments" onclick="event.stopPropagation(); selectCopy('moments')">
+                        <div class="copywriter-info">
+                            <div class="copywriter-platform moments">朋友圈</div>
+                            <div class="copywriter-title" id="title_moments">中海汇德里 | 火热认筹中</div>
+                            <div class="copywriter-meta">约100字</div>
+                        </div>
+                        <i class="fa fa-chevron-down copywriter-expand-icon"></i>
                     </div>
-                    <i class="fa fa-chevron-down copywriter-expand-icon"></i>
-                </div>
-                <div class="copywriter-content">
-                    <div class="copywriter-text" id="content_moments"></div>
-                    <div class="copywriter-actions">
-                        <button class="action-btn" onclick="copyText('moments')">
-                            <i class="fa fa-copy"></i>复制
-                        </button>
-                        <button class="action-btn" onclick="regenerateCopy('moments')">
-                            <i class="fa fa-refresh"></i>重生
-                        </button>
-                        <button class="action-btn" onclick="openEditModal('moments')">
-                            <i class="fa fa-edit"></i>编辑
-                        </button>
+                    <div class="copywriter-content">
+                        <div class="copywriter-text" id="content_moments"></div>
+                        <div class="copywriter-actions">
+                            <button class="action-btn" onclick="copyText('moments')"><i class="fa fa-copy"></i>复制</button>
+                            <button class="action-btn" onclick="regenerateCopy('moments')"><i class="fa fa-refresh"></i>重生</button>
+                            <button class="action-btn" onclick="openEditModal('moments')"><i class="fa fa-edit"></i>编辑</button>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- 公众号文案 -->
-            <div class="copywriter-card" id="card_wechat">
-                <div class="copywriter-header" onclick="toggleCard('wechat')">
-                    <input type="checkbox" class="copywriter-checkbox" id="check_wechat" onclick="event.stopPropagation(); selectCopy('wechat')">
-                    <div class="copywriter-info">
-                        <div class="copywriter-platform wechat">公众号</div>
-                        <div class="copywriter-title" id="title_wechat">【开盘预告】中海汇德里震撼来袭</div>
-                        <div class="copywriter-meta">约500字</div>
+                <!-- 公众号 -->
+                <div class="copywriter-card" id="card_wechat" style="display:none;">
+                    <div class="copywriter-header" onclick="toggleCard('wechat')">
+                        <input type="checkbox" class="copywriter-checkbox" id="check_wechat" onclick="event.stopPropagation(); selectCopy('wechat')">
+                        <div class="copywriter-info">
+                            <div class="copywriter-platform wechat">公众号</div>
+                            <div class="copywriter-title" id="title_wechat">【开盘预告】中海汇德里震撼来袭</div>
+                            <div class="copywriter-meta">约500字</div>
+                        </div>
+                        <i class="fa fa-chevron-down copywriter-expand-icon"></i>
                     </div>
-                    <i class="fa fa-chevron-down copywriter-expand-icon"></i>
-                </div>
-                <div class="copywriter-content">
-                    <div class="copywriter-text" id="content_wechat"></div>
-                    <div class="copywriter-actions">
-                        <button class="action-btn" onclick="copyText('wechat')">
-                            <i class="fa fa-copy"></i>复制
-                        </button>
-                        <button class="action-btn" onclick="regenerateCopy('wechat')">
-                            <i class="fa fa-refresh"></i>重生
-                        </button>
-                        <button class="action-btn" onclick="openEditModal('wechat')">
-                            <i class="fa fa-edit"></i>编辑
-                        </button>
+                    <div class="copywriter-content">
+                        <div class="copywriter-text" id="content_wechat"></div>
+                        <div class="copywriter-actions">
+                            <button class="action-btn" onclick="copyText('wechat')"><i class="fa fa-copy"></i>复制</button>
+                            <button class="action-btn" onclick="regenerateCopy('wechat')"><i class="fa fa-refresh"></i>重生</button>
+                            <button class="action-btn" onclick="openEditModal('wechat')"><i class="fa fa-edit"></i>编辑</button>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- 视频脚本（特殊样式） -->
-            <div class="video-card" id="card_video">
-                <div class="video-header" onclick="toggleVideoCard()">
-                    <input type="checkbox" class="video-checkbox" id="check_video" onclick="event.stopPropagation(); selectCopy('video')">
-                    <div class="video-info">
-                        <div class="video-platform">短视频</div>
-                        <div class="video-title" id="title_video">中海汇德里 | 楼盘介绍脚本</div>
-                        <div class="video-meta">约60秒</div>
+                <!-- 视频脚本 -->
+                <div class="video-card" id="card_video" style="display:none;">
+                    <div class="video-header" onclick="toggleVideoCard()">
+                        <input type="checkbox" class="video-checkbox" id="check_video" onclick="event.stopPropagation(); selectCopy('video')">
+                        <div class="video-info">
+                            <div class="video-platform">短视频</div>
+                            <div class="video-title" id="title_video">中海汇德里 | 楼盘介绍脚本</div>
+                            <div class="video-meta">约60秒</div>
+                        </div>
+                        <i class="fa fa-chevron-down video-expand-icon"></i>
                     </div>
-                    <i class="fa fa-chevron-down video-expand-icon"></i>
-                </div>
-                <div class="video-content">
-                    <!-- 生成方式选择 -->
-                    <div class="video-generation-methods">
-                        <div class="method-title">选择视频生成方式</div>
-                        <div class="method-options">
-                            <!-- 闪电生成 -->
-                            <div class="method-option selected" onclick="selectMethod('lightning')" id="method_lightning">
-                                <div class="method-radio"></div>
-                                <div class="method-info">
-                                    <div class="method-name">
-                                        闪电生成
-                                        <span class="method-badge fast">快速</span>
-                                    </div>
-                                    <div class="method-desc">直接使用已生成好的视频，无需等待</div>
-                                    <div class="method-features">
-                                        <span class="method-feature">即时可用</span>
-                                        <span class="method-feature">无需等待</span>
+                    <div class="video-content">
+                        <div class="video-generation-methods">
+                            <div class="method-title">视频生成方式</div>
+                            <div class="method-options">
+                                <div class="method-option selected" id="view_method_lightning">
+                                    <div class="method-radio"></div>
+                                    <div class="method-info">
+                                        <div class="method-name">闪电生成 <span class="method-badge fast">快速</span></div>
+                                        <div class="method-desc">直接使用已生成好的视频</div>
                                     </div>
                                 </div>
-                            </div>
-                            
-                            <!-- 普通生成 -->
-                            <div class="method-option" onclick="selectMethod('normal')" id="method_normal">
-                                <div class="method-radio"></div>
-                                <div class="method-info">
-                                    <div class="method-name">
-                                        普通生成
-                                        <span class="method-badge normal">推荐</span>
-                                    </div>
-                                    <div class="method-desc">系统智能生成视频，支持声音替换</div>
-                                    <div class="method-features">
-                                        <span class="method-feature">AI混剪</span>
-                                        <span class="method-feature">声音替换</span>
-                                        <span class="method-feature">上传音频</span>
+                                <div class="method-option" id="view_method_normal">
+                                    <div class="method-radio"></div>
+                                    <div class="method-info">
+                                        <div class="method-name">普通生成 <span class="method-badge normal">推荐</span></div>
+                                        <div class="method-desc">AI混剪 + 声音替换</div>
                                     </div>
                                 </div>
-                            </div>
-                            
-                            <!-- 大师生成 -->
-                            <div class="method-option" onclick="selectMethod('master')" id="method_master">
-                                <div class="method-radio"></div>
-                                <div class="method-info">
-                                    <div class="method-name">
-                                        大师生成
-                                        <span class="method-badge master">自定义</span>
-                                    </div>
-                                    <div class="method-desc">基于上传的素材自定义生成，支持声音替换</div>
-                                    <div class="method-features">
-                                        <span class="method-feature">自定义素材</span>
-                                        <span class="method-feature">声音替换</span>
-                                        <span class="method-feature">上传音频</span>
+                                <div class="method-option" id="view_method_master">
+                                    <div class="method-radio"></div>
+                                    <div class="method-info">
+                                        <div class="method-name">大师生成 <span class="method-badge master">自定义</span></div>
+                                        <div class="method-desc">自定义素材 + 声音替换</div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    
-                    <!-- 视频脚本内容（闪电生成显示） -->
-                    <div class="video-script-content" id="videoScriptContent">
-                        <div style="font-size:12px;color:var(--color-sub);margin-bottom:8px;">视频脚本</div>
-                        <div class="video-script-text" id="content_video">
-【开场 0-5秒】
-画面：营销中心外景，阳光明媚
-配音：hello大家好，今天带大家探访的是位于朝阳区的热门新盘——中海汇德里...
-
-【沙盘讲解 5-20秒】
-画面：沙盘全景镜头
-配音：项目总建筑面积约15万方，由央企中海倾力打造...
-
-【样板间展示 20-45秒】
-画面：样板间各房间穿过镜头
-配音：走进样板间，首先映入眼帘的是南向客厅...
-
-【区位优势 45-55秒】
-画面：区位图动画
-配音：项目周边商业、教育、医疗配套成熟，地铁站步行仅5分钟...
-
-【结尾呼吁 55-60秒】
-画面：项目效果图+二维码
-配音：感兴趣的朋友欢迎私信预约样板间参观，期待与您相遇！
+                        <div class="video-script-content">
+                            <div class="video-script-text" id="content_video"></div>
                         </div>
-                    </div>
-                    
-                    <!-- 音频上传区域（普通/大师生成显示） -->
-                    <div class="video-audio-section" id="videoAudioSection" style="display:none;margin-bottom:var(--spacing-md);">
-                        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--color-bg);border-radius:var(--radius-lg);margin-bottom:8px;">
-                            <div style="display:flex;align-items:center;gap:8px;">
-                                <i class="fa fa-microphone" style="color:var(--color-purple);"></i>
-                                <span style="font-size:13px;color:var(--color-title);">配音音频</span>
-                            </div>
-                            <button style="padding:6px 12px;background:var(--color-purple);color:white;border:none;border-radius:6px;font-size:12px;" onclick="showToast('请上传配音文件')">
-                                <i class="fa fa-upload"></i> 上传音频
-                            </button>
+                        <div class="video-actions">
+                            <button class="action-btn" onclick="copyText('video')"><i class="fa fa-copy"></i>复制脚本</button>
+                            <button class="action-btn" onclick="regenerateCopy('video')"><i class="fa fa-refresh"></i>重生</button>
+                            <button class="action-btn" onclick="openEditModal('video')"><i class="fa fa-edit"></i>编辑</button>
                         </div>
-                        <div style="font-size:12px;color:var(--color-sub);">支持 MP3、WAV 格式，时长建议30-120秒</div>
-                    </div>
-                    
-                    <!-- 素材上传区域（大师生成显示） -->
-                    <div class="video-material-section" id="videoMaterialSection" style="display:none;margin-bottom:var(--spacing-md);">
-                        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--color-bg);border-radius:var(--radius-lg);">
-                            <div style="display:flex;align-items:center;gap:8px;">
-                                <i class="fa fa-photo-video" style="color:var(--color-purple);"></i>
-                                <span style="font-size:13px;color:var(--color-title);">自定义素材</span>
-                            </div>
-                            <button style="padding:6px 12px;background:var(--color-purple);color:white;border:none;border-radius:6px;font-size:12px;" onclick="showToast('请上传视频素材')">
-                                <i class="fa fa-upload"></i> 上传素材
-                            </button>
-                        </div>
-                        <div style="font-size:12px;color:var(--color-sub);margin-top:8px;">支持 MP4、MOV 格式，支持多段视频拼接</div>
-                    </div>
-                    
-                    <div class="video-actions">
-                        <button class="action-btn" onclick="copyText('video')">
-                            <i class="fa fa-copy"></i>复制脚本
-                        </button>
-                        <button class="action-btn" onclick="regenerateCopy('video')">
-                            <i class="fa fa-refresh"></i>重生脚本
-                        </button>
-                        <button class="action-btn" onclick="openEditModal('video')">
-                            <i class="fa fa-edit"></i>编辑
-                        </button>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- 底部操作栏 -->
-        <div class="bottom-bar">
+        <div class="bottom-bar" id="bottomBar">
             <div class="bottom-hint" id="bottomHint">请选择要使用的文案版本（可多选）</div>
             <button class="confirm-btn" id="confirmBtn" onclick="handleConfirm()">
                 <i class="fa fa-check"></i>
@@ -976,50 +1044,25 @@
     </div>
 
     <script>
-        // 页面数据
-        const PLATFORMS = ['xiaohongshu', 'moments', 'wechat', 'video'];
-        const PLATFORM_NAMES = {
+        // 页面状态
+        let selectedChannels = new Set(['xiaohongshu', 'video']);
+        let selectedVideoMethod = 'lightning';
+        let selectedCopies = new Set();
+        let expandedCard = null;
+        let isGenerated = false;
+        let houseName = '';
+
+        // 渠道名称映射
+        const CHANNEL_NAMES = {
             'xiaohongshu': '小红书',
             'moments': '朋友圈',
             'wechat': '公众号',
             'video': '短视频'
         };
 
-        let selectedCopies = new Set();
-        let expandedCard = null;
-        let isGenerated = false;
-        let houseName = '';
-        let materialCount = 0;
-        let originalContent = {};
-        let currentVideoMethod = 'lightning';
-
-        // 初始化
-        function init() {
-            const params = new URLSearchParams(window.location.search);
-            houseName = params.get('houseName') || '楼盘名称';
-            materialCount = parseInt(params.get('materialCount')) || 6;
-
-            document.getElementById('materialCount').textContent = materialCount;
-            
-            // 检查是否已有生成结果
-            if (params.get('generated') === '1') {
-                showGeneratedResults();
-            }
-        }
-
-        function getDefaultTitle(type) {
-            const titles = {
-                'xiaohongshu': ' | 探盘日记',
-                'moments': ' | 火热认筹中',
-                'wechat': '【开盘预告】',
-                'video': ' | 楼盘介绍脚本'
-            };
-            return titles[type] || '';
-        }
-
-        function getDefaultContent(type) {
-            const contents = {
-                'xiaohongshu': `🏠 【探盘日记 | 中海汇德里】
+        // 默认内容
+        const CONTENTS = {
+            'xiaohongshu': `🏠 【探盘日记 | 中海汇德里】
 
 终于来打卡了朝阳区这个超火的新盘！
 
@@ -1033,16 +1076,14 @@
 人脸识别系统、智能梯控...科技感满满！
 
 2️⃣ 户型设计超赞
-南向大开间，采光绝了！样板间一眼就爱上~
+南向大开间，采光绝了！
 
 3️⃣ 配套成熟
 地铁站步行5分钟，商业教育医疗全覆盖
 
-📝 小贴士：项目即将开盘，感兴趣的朋友建议提前预约参观哦！
+📝 小贴士：项目即将开盘，感兴趣的朋友建议提前预约参观哦！`,
 
-有兴趣的评论区见～有什么问题尽管问！`,
-
-                'moments': `🔥【中海汇德里】火热认筹中！
+            'moments': `🔥【中海汇德里】火热认筹中！
 
 央企品质·智能社区·地铁上盖
 
@@ -1051,35 +1092,32 @@
 
 感兴趣的朋友欢迎私信🙋‍♂️`,
 
-                'wechat': `【开盘预告】中海汇德里震撼来袭
+            'wechat': `【开盘预告】中海汇德里震撼来袭
 
 备受瞩目的朝阳区优质新盘——中海汇德里即将盛大开盘！
 
 项目简介：
-中海汇德里是由央企中海倾力打造的品质住宅项目，位于朝阳区核心地段，总建筑面积约15万平方米。
+中海汇德里是由央企中海倾力打造的品质住宅项目，位于朝阳区核心地段。
 
 核心亮点：
-• 智能化社区系统：人脸识别、智能梯控、智慧物业
-• 优质户型设计：南北通透，大开间设计
-• 完善周边配套：地铁、商超、学校、医院一应俱全
+• 智能化社区系统
+• 优质户型设计
+• 完善周边配套
 
 基础信息：
 • 物业类型：住宅
 • 参考价格：68,000元/m²
 • 开盘时间：2026年4月
-• 交付时间：2027年12月
 
-VIP认筹通道已开启，欢迎私信咨询！
+VIP认筹通道已开启，欢迎私信咨询！`,
 
-声明：以上信息仅供参考，具体以开发商公示为准。`,
-
-                'video': `【开场 0-5秒】
+            'video': `【开场 0-5秒】
 画面：营销中心外景，阳光明媚
-配音：hello大家好，今天带大家探访的是位于朝阳区的热门新盘——中海汇德里...
+配音：hello大家好，今天带大家探访的是中海汇德里...
 
 【沙盘讲解 5-20秒】
 画面：沙盘全景镜头
-配音：项目总建筑面积约15万方，由央企中海倾力打造...
+配音：项目总建筑面积约15万方...
 
 【样板间展示 20-45秒】
 画面：样板间各房间穿过镜头
@@ -1087,42 +1125,102 @@ VIP认筹通道已开启，欢迎私信咨询！
 
 【区位优势 45-55秒】
 画面：区位图动画
-配音：项目周边商业、教育、医疗配套成熟，地铁站步行仅5分钟...
+配音：项目周边商业、教育、医疗配套成熟...
 
 【结尾呼吁 55-60秒】
 画面：项目效果图+二维码
-配音：感兴趣的朋友欢迎私信预约样板间参观，期待与您相遇！`
-            };
-            return contents[type] || '';
+配音：感兴趣的朋友欢迎私信预约样板间参观！`
+        };
+
+        // 初始化
+        function init() {
+            const params = new URLSearchParams(window.location.search);
+            houseName = params.get('houseName') || '楼盘名称';
+            materialCount = parseInt(params.get('materialCount')) || 6;
+            document.getElementById('materialCount').textContent = materialCount;
+            updateGenerateBtn();
+            updateVideoMethodCard();
         }
 
-        function showGeneratedResults() {
+        // 切换渠道选择
+        function toggleChannel(channel) {
+            const el = document.getElementById('channel_' + channel);
+            if (selectedChannels.has(channel)) {
+                selectedChannels.delete(channel);
+                el.classList.remove('selected');
+            } else {
+                selectedChannels.add(channel);
+                el.classList.add('selected');
+            }
+            updateGenerateBtn();
+            updateVideoMethodCard();
+        }
+
+        // 更新生成按钮状态
+        function updateGenerateBtn() {
+            const btn = document.getElementById('generateBtn');
+            const btnText = document.getElementById('generateBtnText');
+            const btnHint = document.getElementById('generateBtnHint');
+            
+            if (selectedChannels.size === 0) {
+                btn.classList.remove('ready');
+                btnText.textContent = '请选择生成渠道';
+                btnHint.textContent = '请至少选择一个渠道';
+            } else {
+                btn.classList.add('ready');
+                const channelNames = Array.from(selectedChannels).map(c => CHANNEL_NAMES[c]).join('、');
+                btnText.textContent = `生成选中的文案`;
+                btnHint.textContent = `将为您生成${channelNames}`;
+            }
+        }
+
+        // 更新视频方式卡片显示
+        function updateVideoMethodCard() {
+            const videoCard = document.getElementById('videoMethodCard');
+            if (selectedChannels.has('video')) {
+                videoCard.style.display = 'block';
+            } else {
+                videoCard.style.display = 'none';
+            }
+        }
+
+        // 选择视频生成方式
+        function selectMethod(method) {
+            selectedVideoMethod = method;
+            document.querySelectorAll('#videoMethodCard .method-option').forEach(el => {
+                el.classList.remove('selected');
+            });
+            document.getElementById('method_' + method)?.classList.add('selected');
+        }
+
+        // 开始生成
+        function startGenerate() {
+            if (selectedChannels.size === 0) {
+                showToast('请至少选择一个渠道');
+                return;
+            }
+
+            // 显示生成中状态
             document.getElementById('generatingBanner').classList.add('show');
             document.getElementById('generateSection').classList.add('hidden');
-            document.getElementById('copywriterList').classList.add('show');
-            
+            document.getElementById('contentSection').classList.add('show');
+
+            // 构建生成项
+            const channels = Array.from(selectedChannels);
+            const genItems = channels.map((c, i) => `<div id="genItem${i}"><i class="fa fa-circle-o"></i> ${CHANNEL_NAMES[c]}生成中...</div>`).join('');
+            document.getElementById('generatingItems').innerHTML = genItems;
+
             // 模拟生成进度
             let progress = 0;
+            let currentIndex = 0;
             const interval = setInterval(() => {
-                progress += Math.random() * 15;
+                progress += Math.random() * 20;
                 if (progress >= 100) {
                     progress = 100;
                     clearInterval(interval);
                     setTimeout(() => {
                         document.getElementById('generatingBanner').classList.remove('show');
-                        // 显示所有卡片
-                        PLATFORMS.forEach(type => {
-                            const card = document.getElementById('card_' + type);
-                            if (card) {
-                                card.classList.add('revealed');
-                                const titleEl = document.getElementById('title_' + type);
-                                const contentEl = document.getElementById('content_' + type);
-                                if (titleEl) titleEl.textContent = houseName + getDefaultTitle(type);
-                                if (contentEl) contentEl.textContent = getDefaultContent(type);
-                            }
-                        });
-                        isGenerated = true;
-                        updateConfirmBtn();
+                        showGeneratedResults();
                     }, 500);
                 }
                 
@@ -1130,27 +1228,74 @@ VIP认筹通道已开启，欢迎私信咨询！
                 document.getElementById('generatingProgress').textContent = Math.round(progress) + '%';
                 
                 // 更新生成项状态
-                const items = ['genItem1', 'genItem2', 'genItem3', 'genItem4'];
-                items.forEach((id, i) => {
-                    const el = document.getElementById(id);
-                    if (el && progress > (i + 1) * 25) {
-                        el.innerHTML = '<i class="fa fa-check-circle"></i> ' + el.textContent.replace('生成中...', '已完成');
+                const itemIndex = Math.floor(progress / 100 * channels.length);
+                for (let i = 0; i < channels.length; i++) {
+                    const el = document.getElementById('genItem' + i);
+                    if (el) {
+                        if (i < itemIndex) {
+                            el.innerHTML = '<i class="fa fa-check-circle"></i> ' + el.textContent.replace('生成中...', '已完成');
+                        } else if (i === itemIndex && progress < 100) {
+                            el.innerHTML = '<i class="fa fa-spinner fa-spin"></i> ' + el.textContent;
+                        }
                     }
-                });
-            }, 300);
+                }
+            }, 200);
         }
 
-        function startGenerate() {
-            showGeneratedResults();
+        // 显示生成结果
+        function showGeneratedResults() {
+            selectedChannels.forEach(channel => {
+                const card = document.getElementById('card_' + channel);
+                if (card) {
+                    card.style.display = 'block';
+                    card.classList.add('revealed');
+                    const titleEl = document.getElementById('title_' + channel);
+                    const contentEl = document.getElementById('content_' + channel);
+                    if (titleEl) titleEl.textContent = houseName + ' | ' + (channel === 'moments' ? '火热认筹中' : channel === 'wechat' ? '开盘预告' : '探盘日记');
+                    if (contentEl) contentEl.textContent = CONTENTS[channel];
+                }
+            });
+
+            // 更新视频方式显示
+            updateVideoMethodView();
+
+            // 默认展开第一个
+            if (selectedChannels.size > 0) {
+                const firstChannel = Array.from(selectedChannels)[0];
+                toggleCard(firstChannel);
+            }
+
+            isGenerated = true;
+            selectedCopies = new Set(selectedChannels);
+            updateConfirmBtn();
+            updateBottomBar();
         }
 
+        // 更新视频方式视图
+        function updateVideoMethodView() {
+            document.querySelectorAll('#view_method_lightning, #view_method_normal, #view_method_master').forEach(el => {
+                el.classList.remove('selected');
+            });
+            document.getElementById('view_method_' + selectedVideoMethod)?.classList.add('selected');
+        }
+
+        // 显示配置区域
+        function showConfig() {
+            document.getElementById('generatingBanner').classList.remove('show');
+            document.getElementById('configSection').classList.remove('hidden');
+            document.getElementById('generateSection').classList.remove('hidden');
+            document.getElementById('contentSection').classList.remove('show');
+        }
+
+        // 切换卡片展开
         function toggleCard(type) {
             const card = document.getElementById('card_' + type);
+            if (!card || card.style.display === 'none') return;
+            
             if (expandedCard === type) {
                 card.classList.remove('expanded');
                 expandedCard = null;
             } else {
-                // 关闭其他卡片
                 if (expandedCard) {
                     document.getElementById('card_' + expandedCard)?.classList.remove('expanded');
                 }
@@ -1161,6 +1306,8 @@ VIP认筹通道已开启，欢迎私信咨询！
 
         function toggleVideoCard() {
             const card = document.getElementById('card_video');
+            if (!card || card.style.display === 'none') return;
+            
             if (card.classList.contains('expanded')) {
                 card.classList.remove('expanded');
             } else {
@@ -1168,6 +1315,7 @@ VIP认筹通道已开启，欢迎私信咨询！
             }
         }
 
+        // 选择文案
         function selectCopy(type) {
             const checkbox = document.getElementById('check_' + type);
             if (checkbox.checked) {
@@ -1178,44 +1326,53 @@ VIP认筹通道已开启，欢迎私信咨询！
             updateConfirmBtn();
         }
 
+        // 更新确认按钮
         function updateConfirmBtn() {
             const btn = document.getElementById('confirmBtn');
             const hint = document.getElementById('bottomHint');
             
-            // 简单规则：至少选了一个
-            const hasSelection = selectedCopies.size > 0 || isGenerated;
-            
-            if (hasSelection) {
+            if (selectedCopies.size > 0) {
                 btn.classList.add('ready');
-                hint.textContent = `已选择 ${selectedCopies.size || PLATFORMS.length} 个文案`;
+                hint.textContent = `已选择 ${selectedCopies.size} 个文案`;
             } else {
                 btn.classList.remove('ready');
-                hint.textContent = '请选择要使用的文案版本（可多选）';
+                hint.textContent = '请选择要使用的文案版本';
             }
         }
 
+        // 更新底部栏
+        function updateBottomBar() {
+            const bottomBar = document.getElementById('bottomBar');
+            if (isGenerated) {
+                bottomBar.style.display = 'block';
+            }
+        }
+
+        // 重新生成单个
         function regenerateCopy(type) {
             const contentEl = document.getElementById('content_' + type);
             if (contentEl) {
                 contentEl.textContent = '正在重新生成...';
                 setTimeout(() => {
-                    contentEl.textContent = getDefaultContent(type);
-                    showToast(PLATFORM_NAMES[type] + '文案已重新生成');
+                    contentEl.textContent = CONTENTS[type];
+                    showToast(CHANNEL_NAMES[type] + '已重新生成');
                 }, 1500);
             }
         }
 
+        // 复制文本
         function copyText(type) {
             const contentEl = document.getElementById('content_' + type);
             if (contentEl) {
                 navigator.clipboard.writeText(contentEl.textContent).then(() => {
                     showToast('已复制到剪贴板');
                 }).catch(() => {
-                    showToast('复制失败，请手动复制');
+                    showToast('复制失败');
                 });
             }
         }
 
+        // 编辑弹窗
         let currentEditType = null;
 
         function openEditModal(type) {
@@ -1242,62 +1399,33 @@ VIP认筹通道已开启，欢迎私信咨询！
             showToast('保存成功');
         }
 
+        // 确认提交
         function handleConfirm() {
-            if (selectedCopies.size === 0 && isGenerated) {
-                // 如果没有手动选择但已生成，默认全选
-                selectedCopies = new Set(PLATFORMS);
-            }
-            
-            if (selectedCopies.size > 0) {
-                showToast('已确认' + selectedCopies.size + '个文案，准备提交...');
-                setTimeout(() => {
-                    location.href = 'confirm-cover.html?task=TASK001&step=3';
-                }, 1000);
-            } else {
+            if (selectedCopies.size === 0) {
                 showToast('请至少选择一个文案');
+                return;
             }
+            showToast('已确认' + selectedCopies.size + '个文案，准备提交...');
+            setTimeout(() => {
+                location.href = 'confirm-cover.html?task=TASK001&step=3';
+            }, 1000);
         }
 
         function goBack() {
             history.back();
         }
 
-        // ========== 视频生成方式选择 ==========
-        function selectMethod(method) {
-            currentVideoMethod = method;
-            
-            // 更新UI
-            document.querySelectorAll('.method-option').forEach(el => {
-                el.classList.remove('selected');
-            });
-            document.getElementById('method_' + method)?.classList.add('selected');
-            
-            // 显示/隐藏对应区域
-            const audioSection = document.getElementById('videoAudioSection');
-            const materialSection = document.getElementById('videoMaterialSection');
-            const scriptContent = document.getElementById('videoScriptContent');
-            
-            if (method === 'lightning') {
-                // 闪电生成：显示脚本内容
-                scriptContent.style.display = 'block';
-                audioSection.style.display = 'none';
-                materialSection.style.display = 'none';
-            } else if (method === 'normal') {
-                // 普通生成：显示音频上传
-                scriptContent.style.display = 'block';
-                audioSection.style.display = 'block';
-                materialSection.style.display = 'none';
-            } else if (method === 'master') {
-                // 大师生成：显示音频和素材上传
-                scriptContent.style.display = 'block';
-                audioSection.style.display = 'block';
-                materialSection.style.display = 'block';
-            }
-            
-            showToast('已选择' + method + '生成方式');
+        // Toast
+        function showToast(msg) {
+            const existing = document.querySelector('.toast');
+            if (existing) existing.remove();
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = msg;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2000);
         }
 
-        // 初始化
         init();
     </script>
 </body>
