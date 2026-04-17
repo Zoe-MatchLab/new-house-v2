@@ -1009,13 +1009,15 @@
 
         // 折叠切换
         function toggleCollapse(el) {
+            console.log('toggleCollapse called', el);
             el.classList.toggle('open');
             // 找到相邻的collapse-body
             const body = el.nextElementSibling;
+            console.log('body:', body);
             if (body && body.classList.contains('collapse-body')) {
                 body.classList.toggle('open');
             } else {
-                console.warn('ToggleCollapse: body not found', body);
+                console.warn('ToggleCollapse: body not found or wrong type', body);
             }
         }
 
