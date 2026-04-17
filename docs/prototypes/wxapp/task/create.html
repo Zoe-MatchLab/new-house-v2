@@ -12,20 +12,22 @@
             --brand-primary-light: #FFF7E6;
             --color-success: #00B42A;
             --color-success-light: #E8FFEA;
+            --color-warning: #FF7D00;
+            --color-danger: #FA5151;
+            --color-info: #165DFF;
+            --color-title: #1D2129;
             --color-text: #4E5969;
             --color-sub: #86909C;
-            --color-title: #1D2129;
             --color-border: #E5E6EB;
             --color-bg: #F7F8FA;
             --color-card: #FFFFFF;
             --spacing-xs: 8px;
             --spacing-sm: 12px;
             --spacing-md: 16px;
-            --spacing-lg: 24px;
-            --radius-sm: 4px;
-            --radius-md: 8px;
-            --radius-lg: 12px;
-            --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
+            --spacing-lg: 20px;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html, body {
@@ -52,11 +54,7 @@
             border-bottom: 1px solid var(--color-border);
             flex-shrink: 0;
         }
-        .header-title {
-            font-size: 17px;
-            font-weight: 600;
-            color: var(--color-title);
-        }
+        .header-title { font-size: 17px; font-weight: 600; color: var(--color-title); }
         .header-btn {
             font-size: 15px;
             color: var(--brand-primary);
@@ -65,7 +63,6 @@
             cursor: pointer;
             padding: 4px 8px;
         }
-        .header-btn:active { opacity: 0.7; }
         .back-btn {
             width: 36px;
             height: 36px;
@@ -74,102 +71,101 @@
             justify-content: center;
             color: var(--color-sub);
         }
-        .back-btn i { font-size: 20px; }
         /* 主内容 */
         .main {
             flex: 1;
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
         }
-        /* 表单样式 */
-        .form-section {
+        /* 通用折叠面板 */
+        .collapse-section {
             background: var(--color-card);
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
-        .form-section-title {
+        .collapse-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             padding: var(--spacing-md);
-            padding-bottom: var(--spacing-sm);
-            font-size: 13px;
+            cursor: pointer;
+        }
+        .collapse-header:active { background: var(--color-bg); }
+        .collapse-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 15px;
             font-weight: 600;
             color: var(--color-title);
         }
+        .collapse-title i { color: var(--brand-primary); font-size: 16px; }
+        .collapse-title .badge {
+            font-size: 11px;
+            padding: 2px 6px;
+            background: var(--color-danger);
+            color: white;
+            border-radius: 10px;
+            font-weight: 500;
+        }
+        .collapse-arrow {
+            color: var(--color-sub);
+            font-size: 14px;
+            transition: transform 0.3s;
+        }
+        .collapse-header.open .collapse-arrow { transform: rotate(180deg); }
+        .collapse-body {
+            display: none;
+            padding: 0 var(--spacing-md) var(--spacing-md);
+            border-top: 1px solid var(--color-border);
+        }
+        .collapse-body.open { display: block; }
+        /* 任务类型选择 */
+        .type-select {
+            width: 100%;
+            padding: 12px var(--spacing-md);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-sm);
+            font-size: 15px;
+            color: var(--color-title);
+            background: white;
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2386909C' d='M2 4l4 4 4-4'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+        }
+        .type-select:focus { outline: none; border-color: var(--brand-primary); }
+        /* 表单项 */
         .form-item {
             display: flex;
-            align-items: center;
-            padding: var(--spacing-md);
+            align-items: flex-start;
+            padding: var(--spacing-md) 0;
             border-bottom: 1px solid var(--color-border);
         }
         .form-item:last-child { border-bottom: none; }
         .form-label {
-            width: 80px;
+            width: 70px;
             flex-shrink: 0;
-            font-size: 15px;
+            font-size: 14px;
             color: var(--color-title);
+            padding-top: 2px;
         }
-        .form-label.required::after {
-            content: ' *';
-            color: var(--brand-primary);
-        }
+        .form-label.required::after { content: ' *'; color: var(--brand-primary); }
         .form-control {
             flex: 1;
             border: none;
             outline: none;
-            font-size: 15px;
+            font-size: 14px;
             color: var(--color-title);
             background: transparent;
+            resize: none;
         }
         .form-control::placeholder { color: var(--color-sub); }
-        .form-arrow {
+        .form-hint {
+            font-size: 11px;
             color: var(--color-sub);
-            font-size: 14px;
-            margin-left: 8px;
-        }
-        /* 任务类型选择 */
-        .type-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            padding: var(--spacing-md);
-        }
-        .type-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 16px 12px;
-            background: var(--color-bg);
-            border: 2px solid transparent;
-            border-radius: var(--radius-lg);
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .type-item:active { transform: scale(0.98); }
-        .type-item.selected {
-            background: var(--brand-primary-light);
-            border-color: var(--brand-primary);
-        }
-        .type-item-icon {
-            width: 40px;
-            height: 40px;
-            background: var(--color-card);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 8px;
-        }
-        .type-item.selected .type-item-icon {
-            background: var(--brand-primary);
-        }
-        .type-item-icon i {
-            font-size: 18px;
-            color: var(--brand-primary);
-        }
-        .type-item.selected .type-item-icon i { color: white; }
-        .type-item-name {
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--color-title);
-            text-align: center;
+            margin-top: 4px;
         }
         /* 楼盘选择 */
         .building-selector {
@@ -177,6 +173,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+            cursor: pointer;
         }
         .building-info {
             display: flex;
@@ -187,20 +184,15 @@
             width: 32px;
             height: 32px;
             background: var(--color-bg);
-            border-radius: var(--radius-md);
+            border-radius: var(--radius-sm);
             display: flex;
             align-items: center;
             justify-content: center;
         }
-        .building-icon i { color: var(--brand-primary); font-size: 16px; }
-        .building-name {
-            font-size: 15px;
-            color: var(--color-title);
-        }
-        .building-name.empty {
-            color: var(--color-sub);
-            font-size: 14px;
-        }
+        .building-icon i { color: var(--brand-primary); font-size: 14px; }
+        .building-name { font-size: 14px; color: var(--color-title); }
+        .building-name.empty { color: var(--color-sub); }
+        .form-arrow { color: var(--color-sub); font-size: 14px; }
         /* 执行人 */
         .executor-list {
             flex: 1;
@@ -213,15 +205,15 @@
             align-items: center;
             gap: 4px;
             padding: 4px 10px;
-            background: var(--color-bg);
+            background: var(--brand-primary-light);
+            color: var(--brand-primary);
             border-radius: 16px;
             font-size: 13px;
-            color: var(--color-text);
         }
         .executor-tag .remove {
             width: 14px;
             height: 14px;
-            background: var(--color-sub);
+            background: var(--brand-primary);
             color: white;
             border-radius: 50%;
             display: flex;
@@ -242,39 +234,160 @@
             color: var(--color-sub);
             cursor: pointer;
         }
-        .add-executor:active { background: var(--color-bg); }
-        /* 日期选择 */
-        .date-input {
-            flex: 1;
+        /* Switch */
+        .switch {
+            position: relative;
+            width: 44px;
+            height: 26px;
+            flex-shrink: 0;
+        }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            inset: 0;
+            background-color: #ccc;
+            transition: 0.3s;
+            border-radius: 26px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            transition: 0.3s;
+            border-radius: 50%;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+        input:checked + .slider { background-color: var(--brand-primary); }
+        input:checked + .slider:before { transform: translateX(18px); }
+        /* 配置开关项 */
+        .config-switch-item {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             justify-content: space-between;
+            padding: var(--spacing-md) 0;
+            border-bottom: 1px solid var(--color-border);
         }
-        .date-value {
-            font-size: 15px;
-            color: var(--color-title);
-        }
-        .date-value.empty {
-            color: var(--color-sub);
-            font-size: 14px;
-        }
-        /* 时间选择 */
-        .time-input {
-            flex: 1;
+        .config-switch-item:last-child { border-bottom: none; }
+        .config-switch-item .info { flex: 1; }
+        .config-switch-item .label { font-size: 14px; color: var(--color-title); }
+        .config-switch-item .desc { font-size: 12px; color: var(--color-sub); margin-top: 2px; }
+        /* 打卡配置 */
+        .input-row {
             display: flex;
             align-items: center;
             gap: 8px;
+            padding: var(--spacing-sm) 0;
         }
-        .time-value {
-            font-size: 15px;
-            color: var(--color-title);
-            background: var(--color-bg);
-            padding: 6px 12px;
-            border-radius: var(--radius-md);
-        }
-        /* 提醒设置 */
-        .reminder-options {
+        .input-row .label { font-size: 13px; color: var(--color-sub); width: 60px; flex-shrink: 0; }
+        .input-row .field {
             flex: 1;
+            height: 36px;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-sm);
+            padding: 0 10px;
+            font-size: 14px;
+        }
+        .input-row .field:focus { outline: none; border-color: var(--brand-primary); }
+        /* 阈值条 */
+        .threshold-bar {
+            display: flex;
+            gap: 6px;
+            margin-top: var(--spacing-sm);
+            padding: 10px;
+            background: var(--color-bg);
+            border-radius: var(--radius-sm);
+        }
+        .threshold-item {
+            flex: 1;
+            text-align: center;
+            padding: 6px 4px;
+            border-radius: 4px;
+            font-size: 11px;
+        }
+        .threshold-item.green { background: var(--color-success-light); color: var(--color-success); }
+        .threshold-item.yellow { background: #FFF7E6; color: var(--color-warning); }
+        .threshold-item.red { background: #FFECE8; color: var(--color-danger); }
+        .threshold-item strong { font-size: 12px; font-weight: 600; display: block; }
+        /* 点位卡片 */
+        .point-card {
+            background: var(--color-bg);
+            border-radius: var(--radius-sm);
+            padding: 12px;
+            margin-bottom: 10px;
+        }
+        .point-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .point-title { display: flex; align-items: center; gap: 8px; }
+        .point-num {
+            width: 20px;
+            height: 20px;
+            background: var(--brand-primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .point-name { font-size: 14px; font-weight: 500; color: var(--color-title); }
+        .point-tag {
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: var(--brand-primary-light);
+            color: var(--brand-primary);
+        }
+        .point-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+        .point-tag-item {
+            font-size: 12px;
+            padding: 3px 8px;
+            background: white;
+            border: 1px solid var(--color-border);
+            border-radius: 4px;
+            color: var(--color-text);
+        }
+        .add-btn {
+            width: 100%;
+            padding: 10px;
+            border: 1px dashed var(--color-border);
+            border-radius: var(--radius-sm);
+            background: transparent;
+            color: var(--color-sub);
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            cursor: pointer;
+        }
+        .add-btn:active { background: var(--color-bg); border-color: var(--brand-primary); color: var(--brand-primary); }
+        /* 时间区间 */
+        .time-range {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .time-input {
+            flex: 1;
+            height: 36px;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-sm);
+            padding: 0 10px;
+            font-size: 14px;
+        }
+        .time-input:focus { outline: none; border-color: var(--brand-primary); }
+        /* 提醒标签 */
+        .reminder-tags {
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
@@ -288,10 +401,7 @@
             cursor: pointer;
             border: none;
         }
-        .reminder-tag.selected {
-            background: var(--brand-primary-light);
-            color: var(--brand-primary);
-        }
+        .reminder-tag.selected { background: var(--brand-primary-light); color: var(--brand-primary); }
         /* 底部按钮 */
         .footer {
             padding: var(--spacing-md);
@@ -307,7 +417,7 @@
             font-size: 16px;
             font-weight: 600;
             border: none;
-            border-radius: var(--radius-lg);
+            border-radius: var(--radius-md);
             cursor: pointer;
             transition: all 0.2s;
         }
@@ -334,92 +444,317 @@
             transition: opacity 0.2s;
         }
         .toast.show { opacity: 1; }
+        /* 空配置提示 */
+        .config-empty {
+            padding: 30px;
+            text-align: center;
+            color: var(--color-sub);
+        }
     </style>
 </head>
 <body>
     <div class="page">
         <!-- 标题栏 -->
         <div class="header">
-            <a href="list.html" class="back-btn">
-                <i class="fa fa-angle-left"></i>
-            </a>
+            <a href="list.html" class="back-btn"><i class="fa fa-angle-left" style="font-size:20px;"></i></a>
             <span class="header-title">创建任务</span>
             <button class="header-btn" onclick="saveDraft()">存草稿</button>
         </div>
 
         <!-- 主内容 -->
         <div class="main">
-            <!-- 任务类型 -->
-            <div class="form-section">
-                <div class="form-section-title">任务类型</div>
-                <div class="type-grid">
-                    <div class="type-item selected" data-type="house" onclick="selectType(this)">
-                        <div class="type-item-icon"><i class="fa fa-map-marker"></i></div>
-                        <div class="type-item-name">探盘任务</div>
+            <!-- ========== 任务类型 ========== -->
+            <div class="collapse-section">
+                <div class="collapse-header open" onclick="toggleCollapse(this)">
+                    <div class="collapse-title">
+                        <i class="fa fa-tasks"></i>
+                        任务类型
+                        <span class="badge">必填</span>
                     </div>
-                    <div class="type-item" data-type="training" onclick="selectType(this)">
-                        <div class="type-item-icon"><i class="fa fa-comments"></i></div>
-                        <div class="type-item-name">话术训练</div>
-                    </div>
-                    <div class="type-item" data-type="recording" onclick="selectType(this)">
-                        <div class="type-item-icon"><i class="fa fa-microphone"></i></div>
-                        <div class="type-item-name">录音分析</div>
-                    </div>
-                    <div class="type-item" data-type="content" onclick="selectType(this)">
-                        <div class="type-item-icon"><i class="fa fa-file-text"></i></div>
-                        <div class="type-item-name">文案生成</div>
-                    </div>
+                    <i class="fa fa-angle-down collapse-arrow"></i>
+                </div>
+                <div class="collapse-body open">
+                    <select class="type-select" id="taskType" onchange="onTaskTypeChange()">
+                        <option value="">请选择任务类型</option>
+                        <option value="house">探盘任务</option>
+                        <option value="training">话术训练任务</option>
+                        <option value="recording">录音分析任务</option>
+                        <option value="content">文案生成任务</option>
+                        <option value="custom">自定义任务</option>
+                    </select>
                 </div>
             </div>
 
-            <!-- 基本信息 -->
-            <div class="form-section">
-                <div class="form-section-title">基本信息</div>
-                <div class="form-item">
-                    <div class="form-label required">任务名称</div>
-                    <input type="text" class="form-control" id="taskName" placeholder="请输入任务名称" maxlength="30">
+            <!-- ========== 基本信息 ========== -->
+            <div class="collapse-section">
+                <div class="collapse-header" onclick="toggleCollapse(this)">
+                    <div class="collapse-title">
+                        <i class="fa fa-info-circle"></i>
+                        基本信息
+                        <span class="badge">必填</span>
+                    </div>
+                    <i class="fa fa-angle-down collapse-arrow"></i>
                 </div>
-                <div class="form-item" onclick="selectBuilding()">
-                    <div class="form-label required">关联楼盘</div>
-                    <div class="building-selector">
-                        <div class="building-info">
-                            <div class="building-icon"><i class="fa fa-building-o"></i></div>
-                            <span class="building-name empty" id="buildingName">请选择楼盘</span>
+                <div class="collapse-body">
+                    <div class="form-item">
+                        <div class="form-label required">标题</div>
+                        <div style="flex:1;">
+                            <input type="text" class="form-control" id="taskTitle" placeholder="请输入任务标题" maxlength="50" oninput="updateCreateBtn()">
+                            <div class="form-hint"><span id="titleCount">0</span>/50</div>
                         </div>
-                        <i class="fa fa-angle-right form-arrow"></i>
+                    </div>
+                    <div class="form-item">
+                        <div class="form-label">描述</div>
+                        <div style="flex:1;">
+                            <textarea class="form-control" id="taskDesc" placeholder="请输入任务描述" rows="3" maxlength="200" style="height:80px;"></textarea>
+                            <div class="form-hint"><span id="descCount">0</span>/200</div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- 执行人员 -->
-            <div class="form-section">
-                <div class="form-section-title">执行人员</div>
-                <div class="form-item">
-                    <div class="form-label required">执行人</div>
-                    <div class="executor-list" id="executorList">
-                        <button class="add-executor" onclick="addExecutor()">
-                            <i class="fa fa-plus"></i> 添加
-                        </button>
+            <!-- ========== 配置信息 ========== -->
+            <div class="collapse-section" id="configSection">
+                <div class="collapse-header" onclick="toggleCollapse(this)">
+                    <div class="collapse-title">
+                        <i class="fa fa-cog"></i>
+                        配置信息
+                    </div>
+                    <i class="fa fa-angle-down collapse-arrow"></i>
+                </div>
+                <div class="collapse-body">
+                    <!-- 探盘任务配置 -->
+                    <div id="houseConfig" style="display:none;">
+                        <!-- 楼盘信息 -->
+                        <div class="collapse-section" style="margin-bottom:8px;">
+                            <div class="collapse-header open" onclick="toggleCollapse(this)">
+                                <div class="collapse-title" style="font-size:14px;">
+                                    <i class="fa fa-building-o"></i>
+                                    楼盘信息
+                                </div>
+                                <i class="fa fa-angle-down collapse-arrow" style="font-size:12px;"></i>
+                            </div>
+                            <div class="collapse-body open">
+                                <div class="building-selector" onclick="selectBuilding()">
+                                    <div class="building-info">
+                                        <div class="building-icon"><i class="fa fa-building-o"></i></div>
+                                        <span class="building-name" id="buildingName">请选择楼盘</span>
+                                    </div>
+                                    <i class="fa fa-angle-right form-arrow"></i>
+                                </div>
+                                <div id="buildingDetail" style="display:none;padding-top:12px;">
+                                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:12px;color:var(--color-sub);">
+                                        <div>物业类型：<span style="color:var(--color-title);">住宅</span></div>
+                                        <div>开发商：<span style="color:var(--color-title);">中海地产</span></div>
+                                        <div>均价：<span style="color:var(--brand-primary);font-weight:600;">68,000 元/㎡</span></div>
+                                        <div>户型：<span style="color:var(--color-title);">85-130㎡</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 打卡配置 -->
+                        <div class="collapse-section" style="margin-bottom:8px;">
+                            <div class="collapse-header open" onclick="toggleCollapse(this)">
+                                <div class="collapse-title" style="font-size:14px;">
+                                    <i class="fa fa-map-marker"></i>
+                                    打卡配置
+                                </div>
+                                <i class="fa fa-angle-down collapse-arrow" style="font-size:12px;"></i>
+                            </div>
+                            <div class="collapse-body open">
+                                <div class="input-row">
+                                    <span class="label">打卡范围</span>
+                                    <input type="number" class="field" value="200" style="width:80px;text-align:center;">
+                                    <span style="color:var(--color-sub);font-size:13px;">米</span>
+                                </div>
+                                <div class="input-row" style="flex-direction:column;align-items:flex-start;gap:8px;">
+                                    <span class="label">偏移阈值</span>
+                                    <div style="display:flex;align-items:center;gap:10px;width:100%;">
+                                        <input type="range" min="200" max="1000" step="100" value="500" style="flex:1;-webkit-appearance:none;height:4px;background:var(--color-border);border-radius:2px;">
+                                        <span style="min-width:45px;text-align:right;font-size:14px;color:var(--color-title);">500m</span>
+                                    </div>
+                                </div>
+                                <div class="threshold-bar">
+                                    <div class="threshold-item green"><strong>≤200m</strong>正常</div>
+                                    <div class="threshold-item yellow"><strong>200-500m</strong>警告</div>
+                                    <div class="threshold-item red"><strong>>500m</strong>拦截</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 点位采集配置 -->
+                        <div class="collapse-section" style="margin-bottom:8px;">
+                            <div class="collapse-header" onclick="toggleCollapse(this)">
+                                <div class="collapse-title" style="font-size:14px;">
+                                    <i class="fa fa-map-markers"></i>
+                                    采集点位配置
+                                </div>
+                                <i class="fa fa-angle-down collapse-arrow" style="font-size:12px;"></i>
+                            </div>
+                            <div class="collapse-body">
+                                <div class="point-card">
+                                    <div class="point-header">
+                                        <div class="point-title">
+                                            <span class="point-num">1</span>
+                                            <span class="point-name">接待处</span>
+                                            <span class="point-tag">必打卡</span>
+                                        </div>
+                                    </div>
+                                    <div class="point-tags">
+                                        <span class="point-tag-item"><i class="fa fa-camera"></i> 拍照</span>
+                                        <span class="point-tag-item"><i class="fa fa-pencil"></i> 填写内容</span>
+                                    </div>
+                                </div>
+                                <div class="point-card">
+                                    <div class="point-header">
+                                        <div class="point-title">
+                                            <span class="point-num">2</span>
+                                            <span class="point-name">沙盘区</span>
+                                            <span class="point-tag">必打卡</span>
+                                        </div>
+                                    </div>
+                                    <div class="point-tags">
+                                        <span class="point-tag-item"><i class="fa fa-camera"></i> 拍照</span>
+                                        <span class="point-tag-item"><i class="fa fa-video-camera"></i> 录制视频</span>
+                                    </div>
+                                </div>
+                                <button class="add-btn"><i class="fa fa-plus"></i> 添加点位</button>
+                            </div>
+                        </div>
+
+                        <!-- 内容生成配置 -->
+                        <div class="collapse-section" style="margin-bottom:8px;">
+                            <div class="collapse-header" onclick="toggleCollapse(this)">
+                                <div class="collapse-title" style="font-size:14px;">
+                                    <i class="fa fa-magic"></i>
+                                    内容生成配置
+                                </div>
+                                <i class="fa fa-angle-down collapse-arrow" style="font-size:12px;"></i>
+                            </div>
+                            <div class="collapse-body">
+                                <div class="config-switch-item">
+                                    <div class="info">
+                                        <div class="label">文案内容生成</div>
+                                        <div class="desc">开启后自动解锁文案生成</div>
+                                    </div>
+                                    <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+                                </div>
+                                <div class="config-switch-item">
+                                    <div class="info">
+                                        <div class="label">图片/视频生成</div>
+                                        <div class="desc">开启后解锁多模态内容生成</div>
+                                    </div>
+                                    <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 话术训练配置 -->
+                        <div class="collapse-section" style="margin-bottom:8px;">
+                            <div class="collapse-header" onclick="toggleCollapse(this)">
+                                <div class="collapse-title" style="font-size:14px;">
+                                    <i class="fa fa-graduation-cap"></i>
+                                    话术训练配置
+                                </div>
+                                <i class="fa fa-angle-down collapse-arrow" style="font-size:12px;"></i>
+                            </div>
+                            <div class="collapse-body">
+                                <div class="config-switch-item">
+                                    <div class="info">
+                                        <div class="label">启用话术训练</div>
+                                        <div class="desc">任务包含话术训练模块</div>
+                                    </div>
+                                    <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 录音分析配置 -->
+                        <div class="collapse-section" style="margin-bottom:8px;">
+                            <div class="collapse-header" onclick="toggleCollapse(this)">
+                                <div class="collapse-title" style="font-size:14px;">
+                                    <i class="fa fa-microphone"></i>
+                                    录音分析配置
+                                </div>
+                                <i class="fa fa-angle-down collapse-arrow" style="font-size:12px;"></i>
+                            </div>
+                            <div class="collapse-body">
+                                <div class="config-switch-item">
+                                    <div class="info">
+                                        <div class="label">启用录音分析</div>
+                                        <div class="desc">任务包含邀约录音分析模块</div>
+                                    </div>
+                                    <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 其他任务类型配置 -->
+                    <div id="otherConfig" class="config-empty" style="display:none;">
+                        <i class="fa fa-cog" style="font-size:32px;margin-bottom:10px;"></i>
+                        <div>该任务类型配置暂未开放</div>
                     </div>
                 </div>
             </div>
 
-            <!-- 时间设置 -->
-            <div class="form-section">
-                <div class="form-section-title">时间设置</div>
-                <div class="form-item" onclick="selectEndTime()">
-                    <div class="form-label required">截止时间</div>
-                    <div class="date-input">
-                        <span class="date-value empty" id="endTime">请选择截止时间</span>
-                        <i class="fa fa-angle-right form-arrow"></i>
+            <!-- ========== 执行信息 ========== -->
+            <div class="collapse-section">
+                <div class="collapse-header open" onclick="toggleCollapse(this)">
+                    <div class="collapse-title">
+                        <i class="fa fa-user-plus"></i>
+                        执行信息
+                        <span class="badge">必填</span>
                     </div>
+                    <i class="fa fa-angle-down collapse-arrow"></i>
                 </div>
-                <div class="form-item">
-                    <div class="form-label">提醒</div>
-                    <div class="reminder-options" id="reminderOptions">
-                        <button class="reminder-tag selected" data-minutes="1440" onclick="toggleReminder(this)">24小时前</button>
-                        <button class="reminder-tag" data-minutes="720" onclick="toggleReminder(this)">12小时前</button>
-                        <button class="reminder-tag" data-minutes="120" onclick="toggleReminder(this)">2小时前</button>
+                <div class="collapse-body">
+                    <!-- 任务时间 -->
+                    <div class="form-item">
+                        <div class="form-label required">任务时间</div>
+                        <div style="flex:1;">
+                            <div class="time-range">
+                                <input type="date" class="time-input" id="startTime">
+                                <span style="color:var(--color-sub);">至</span>
+                                <input type="date" class="time-input" id="endTime">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 提醒时间 -->
+                    <div class="form-item">
+                        <div class="form-label">提醒时间</div>
+                        <div style="flex:1;">
+                            <div class="reminder-tags" id="reminderTags">
+                                <button class="reminder-tag" data-level="light" onclick="toggleReminder(this)">
+                                    <i class="fa fa-bell-o"></i> 轻度
+                                </button>
+                                <button class="reminder-tag" data-level="mid" onclick="toggleReminder(this)">
+                                    <i class="fa fa-bell"></i> 中度
+                                </button>
+                                <button class="reminder-tag" data-level="high" onclick="toggleReminder(this)">
+                                    <i class="fa fa-bell-o"></i> 重度
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 执行人 -->
+                    <div class="form-item">
+                        <div class="form-label required">执行人</div>
+                        <div class="executor-list" id="executorList">
+                            <button class="add-executor" onclick="addExecutor()">
+                                <i class="fa fa-plus"></i> 添加
+                            </button>
+                        </div>
+                    </div>
+                    <!-- 通知人 -->
+                    <div class="form-item">
+                        <div class="form-label">通知人</div>
+                        <div class="executor-list" id="notifyList">
+                            <button class="add-executor" onclick="addNotifier()">
+                                <i class="fa fa-plus"></i> 添加
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -427,7 +762,7 @@
 
         <!-- 底部按钮 -->
         <div class="footer">
-            <button class="btn-create" id="createBtn" onclick="createTask()">创建任务</button>
+            <button class="btn-create" id="createBtn" onclick="createTask()" disabled>创建任务</button>
         </div>
 
         <!-- Toast -->
@@ -436,23 +771,41 @@
 
     <script>
         // 状态
-        let selectedType = 'house';
-        let selectedBuilding = null;
+        let selectedType = '';
         let executors = [];
-        let endTime = null;
-        let reminders = [1440]; // 默认24小时前
+        let notifiers = [];
 
-        // 选择任务类型
-        function selectType(el) {
-            document.querySelectorAll('.type-item').forEach(item => item.classList.remove('selected'));
-            el.classList.add('selected');
-            selectedType = el.dataset.type;
+        // 折叠切换
+        function toggleCollapse(el) {
+            el.classList.toggle('open');
+            el.nextElementSibling.classList.toggle('open');
+        }
+
+        // 任务类型变更
+        function onTaskTypeChange() {
+            selectedType = document.getElementById('taskType').value;
+            const houseConfig = document.getElementById('houseConfig');
+            const otherConfig = document.getElementById('otherConfig');
+            
+            if (selectedType === 'house') {
+                houseConfig.style.display = 'block';
+                otherConfig.style.display = 'none';
+            } else if (selectedType) {
+                houseConfig.style.display = 'none';
+                otherConfig.style.display = 'block';
+            } else {
+                houseConfig.style.display = 'none';
+                otherConfig.style.display = 'none';
+            }
             updateCreateBtn();
         }
 
         // 选择楼盘
         function selectBuilding() {
-            showToast('跳转到楼盘选择页');
+            document.getElementById('buildingName').textContent = '中海汇德里';
+            document.getElementById('buildingName').classList.remove('empty');
+            document.getElementById('buildingDetail').style.display = 'block';
+            updateCreateBtn();
         }
 
         // 添加执行人
@@ -460,61 +813,44 @@
             showToast('跳转到人员选择页');
         }
 
-        // 选择截止时间
-        function selectEndTime() {
-            const now = new Date();
-            now.setDate(now.getDate() + 7); // 默认7天后
-            const dateStr = now.toISOString().split('T')[0];
-            endTime = dateStr;
-            document.getElementById('endTime').textContent = dateStr;
-            document.getElementById('endTime').classList.remove('empty');
-            updateCreateBtn();
+        // 添加通知人
+        function addNotifier() {
+            showToast('跳转到通知人选择页');
         }
 
         // 切换提醒
         function toggleReminder(el) {
             el.classList.toggle('selected');
-            updateReminders();
-        }
-
-        function updateReminders() {
-            reminders = [];
-            document.querySelectorAll('.reminder-tag.selected').forEach(tag => {
-                reminders.push(parseInt(tag.dataset.minutes));
-            });
         }
 
         // 更新创建按钮状态
         function updateCreateBtn() {
-            const btn = document.getElementById('createBtn');
-            const name = document.getElementById('taskName').value.trim();
-            const canCreate = name && selectedBuilding && executors.length > 0 && endTime;
-            btn.disabled = !canCreate;
+            const title = document.getElementById('taskTitle').value.trim();
+            const hasType = selectedType === 'house'; // 当前只支持探盘任务完整配置
+            const hasBuilding = document.getElementById('buildingName').textContent !== '请选择楼盘';
+            const hasExecutor = executors.length > 0;
+            const hasTime = document.getElementById('startTime').value && document.getElementById('endTime').value;
+            
+            const canCreate = title && hasType && hasBuilding && hasExecutor && hasTime;
+            document.getElementById('createBtn').disabled = !canCreate;
         }
+
+        // 字数统计
+        document.getElementById('taskTitle').addEventListener('input', function() {
+            document.getElementById('titleCount').textContent = this.value.length;
+            updateCreateBtn();
+        });
+        document.getElementById('taskDesc').addEventListener('input', function() {
+            document.getElementById('descCount').textContent = this.value.length;
+        });
 
         // 创建任务
         function createTask() {
-            const name = document.getElementById('taskName').value.trim();
-            if (!name) {
-                showToast('请输入任务名称');
-                return;
-            }
-            if (!selectedBuilding) {
-                showToast('请选择关联楼盘');
-                return;
-            }
-            if (executors.length === 0) {
-                showToast('请添加执行人员');
-                return;
-            }
-            if (!endTime) {
-                showToast('请选择截止时间');
-                return;
-            }
+            const title = document.getElementById('taskTitle').value.trim();
+            if (!title) { showToast('请输入任务标题'); return; }
+            if (!selectedType) { showToast('请选择任务类型'); return; }
             showToast('创建成功');
-            setTimeout(() => {
-                location.href = 'list.html';
-            }, 1000);
+            setTimeout(() => location.href = 'list.html', 1000);
         }
 
         // 存草稿
@@ -522,7 +858,7 @@
             showToast('草稿已保存');
         }
 
-        // 显示Toast
+        // Toast
         function showToast(msg) {
             const toast = document.getElementById('toast');
             toast.textContent = msg;
@@ -530,8 +866,9 @@
             setTimeout(() => toast.classList.remove('show'), 2000);
         }
 
-        // 监听输入
-        document.getElementById('taskName').addEventListener('input', updateCreateBtn);
+        // 时间输入监听
+        document.getElementById('startTime').addEventListener('change', updateCreateBtn);
+        document.getElementById('endTime').addEventListener('change', updateCreateBtn);
     </script>
 </body>
 </html>
