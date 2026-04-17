@@ -112,15 +112,16 @@
         }
 
         /* 生成中状态 */
-        .generating-banner {
+        .generating-card {
             margin: 0 var(--spacing-md) var(--spacing-md);
             padding: var(--spacing-md);
             background: linear-gradient(135deg, var(--color-purple) 0%, #8B5CF6 100%);
             border-radius: var(--radius-xl);
             color: white;
+            text-align: center;
             display: none;
         }
-        .generating-banner.show { display: block; }
+        .generating-card.show { display: block; }
         .generating-header {
             display: flex;
             align-items: center;
@@ -730,17 +731,17 @@
             </div>
         </div>
 
-        <!-- 生成中状态 - 替换配置区域 -->
-        <div class="generating-card" id="generatingBanner" style="margin: 0 var(--spacing-md) var(--spacing-md);padding: var(--spacing-lg);background: linear-gradient(135deg, var(--color-purple) 0%, #8B5CF6 100%);border-radius: var(--radius-xl);color: white;text-align:center;display:none;">
-            <div style="margin-bottom:var(--spacing-md);">
-                <div class="generating-spinner" style="margin:0 auto;"></div>
+        <!-- 生成中状态 -->
+        <div class="generating-card" id="generatingBanner">
+            <div style="display:flex;justify-content:center;margin-bottom:var(--spacing-md);">
+                <div class="generating-spinner"></div>
             </div>
             <div style="font-size:16px;font-weight:600;margin-bottom:var(--spacing-sm);">AI生成中...</div>
             <div style="font-size:12px;opacity:0.8;margin-bottom:var(--spacing-md);" id="generatingProgress">正在生成 0%</div>
-            <div class="generating-bar" style="height:6px;background:rgba(255,255,255,0.3);border-radius:3px;overflow:hidden;">
-                <div class="generating-fill" id="generatingFill" style="height:100%;background:white;border-radius:3px;transition:width 0.3s ease;width:0%;"></div>
+            <div class="generating-bar">
+                <div class="generating-fill" id="generatingFill" style="width:0%;"></div>
             </div>
-            <div style="display:flex;flex-direction:column;gap:4px;margin-top:var(--spacing-md);font-size:12px;opacity:0.9;" id="generatingItems">
+            <div id="generatingItems" style="display:flex;flex-direction:column;gap:4px;margin-top:var(--spacing-md);font-size:12px;opacity:0.9;">
                 <!-- 动态生成项 -->
             </div>
         </div>
